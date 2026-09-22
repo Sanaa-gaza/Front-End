@@ -1,0 +1,18 @@
+{
+    "title": "تسجيل الدخول",
+    "subtitle": "أهلاً بك مرة اخرى",
+    "email": "البريد الالكتروني",
+    "emailPlaceholder": "example@gmail.com",
+    "password": "كلمة المرور",
+    "rememberMe": "تذكرني",
+    "forgotPassword": "نسيت كلمة المرور؟",
+    "submit": "تسجيل الدخول",
+    "submitting": "جارِ تسجيل الدخول...",
+    "noAccount": "ليس لديك حساب؟",
+    "createAccount": "إنشاء حساب",
+    "emailRequired": "البريد الإلكتروني مطلوب",
+    "emailInvalid": "صيغة البريد الإلكتروني غير صحيحة",
+    "passwordRequired": "كلمة المرور مطلوبة",
+    "showPassword": "إظهار كلمة المرور",
+    "hidePassword": "إخفاء كلمة المرور"
+}

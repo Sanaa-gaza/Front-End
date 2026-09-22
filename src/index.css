@@ -1,0 +1,240 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* لون عناصر النظام الأصلية (checkbox, select, scrollbar...) يتبع
+   وضع الموقع نفسه (.dark) مش نظام تشغيل الجهاز، عشان يفضل متسق مع
+   أي اختيار يدوي للمستخدم من زر تبديل الوضع. */
+html {
+  color-scheme: light;
+}
+
+html.dark {
+  color-scheme: dark;
+}
+
+body {
+  perspective: 1200px;
+  background-color: #ffffff;
+}
+
+html.dark body {
+  background-color: #0f172a;
+}
+
+.page-flip-in {
+  animation: flipIn 0.7s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  backface-visibility: hidden;
+}
+
+.page-flip-out {
+  animation: flipOut 0.7s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  backface-visibility: hidden;
+}
+
+@keyframes flipIn {
+  from {
+    transform: rotateY(-180deg);
+    opacity: 0;
+  }
+
+  to {
+    transform: rotateY(0deg);
+    opacity: 1;
+  }
+}
+
+@keyframes flipOut {
+  from {
+    transform: rotateY(0deg);
+    opacity: 1;
+  }
+
+  to {
+    transform: rotateY(180deg);
+    opacity: 0;
+  }
+}
+
+/* 1. تعريف ملف الخط من مجلد public */
+@font-face {
+  font-family: 'Cairo';
+  src: url('/font/Cairo-VariableFont_slnt,wght.ttf') format('truetype');
+  font-weight: 100 900;
+  font-style: normal;
+}
+
+/* 2. ربط الخط بـ Tailwind v4 مباشرة */
+@theme {
+  --font-cairo: 'Cairo', sans-serif;
+}
+
+body {
+  font-family: var(--font-cairo);
+}
+
+/* أضيفي هذا الكود في نهاية ملف index.css */
+
+@keyframes digitPop {
+  0% {
+    transform: translateY(-20px) scale(0.6) rotate(-10deg);
+    opacity: 0;
+  }
+
+  60% {
+    transform: translateY(4px) scale(1.1) rotate(3deg);
+    opacity: 1;
+  }
+
+  100% {
+    transform: translateY(0) scale(1.05) rotate(0deg);
+  }
+}
+
+.digit-animate {
+  animation: digitPop 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+.success-screen {
+  animation: successFadeIn 0.4s ease-out forwards;
+}
+
+@keyframes successFadeIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.check-card {
+  animation: popSuccess 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+@keyframes popSuccess {
+  0% {
+    transform: scale(0) rotate(-45deg);
+  }
+
+  70% {
+    transform: scale(1.15) rotate(5deg);
+  }
+
+  100% {
+    transform: scale(1) rotate(0deg);
+  }
+}
+
+.check-icon path {
+  stroke-dasharray: 50;
+  stroke-dashoffset: 50;
+  animation: drawCheck 0.4s ease-in-out 0.3s forwards;
+}
+
+@keyframes drawCheck {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+.confetti-wrapper {
+  position: absolute;
+  pointer-events: none;
+}
+
+.particle {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  opacity: 0;
+  animation: burst 0.7s ease-out 0.2s forwards;
+}
+
+.particle.p-1 {
+  background: #10B981;
+  --x: -60px;
+  --y: -50px;
+}
+
+.particle.p-2 {
+  background: #286292;
+  --x: 60px;
+  --y: -50px;
+}
+
+.particle.p-3 {
+  background: #F38121;
+  --x: -80px;
+  --y: 10px;
+}
+
+.particle.p-4 {
+  background: #10B981;
+  --x: 80px;
+  --y: 10px;
+}
+
+.particle.p-5 {
+  background: #286292;
+  --x: -40px;
+  --y: 60px;
+}
+
+.particle.p-6 {
+  background: #F38121;
+  --x: 40px;
+  --y: 60px;
+}
+
+.particle.p-7 {
+  background: #10B981;
+  --x: -90px;
+  --y: -20px;
+}
+
+.particle.p-8 {
+  background: #286292;
+  --x: 90px;
+  --y: -20px;
+}
+
+.particle.p-9 {
+  background: #F38121;
+  --x: -20px;
+  --y: -70px;
+}
+
+.particle.p-10 {
+  background: #10B981;
+  --x: 20px;
+  --y: -70px;
+}
+
+.particle.p-11 {
+  background: #286292;
+  --x: -50px;
+  --y: -30px;
+}
+
+.particle.p-12 {
+  background: #F38121;
+  --x: 50px;
+  --y: -30px;
+}
+
+@keyframes burst {
+  0% {
+    transform: translate(0, 0) scale(1);
+    opacity: 1;
+  }
+
+  100% {
+    transform: translate(var(--x), var(--y)) scale(0);
+    opacity: 0;
+  }
+}

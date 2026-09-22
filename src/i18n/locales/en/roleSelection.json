@@ -1,0 +1,26 @@
+{
+    "title": "How would you like to use the platform?",
+    "subtitle": "Choose your primary role to customize your experience",
+    "institution": {
+        "title": "Institution",
+        "desc": "Browse categories and contractors, find the right professional for your organization's projects.",
+        "btn": "Create an account"
+    },
+    "contractor": {
+        "title": "Contractor",
+        "desc": "Offer your services, manage your professional requests, and grow your business.",
+        "btn": "Create an account"
+    },
+    "craftsman": {
+        "title": "Craftsman",
+        "desc": "Offer services, manage professional requests, and grow your business.",
+        "btn": "Create an account"
+    },
+    "client": {
+        "title": "Client",
+        "desc": "Browse services, categories, and craftsmen to find the right professional for your needs.",
+        "btn": "Create an account"
+    },
+    "haveAccount": "Already have an account?",
+    "login": "Log in"
+}

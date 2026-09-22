@@ -1,0 +1,18 @@
+{
+    "title": "Login",
+    "subtitle": "Welcome back",
+    "email": "Email",
+    "emailPlaceholder": "example@gmail.com",
+    "password": "Password",
+    "rememberMe": "Remember me",
+    "forgotPassword": "Forgot password?",
+    "submit": "Login",
+    "submitting": "Logging in...",
+    "noAccount": "Don't have an account?",
+    "createAccount": "Create account",
+    "emailRequired": "Email is required",
+    "emailInvalid": "Invalid email format",
+    "passwordRequired": "Password is required",
+    "showPassword": "Show password",
+    "hidePassword": "Hide password"
+}

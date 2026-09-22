@@ -1,0 +1,14 @@
+{
+    "title": "Verify Your Email",
+    "codeSentTo": "We sent a verification code to",
+    "codeIncomplete": "Please enter the complete 6-digit code",
+    "digitLabel": "Digit {{index}} of {{total}}",
+    "verifying": "Verifying...",
+    "confirmCode": "Confirm Code",
+    "verifiedTitle": "Verified Successfully",
+    "redirecting": "Redirecting...",
+    "noCode": "Didn't receive the code?",
+    "resendCode": "Resend Code",
+    "resendIn": "in",
+    "resendLimitReached": "You've used all your resend attempts. Try again in"
+}

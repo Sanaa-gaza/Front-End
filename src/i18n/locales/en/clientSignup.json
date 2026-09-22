@@ -1,0 +1,12 @@
+{
+    "title": "Create a customer Account",
+    "back": "Back",
+    "fullName": "Full Name",
+    "fullNamePlaceholder": "Enter your full name",
+    "fullNameRequired": "Please enter your full name",
+    "cityRequired": "Please select a city",
+    "areaRequired": "Please select an area",
+    "agreeTerms": "I agree to the terms and conditions",
+    "termsRequired": "Please agree to the terms and conditions",
+    "createAccount": "Create Account"
+}

@@ -1,0 +1,12 @@
+{
+    "title": "إنشاء حساب كزبون",
+    "back": "عودة",
+    "fullName": "الاسم بالكامل",
+    "fullNamePlaceholder": "ادخل اسمك بالكامل",
+    "fullNameRequired": "يرجى إدخال الاسم بالكامل",
+    "cityRequired": "يرجى اختيار المدينة",
+    "areaRequired": "يرجى اختيار المنطقة",
+    "agreeTerms": "اوافق على الشروط والاحكام",
+    "termsRequired": "يرجى الموافقة على الشروط والاحكام",
+    "createAccount": "إنشاء حساب"
+}

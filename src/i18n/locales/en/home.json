@@ -1,0 +1,94 @@
+{
+    "nav": {
+        "home": "Home",
+        "services": "Services",
+        "craftsmen": "Craftsmen",
+        "about": "About Sanaa",
+        "contact": "Contact Us"
+    },
+    "login": "Login",
+    "createAccount": "Create Account",
+    "hero": {
+        "title": "Your services and skills, all in one place",
+        "desc": "Discover the services you need or offer your skills and services easily through the Sanaa platform",
+        "allCities": "All Cities",
+        "searchPlaceholder": "Search for a service",
+        "search": "Search",
+        "usersCount": "9500+",
+        "usersLabel": "users trust us",
+        "rating": "4.9/5",
+        "ratingLabel": "customer rating"
+    },
+    "services": {
+        "title": "Discover a variety of services from trusted craftsmen",
+        "featuredTag": "Painting",
+        "featuredDesc": "Renovate your wall decor with the highest quality",
+        "more": "Discover more",
+        "items": {
+            "cleaning": "Cleaning",
+            "painting": "Painting",
+            "carpentry": "Carpentry",
+            "electricity": "Electricity",
+            "plumbing": "Plumbing"
+        }
+    },
+    "craftsmen": {
+        "title": "Craftsmen of the Month",
+        "titleHighlight": "Top Rated",
+        "desc": "Meet the craftsmen with the highest ratings from our customers over the past month.",
+        "list": {
+            "c1": { "name": "Mahdi Naem", "craft": "Carpenter" },
+            "c2": { "name": "Karim Mohammed", "craft": "Plumber" },
+            "c3": { "name": "Mahmoud Fayez", "craft": "Painter" },
+            "c4": { "name": "Karim Karam", "craft": "Electrician" },
+            "c5": { "name": "Hadi Khalil", "craft": "Carpenter" }
+        }
+    },
+    "features": {
+        "tag": "Our Featured Services",
+        "title": "Why Sanaa?",
+        "payment": {
+            "title": "Secure Payment",
+            "desc": "Pay safely through the platform — funds are only released after the work is confirmed complete"
+        },
+        "choice": {
+            "title": "Choosing a Craftsman",
+            "desc": "Review portfolios, prices, and past customer reviews to pick the best fit for you"
+        },
+        "search": {
+            "title": "Search & Discovery",
+            "desc": "Browse categories of specialized craftsmen in your area based on ratings"
+        }
+    },
+    "guide": {
+        "title": "Your guide to using",
+        "titleHighlight": "Sanaa",
+        "trusted": {
+            "title": "Trusted Craftsmen",
+            "desc": "Meet craftsmen whose details and experience have been verified"
+        },
+        "clear": {
+            "title": "Clear Information",
+            "desc": "See service details, experience, and ratings before deciding"
+        },
+        "easy": {
+            "title": "An Easier Experience",
+            "desc": "Everything you need in one place, from search to completion"
+        },
+        "safe": {
+            "title": "Safety & Comfort",
+            "desc": "A payment system that protects your rights and gives you peace of mind"
+        }
+    },
+    "cta": {
+        "title": "Ready to get started with Sanaa?",
+        "desc": "Whether you're a client looking for a skilled craftsman to get things done, or a professional looking for work opportunities and to grow your business, Sanaa is the right destination to get services done easily.",
+        "button": "Create your account now"
+    },
+    "footer": {
+        "copyright": "Sanaa 2026 © All rights reserved"
+    },
+    "assistant": {
+        "label": "AI Assistant"
+    }
+}
