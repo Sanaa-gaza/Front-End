@@ -59,7 +59,7 @@ export default function CraftsmanSignupStep1() {
     };
 
     return (
-        <div className="min-h-dvh flex flex-col bg-gradient-to-t from-[#dbeaf5] dark:from-slate-950 to-white dark:to-slate-900">
+        <div className="min-h-dvh flex flex-col bg-gradient-to-t from-[#dbeaf5] to-white">
             <AuthHeader />
 
             <main className="flex-1 py-10 px-4">
@@ -76,18 +76,18 @@ export default function CraftsmanSignupStep1() {
                             <span>{t("back")}</span>
                         </button>
 
-                        <h1 className="col-start-2 justify-self-center text-[#141415D1] dark:text-slate-100 text-xl font-bold">
+                        <h1 className="col-start-2 justify-self-center text-[#141415D1] text-xl font-bold">
                             {t("title")}
                         </h1>
                     </div>
 
                     <StepIndicator steps={[t("step1Label"), t("step2Label")]} currentStep={1} />
 
-                    <section className="bg-white dark:bg-slate-900 border border-[#0000001A] dark:border-white/10 rounded-2xl shadow-sm overflow-hidden">
+                    <section className="bg-white border border-[#0000001A] rounded-2xl shadow-sm overflow-hidden">
                         <div className="p-8">
                             <form onSubmit={handleSubmit} noValidate>
                                 <div className="mb-4">
-                                    <label htmlFor="fullName" className="block text-xs font-semibold text-slate-700 dark:text-slate-200 mb-1.5">
+                                    <label htmlFor="fullName" className="block text-xs font-semibold text-slate-700 mb-1.5">
                                         {t("fullName")}
                                     </label>
                                     <FormField
@@ -102,7 +102,7 @@ export default function CraftsmanSignupStep1() {
                                 </div>
 
                                 <div className="mb-4">
-                                    <label htmlFor="email" className="block text-xs font-semibold text-slate-700 dark:text-slate-200 mb-1.5">
+                                    <label htmlFor="email" className="block text-xs font-semibold text-slate-700 mb-1.5">
                                         {t("signupCommon:email")}
                                     </label>
                                     <FormField
@@ -126,7 +126,7 @@ export default function CraftsmanSignupStep1() {
                                 />
 
                                 <div className="mb-4">
-                                    <label htmlFor="password" className="block text-xs font-semibold text-slate-700 dark:text-slate-200 mb-1.5">
+                                    <label htmlFor="password" className="block text-xs font-semibold text-slate-700 mb-1.5">
                                         {t("signupCommon:createPassword")}
                                     </label>
                                     <FormField
@@ -143,7 +143,7 @@ export default function CraftsmanSignupStep1() {
                                 </div>
 
                                 <div className="mb-4">
-                                    <label htmlFor="confirmPassword" className="block text-xs font-semibold text-slate-700 dark:text-slate-200 mb-1.5">
+                                    <label htmlFor="confirmPassword" className="block text-xs font-semibold text-slate-700 mb-1.5">
                                         {t("signupCommon:confirmPassword")}
                                     </label>
                                     <FormField
@@ -179,7 +179,7 @@ export default function CraftsmanSignupStep1() {
                                     />
 
                                     <div>
-                                        <label htmlFor="area" className="block text-xs font-semibold text-slate-700 dark:text-slate-200 mb-1.5">
+                                        <label htmlFor="area" className="block text-xs font-semibold text-slate-700 mb-1.5">
                                             {t("signupCommon:area")}
                                         </label>
                                         <FormField

@@ -14,17 +14,17 @@ export default function StepIndicator({ steps, currentStep }) {
                             <div
                                 className={`w-9 h-9 rounded-full flex items-center justify-center text-sm font-bold ${isDone || isActive
                                     ? "bg-[#4B9AD2] text-white"
-                                    : "border-2 border-[#bfc6d3] text-[#89949D] dark:text-slate-400 bg-transparent"
+                                    : "border-2 border-[#bfc6d3] text-[#89949D] bg-transparent"
                                     }`}
                             >
                                 {isDone ? <i className="fa-solid fa-check text-xs"></i> : stepNum}
                             </div>
                             <span
                                 className={`text-xs ${isActive
-                                    ? "text-[#141415D1] dark:text-slate-100 font-bold"
+                                    ? "text-[#141415D1] font-bold"
                                     : isDone
                                         ? "text-[#4B9AD2] font-medium"
-                                        : "text-[#89949D] dark:text-slate-400 font-medium"
+                                        : "text-[#89949D] font-medium"
                                     }`}
                             >
                                 {label}

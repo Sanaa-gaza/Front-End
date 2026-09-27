@@ -58,7 +58,7 @@ export default function InstitutionSignupStep2() {
     };
 
     return (
-        <div className="min-h-dvh flex flex-col bg-gradient-to-t from-[#dbeaf5] dark:from-slate-950 to-white dark:to-slate-900">
+        <div className="min-h-dvh flex flex-col bg-gradient-to-t from-[#dbeaf5] to-white">
             <AuthHeader />
 
             <main className="flex-1 py-10 px-4">
@@ -75,14 +75,14 @@ export default function InstitutionSignupStep2() {
                             <span>{t("back")}</span>
                         </button>
 
-                        <h1 className="col-start-2 justify-self-center text-[#141415D1] dark:text-slate-100 text-xl font-bold">
+                        <h1 className="col-start-2 justify-self-center text-[#141415D1] text-xl font-bold">
                             {t("title")}
                         </h1>
                     </div>
 
                     <StepIndicator steps={[t("step1Label"), t("step2Label")]} currentStep={2} />
 
-                    <section className="bg-white dark:bg-slate-900 border border-[#0000001A] dark:border-white/10 rounded-2xl shadow-sm overflow-hidden">
+                    <section className="bg-white border border-[#0000001A] rounded-2xl shadow-sm overflow-hidden">
                         <div className="p-8">
                             <form onSubmit={handleSubmit} noValidate>
                                 <DropzoneField
@@ -97,7 +97,7 @@ export default function InstitutionSignupStep2() {
                                 />
 
                                 <div className="mb-4">
-                                    <label htmlFor="bio" className="block text-xs font-semibold text-slate-700 dark:text-slate-200 mb-1.5">
+                                    <label htmlFor="bio" className="block text-xs font-semibold text-slate-700 mb-1.5">
                                         {t("bioLabel")}
                                     </label>
                                     <textarea
@@ -106,7 +106,7 @@ export default function InstitutionSignupStep2() {
                                         value={bio}
                                         onChange={(e) => { setBio(e.target.value); clearError("bio"); }}
                                         placeholder={t("bioPlaceholder")}
-                                        className={`w-full bg-[#F5F6F8] dark:bg-slate-800 border rounded-lg py-2.5 px-4 text-sm text-[#141415D1] dark:text-slate-100 placeholder-[#89949D] focus:outline-none focus:ring-1 focus:ring-[#4ba0d8] focus:border-[#4ba0d8] resize-none ${errors.bio ? "border-red-400" : "border-[#0000001A] dark:border-white/10"
+                                        className={`w-full bg-[#F5F6F8] border rounded-lg py-2.5 px-4 text-sm text-[#141415D1] placeholder-[#89949D] focus:outline-none focus:ring-1 focus:ring-[#4ba0d8] focus:border-[#4ba0d8] resize-none ${errors.bio ? "border-red-400" : "border-[#0000001A]"
                                             }`}
                                     />
                                     <p className={`text-red-500 text-xs mt-1 text-start ${errors.bio ? "" : "hidden"}`}>{errors.bio && t(errors.bio)}</p>
@@ -120,7 +120,7 @@ export default function InstitutionSignupStep2() {
                                         onChange={(e) => { setAgreeTerms(e.target.checked); clearError("agreeTerms"); }}
                                         className="w-4 h-4 accent-[#4B9AD2] cursor-pointer"
                                     />
-                                    <label htmlFor="agreeTerms" className="text-[#777777] dark:text-slate-400 text-sm cursor-pointer">
+                                    <label htmlFor="agreeTerms" className="text-[#777777] text-sm cursor-pointer">
                                         {t("agreeTerms")}
                                     </label>
 

@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import FormField from "./FormField";
-import { useTheme } from "../context/ThemeContext";
 import { getEmailError } from "../utils/validators";
 
 export default function LoginForm({
@@ -12,7 +11,6 @@ export default function LoginForm({
 }) {
     const navigate = useNavigate();
     const { t, i18n } = useTranslation("login");
-    const { theme, toggleTheme } = useTheme();
 
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -55,8 +53,6 @@ export default function LoginForm({
         setPasswordError(passwordErr);
         if (emailErr || passwordErr) return;
 
-        console.log("تسجيل الدخول:", { email: email.trim(), role, rememberMe });
-
         setSubmitting(true);
         setTimeout(() => {
             setSubmitting(false);
@@ -65,20 +61,12 @@ export default function LoginForm({
     };
 
     return (
-        <div className="min-h-dvh flex flex-col bg-gradient-to-b from-[#dbeaf5] dark:from-slate-950 to-white dark:to-slate-900 ">
-            <header className="flex items-center justify-between px-6 py-4 bg-white dark:bg-slate-900 shadow-md shadow-[#0000001A]">
+        <div className="min-h-dvh flex flex-col bg-gradient-to-b from-[#dbeaf5] to-white ">
+            <header className="flex items-center justify-between px-6 py-4 bg-white shadow-md shadow-[#0000001A]">
                 <button type="button" onClick={() => navigate("/")} className="cursor-pointer">
                     <img src="/images/logo w 1.svg" alt="صنعة" className="w-[110px]" />
                 </button>
                 <div className="flex items-center gap-2">
-                    <button
-                        type="button"
-                        onClick={toggleTheme}
-                        aria-label={theme === "dark" ? "تفعيل الوضع الفاتح" : "تفعيل الوضع الداكن"}
-                        className="w-9 h-9 rounded-full border border-[#2563EB] text-[#2563EB] flex items-center justify-center cursor-pointer"
-                    >
-                        <i className={theme === "dark" ? "fa-solid fa-sun" : "fa-regular fa-moon"}></i>
-                    </button>
                     <button
                         type="button"
                         onClick={toggleLang}
@@ -89,11 +77,11 @@ export default function LoginForm({
                 </div>
             </header>
 
-            <main className="flex-1 flex items-center justify-center px-4">
+            <main className="flex-1 flex items-center justify-center px-4" style={{ perspective: "1200px" }}>
                 <section className="text-center w-[450px]">
                     <div className="container">
                         <div
-                            className={`bg-white dark:bg-slate-900 border border-[#0000001A] dark:border-white/10 rounded-2xl shadow-sm py-8 px-8 w-full max-w-[500px] mx-auto ${flip === "in" ? "page-flip-in" : "page-flip-out"
+                            className={`bg-white border border-[#0000001A] rounded-2xl shadow-sm py-8 px-8 w-full max-w-[500px] mx-auto ${flip === "in" ? "page-flip-in" : "page-flip-out"
                                 }`}
                         >
                             <div className="logo mb-5">
@@ -104,7 +92,7 @@ export default function LoginForm({
                             <form onSubmit={handleSubmit} noValidate>
                                 <div className="mb-1">
                                     <div className="flex items-center justify-between mb-1.5">
-                                        <label htmlFor="email" className="text-xs font-semibold text-slate-700 dark:text-slate-200">
+                                        <label htmlFor="email" className="text-xs font-semibold text-slate-700">
                                             {t("email")}
                                         </label>
                                     </div>
@@ -126,7 +114,7 @@ export default function LoginForm({
 
                                 <div className="mb-1">
                                     <div className="flex items-center justify-between mb-1.5">
-                                        <label htmlFor="password" className="text-xs font-semibold text-slate-700 dark:text-slate-200">
+                                        <label htmlFor="password" className="text-xs font-semibold text-slate-700">
                                             {t("password")}
                                         </label>
                                     </div>
@@ -157,7 +145,7 @@ export default function LoginForm({
                                             onChange={(e) => setRememberMe(e.target.checked)}
                                             className="w-4 h-4 accent-[#4B9AD2] cursor-pointer"
                                         />
-                                        <label htmlFor="rememberMe" className="text-[#777777] dark:text-slate-400 text-xs cursor-pointer">
+                                        <label htmlFor="rememberMe" className="text-[#777777] text-xs cursor-pointer">
                                             {t("rememberMe")}
                                         </label>
                                     </div>
@@ -179,7 +167,7 @@ export default function LoginForm({
                                 </button>
                             </form>
 
-                            <p className="text-[#89949D] dark:text-slate-400 text-sm mt-5">
+                            <p className="text-[#89949D] text-sm mt-5">
                                 {t("noAccount")}{" "}
                                 <button
                                     type="button"

@@ -1,0 +1,39 @@
+{
+    "breadcrumb": {
+        "home": "Home",
+        "contact": "Contact Us"
+    },
+    "titleHighlight": "Contact Us",
+    "titleRest": "– we are here to support you!",
+    "desc": "If you have any question or need help, we are here for you. Contact us quickly and easily to get the support you need.",
+    "form": {
+        "name": "Full name",
+        "city": "City",
+        "topic": "Message subject",
+        "topicPlaceholder": "Choose a subject",
+        "message": "Message",
+        "send": "Send message via WhatsApp",
+        "note": "When you press send, WhatsApp will open with an organized message containing your name, city, subject and message.",
+        "errors": {
+            "name": "Please enter your full name",
+            "city": "Please enter your city",
+            "topic": "Please choose a subject",
+            "message": "Please write your message"
+        }
+    },
+    "topics": {
+        "general": "General inquiry",
+        "technical": "Technical issue",
+        "payment": "Payment & guarantee",
+        "join": "Joining as a craftsman or contractor",
+        "complaint": "Complaint or suggestion",
+        "other": "Other"
+    },
+    "whatsapp": {
+        "name": "Name",
+        "city": "City",
+        "topic": "Subject",
+        "message": "Message",
+        "greeting": "Hello Sanaa,"
+    }
+}

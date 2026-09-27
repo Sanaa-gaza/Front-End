@@ -9,19 +9,19 @@ export default function NotFound() {
     const navigate = useNavigate();
 
     return (
-        <div className="min-h-dvh flex flex-col bg-gradient-to-t from-[#dbeaf5] dark:from-slate-950 to-white dark:to-slate-900">
+        <div className="min-h-dvh flex flex-col bg-gradient-to-t from-[#dbeaf5] to-white">
             {/* الترويسة العلوية لصفحات الشعار واللغة */}
             <AuthHeader />
 
             <main className="flex-1 flex flex-col items-center justify-center px-4 py-8">
                 {/* زر العودة العلوي */}
                 {/* <div className="w-full max-w-xl mb-4 flex justify-between items-center">
-                    <h1 className="text-xl sm:text-2xl font-bold text-slate-800 dark:text-slate-100">
+                    <h1 className="text-xl sm:text-2xl font-bold text-slate-800">
                         {t("pageNotFoundTitle", "خطأ 404")}
                     </h1>
                     <button
                         onClick={() => navigate(-1)}
-                        className="flex items-center gap-1.5 text-slate-500 dark:text-slate-400 hover:text-slate-800 text-sm font-medium transition"
+                        className="flex items-center gap-1.5 text-slate-500 hover:text-slate-800 text-sm font-medium transition"
                     >
                         {i18n.language === "ar" ? <ArrowRight size={18} /> : <ArrowLeft size={18} />}
                         <span>{t("back", "عودة")}</span>
@@ -40,13 +40,13 @@ export default function NotFound() {
                         <span>{t("back")}</span>
                     </button>
 
-                    <h1 className="col-start-2 justify-self-center text-[#141415D1] dark:text-slate-100 text-2xl font-bold">
+                    <h1 className="col-start-2 justify-self-center text-[#141415D1] text-2xl font-bold">
                         {t("pageNotFoundTitle", "خطأ 404")}
                     </h1>
                 </div>
 
                 {/* الكارت الرئيسي بنفس نمط الكروت السابقة */}
-                <div className="bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-10 shadow-xl shadow-slate-200/50 dark:shadow-black/30 w-full max-w-xl border border-slate-100 dark:border-white/10 text-center">
+                <div className="bg-white rounded-3xl p-6 sm:p-10 shadow-xl shadow-slate-200/50 w-full max-w-xl border border-slate-100 text-center">
 
 
                     {/* أيقونة تنبيه ملائمة للتصميم */}
@@ -54,11 +54,11 @@ export default function NotFound() {
                         <AlertTriangle size={40} />
                     </div>
 
-                    <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-800 dark:text-slate-100 mb-2">
+                    <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-800 mb-2">
                         {t("pageNotFound", "الصفحة غير موجودة")}
                     </h2>
 
-                    <p className="text-slate-500 dark:text-slate-400 text-sm mb-8 leading-relaxed max-w-md mx-auto">
+                    <p className="text-slate-500 text-sm mb-8 leading-relaxed max-w-md mx-auto">
                         {t(
                             "pageNotFoundDesc",
                             "عذراً، الرابط الذي حاولت الوصول إليه غير صحيح أو تم نقل الصفحة إلى مكان آخر."

@@ -1,0 +1,66 @@
+{
+    "breadcrumb": {
+        "home": "Home",
+        "about": "About Sanaa"
+    },
+    "hero": {
+        "title": "We built Sanaa because Gaza deserves it",
+        "desc": "Sanaa was launched as a bridge connecting the wisdom of the trades and the authenticity of handcraft with the latest digital escrow technology, to restore dignity to every hand that toils with pride and empower thousands of creators to bring life and reconstruction back to our communities.",
+        "badge": "Secure payment with escrow protection",
+        "standardsTitle": "Strict quality standards",
+        "standardsDesc": "Every registered craftsman goes through an on-site assessment and certified verification"
+    },
+    "stats": {
+        "users": "Registered users",
+        "craftsmen": "Verified craftsmen",
+        "orders": "Completed orders",
+        "rating": "Average rating"
+    },
+    "vm": {
+        "tag": "Our future compass",
+        "title": "Our Vision & Mission",
+        "subtitle": "We work every day to establish a pioneering model that restores craftsmen to their central place in economic and enriching development.",
+        "mission": {
+            "tab": "Our Mission",
+            "title": "Empowering craftsmen, comforting customers",
+            "desc": "We seek to empower local craft talent and provide a platform that showcases their skills, while making it easy for customers to reach reliable, high-quality services within seconds."
+        },
+        "vision": {
+            "tab": "Our Vision",
+            "title": "The first destination for craftsmen",
+            "desc": "To become the leading and most trusted digital community in the Middle East for professional services, where excellence meets trust and innovation."
+        }
+    },
+    "values": {
+        "title": "Our firm values that govern every transaction",
+        "subtitle": "We are not just a technical intermediary; we establish solid ethical standards that ensure lasting trust between the craftsman and the customer.",
+        "quality": {
+            "title": "Excellence and integrity",
+            "desc": "We treat the quality of work as a sacred duty, verifying every delivery to ensure it meets the agreed construction and engineering specifications."
+        },
+        "community": {
+            "title": "Empowering the local community",
+            "desc": "Investing in craftsmen skills and providing continuous financial and training support for young people and women to open up independent freelance opportunities."
+        },
+        "transparency": {
+            "title": "Transparency and guarantee",
+            "desc": "Escrow accounts protect all project parties until the work is fully completed and the customer is satisfied, with no surprises or disputes."
+        },
+        "heritage": {
+            "title": "Sustaining identity and heritage",
+            "desc": "Protecting authentic trades from disappearing and documenting rare skills in woodcarving, plasterwork, artisanal fanlights and building protection."
+        }
+    },
+    "join": {
+        "title": "Are you a craftsman or contractor looking for quality opportunities?",
+        "desc": "Join a certified network that ensures you get paid on time and opens the door to the biggest projects.",
+        "button": "Apply to join"
+    },
+    "final": {
+        "tag": "Start with us now",
+        "title": "Be part of the journey to revive craftsmanship and make an impact",
+        "desc": "Whether you want to renovate an old house, carry out skilled construction work, or support dedicated workers, Sanaa is your safe destination.",
+        "browse": "Browse certified craftsmen",
+        "contact": "Contact our support & guidance team"
+    }
+}

@@ -48,7 +48,7 @@ export default function ContractorSignupStep2() {
     };
 
     return (
-        <div className="min-h-dvh flex flex-col bg-gradient-to-t from-[#dbeaf5] dark:from-slate-950 to-white dark:to-slate-900">
+        <div className="min-h-dvh flex flex-col bg-gradient-to-t from-[#dbeaf5] to-white">
             <AuthHeader />
 
             <main className="flex-1 py-10 px-4">
@@ -65,7 +65,7 @@ export default function ContractorSignupStep2() {
                             <span>{t("back")}</span>
                         </button>
 
-                        <h1 className="col-start-2 justify-self-center text-[#141415D1] dark:text-slate-100 text-xl font-bold">
+                        <h1 className="col-start-2 justify-self-center text-[#141415D1] text-xl font-bold">
                             {t("title")}
                         </h1>
                     </div>
@@ -75,11 +75,11 @@ export default function ContractorSignupStep2() {
                         currentStep={2}
                     />
 
-                    <section className="bg-white dark:bg-slate-900 border border-[#0000001A] dark:border-white/10 rounded-2xl shadow-sm overflow-hidden">
+                    <section className="bg-white border border-[#0000001A] rounded-2xl shadow-sm overflow-hidden">
                         <div className="p-8">
                             <form onSubmit={handleSubmit} noValidate>
                                 <div className="mb-4">
-                                    <label htmlFor="teamSize" className="block text-xs font-semibold text-slate-700 dark:text-slate-200 mb-1.5">
+                                    <label htmlFor="teamSize" className="block text-xs font-semibold text-slate-700 mb-1.5">
                                         {t("teamSize")}
                                     </label>
                                     <FormField
@@ -94,7 +94,7 @@ export default function ContractorSignupStep2() {
                                 </div>
 
                                 <div className="mb-4">
-                                    <label htmlFor="mainSpecialty" className="block text-xs font-semibold text-slate-700 dark:text-slate-200 mb-1.5">
+                                    <label htmlFor="mainSpecialty" className="block text-xs font-semibold text-slate-700 mb-1.5">
                                         {t("mainSpecialty")}
                                     </label>
                                     <FormField
@@ -108,7 +108,7 @@ export default function ContractorSignupStep2() {
                                 </div>
 
                                 <div className="mb-6">
-                                    <label htmlFor="bio" className="block text-xs font-semibold text-slate-700 dark:text-slate-200 mb-1.5">
+                                    <label htmlFor="bio" className="block text-xs font-semibold text-slate-700 mb-1.5">
                                         {t("bioLabel")}
                                     </label>
                                     <textarea
@@ -117,7 +117,7 @@ export default function ContractorSignupStep2() {
                                         value={bio}
                                         onChange={(e) => setBio(e.target.value)}
                                         placeholder={t("bioPlaceholder")}
-                                        className="w-full bg-[#F5F6F8] dark:bg-slate-800 border border-[#4B9AD2] rounded-lg py-2.5 px-4 text-sm text-[#141415D1] dark:text-slate-100 placeholder-[#89949D] focus:outline-none focus:ring-1 focus:ring-[#4ba0d8] focus:border-[#4ba0d8] resize-none"
+                                        className="w-full bg-[#F5F6F8] border border-[#4B9AD2] rounded-lg py-2.5 px-4 text-sm text-[#141415D1] placeholder-[#89949D] focus:outline-none focus:ring-1 focus:ring-[#4ba0d8] focus:border-[#4ba0d8] resize-none"
                                     />
                                 </div>
 

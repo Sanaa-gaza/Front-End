@@ -9,6 +9,7 @@
     "cityRequired": "Please select a city",
     "areaRequired": "Please select an area",
     "addPhoto": "Add a profile photo",
+    "avatarRequired": "Please add a profile photo",
     "idPhotoLabel": "Selfie with ID",
     "idPhotoDesc": "Take a clear photo of your face while holding your ID card next to it, to verify you're the ID holder.",
     "idPhotoRequired": "Please attach a selfie holding your ID",
@@ -31,6 +32,14 @@
         "carpenter": "Carpenter",
         "painter": "Painter",
         "blacksmith": "Blacksmith",
+        "tiler": "Tiler",
+        "plasterer": "Plasterer",
+        "aluminum": "Aluminum Technician",
+        "acTechnician": "AC & Refrigeration Technician",
+        "mechanic": "Car Mechanic",
+        "gardener": "Gardening & Landscaping",
+        "mover": "Furniture Mover",
+        "cleaner": "Cleaner",
         "other": "Other"
     }
 }

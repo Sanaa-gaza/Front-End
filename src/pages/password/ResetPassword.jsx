@@ -41,7 +41,7 @@ export default function ResetPassword() {
     };
 
     return (
-        <div className="min-h-dvh flex flex-col bg-gradient-to-t from-[#dbeaf5] dark:from-slate-950 to-white dark:to-slate-900">
+        <div className="min-h-dvh flex flex-col bg-gradient-to-t from-[#dbeaf5] to-white">
             <AuthHeader />
 
             <main className="flex-1 flex flex-col items-center justify-center px-4 py-8">
@@ -57,25 +57,25 @@ export default function ResetPassword() {
                         <span>{t("signupCommon:back")}</span>
                     </button>
 
-                    <h1 className="col-start-2 justify-self-center text-[#141415D1] dark:text-slate-100 text-xl font-bold">
+                    <h1 className="col-start-2 justify-self-center text-[#141415D1] text-xl font-bold">
                         {t("title")}
                     </h1>
                 </div>
 
-                <div className="bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-10 shadow-xl shadow-slate-200/50 dark:shadow-black/30 w-full max-w-xl border border-slate-100 dark:border-white/10 text-center">
+                <div className="bg-white rounded-3xl p-6 sm:p-10 shadow-xl shadow-slate-200/50 w-full max-w-xl border border-slate-100 text-center">
                     <div className="flex justify-center mb-4">
                         <button type="button" onClick={() => navigate("/")} className="cursor-pointer">
                             <img src="/images/logo w 1.svg" alt="صنعة" className="h-12 w-auto" />
                         </button>
                     </div>
 
-                    <p className="text-slate-500 dark:text-slate-400 text-sm mb-8 leading-relaxed max-w-md mx-auto">
+                    <p className="text-slate-500 text-sm mb-8 leading-relaxed max-w-md mx-auto">
                         {t("desc")}
                     </p>
 
                     <form onSubmit={handleSubmit} className="space-y-5 text-start">
                         <div>
-                            <label htmlFor="newPassword" className="block text-xs font-semibold text-slate-700 dark:text-slate-200 mb-1.5">
+                            <label htmlFor="newPassword" className="block text-xs font-semibold text-slate-700 mb-1.5">
                                 {t("newPassword")}
                             </label>
                             <div className="relative">
@@ -85,7 +85,7 @@ export default function ResetPassword() {
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
                                     placeholder="••••••••••••"
-                                    className="w-full px-4 py-3 bg-white dark:bg-slate-900 border border-[#4B9AD2] rounded-xl text-sm focus:border-[#4ba0d8] focus:ring-1 focus:ring-[#4ba0d8] outline-none"
+                                    className="w-full px-4 py-3 bg-white border border-[#4B9AD2] rounded-xl text-sm focus:border-[#4ba0d8] focus:ring-1 focus:ring-[#4ba0d8] outline-none"
                                 />
                                 <button
                                     type="button"
@@ -102,7 +102,7 @@ export default function ResetPassword() {
                         </div>
 
                         <div>
-                            <label htmlFor="confirmPassword" className="block text-xs font-semibold text-slate-700 dark:text-slate-200 mb-1.5">
+                            <label htmlFor="confirmPassword" className="block text-xs font-semibold text-slate-700 mb-1.5">
                                 {t("signupCommon:confirmPassword")}
                             </label>
                             <div className="relative">
@@ -112,7 +112,7 @@ export default function ResetPassword() {
                                     value={confirmPassword}
                                     onChange={(e) => setConfirmPassword(e.target.value)}
                                     placeholder="••••••••••••"
-                                    className="w-full px-4 py-3 bg-white dark:bg-slate-900 border border-[#4B9AD2] rounded-xl text-sm focus:border-[#4ba0d8] focus:ring-1 focus:ring-[#4ba0d8] outline-none"
+                                    className="w-full px-4 py-3 bg-white border border-[#4B9AD2] rounded-xl text-sm focus:border-[#4ba0d8] focus:ring-1 focus:ring-[#4ba0d8] outline-none"
                                 />
                                 <button
                                     type="button"
@@ -127,13 +127,13 @@ export default function ResetPassword() {
                         </div>
 
                         <div className="pt-2">
-                            <p className="text-xs font-bold text-slate-700 dark:text-slate-200 mb-2">
+                            <p className="text-xs font-bold text-slate-700 mb-2">
                                 {t("passwordRequirements")}
                             </p>
                             <div className="space-y-1.5 text-xs">
                                 <div className="flex items-center gap-2">
                                     <span
-                                        className={`w-3.5 h-3.5 rounded-full border flex items-center justify-center ${reqs.hasLength ? "bg-[#4B9AD2] border-[#4B9AD2] text-white" : "border-slate-300 dark:border-white/10"
+                                        className={`w-3.5 h-3.5 rounded-full border flex items-center justify-center ${reqs.hasLength ? "bg-[#4B9AD2] border-[#4B9AD2] text-white" : "border-slate-300"
                                             }`}
                                     >
                                         {reqs.hasLength && <i className="fa-solid fa-check text-[8px]"></i>}
@@ -142,7 +142,7 @@ export default function ResetPassword() {
                                 </div>
                                 <div className="flex items-center gap-2">
                                     <span
-                                        className={`w-3.5 h-3.5 rounded-full border flex items-center justify-center ${reqs.hasNumber ? "bg-[#4B9AD2] border-[#4B9AD2] text-white" : "border-slate-300 dark:border-white/10"
+                                        className={`w-3.5 h-3.5 rounded-full border flex items-center justify-center ${reqs.hasNumber ? "bg-[#4B9AD2] border-[#4B9AD2] text-white" : "border-slate-300"
                                             }`}
                                     >
                                         {reqs.hasNumber && <i className="fa-solid fa-check text-[8px]"></i>}
@@ -151,7 +151,7 @@ export default function ResetPassword() {
                                 </div>
                                 <div className="flex items-center gap-2">
                                     <span
-                                        className={`w-3.5 h-3.5 rounded-full border flex items-center justify-center ${reqs.hasSpecial ? "bg-[#4B9AD2] border-[#4B9AD2] text-white" : "border-slate-300 dark:border-white/10"
+                                        className={`w-3.5 h-3.5 rounded-full border flex items-center justify-center ${reqs.hasSpecial ? "bg-[#4B9AD2] border-[#4B9AD2] text-white" : "border-slate-300"
                                             }`}
                                     >
                                         {reqs.hasSpecial && <i className="fa-solid fa-check text-[8px]"></i>}

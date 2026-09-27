@@ -21,7 +21,7 @@ export default function FormField({
     return (
         <div className="mb-4" style={{ "--accent": accentColor }}>
             {label && (
-                <label htmlFor={id} className="block text-xs font-semibold text-slate-700 dark:text-slate-200 mb-1.5">
+                <label htmlFor={id} className="block text-xs font-semibold text-slate-700 mb-1.5">
                     {label}
                 </label>
             )}
@@ -37,7 +37,7 @@ export default function FormField({
                     aria-invalid={!!error}
                     aria-describedby={error ? errorId : undefined}
                     {...restInputProps}
-                    className={`w-full bg-[#F5F6F8] dark:bg-slate-800 border rounded-lg py-2.5 text-[12px] text-[#141415D1] dark:text-slate-100 placeholder-[#89949D] focus:outline-none focus:ring-1 focus:ring-[#4ba0d8] focus:border-[#4ba0d8] ${icon ? "pe-10" : "pe-4"} ps-4 ${error ? "border-red-400" : "border-[#4B9AD2]"} ${extraClassName || ""}`}
+                    className={`w-full bg-[#F5F6F8] border rounded-lg py-2.5 text-[12px] text-[#141415D1] placeholder-[#89949D] focus:outline-none focus:ring-1 focus:ring-[#4ba0d8] focus:border-[#4ba0d8] ${icon ? "pe-10" : "pe-4"} ps-4 ${error ? "border-red-400" : "border-[#4B9AD2]"} ${extraClassName || ""}`}
                 />
                 {icon && (
                     onIconClick ? (

@@ -34,7 +34,7 @@ export default function ForgotPassword() {
     };
 
     return (
-        <div className="min-h-dvh flex flex-col bg-gradient-to-t from-[#dbeaf5] dark:from-slate-950 to-white dark:to-slate-900">
+        <div className="min-h-dvh flex flex-col bg-gradient-to-t from-[#dbeaf5] to-white">
             <AuthHeader />
 
             <main className="flex-1 flex flex-col items-center justify-center px-4 py-8">
@@ -50,19 +50,19 @@ export default function ForgotPassword() {
                         <span>{t("signupCommon:back")}</span>
                     </button>
 
-                    <h1 className="col-start-2 justify-self-center text-[#141415D1] dark:text-slate-100 text-xl font-bold">
+                    <h1 className="col-start-2 justify-self-center text-[#141415D1] text-xl font-bold">
                         {t("title")}
                     </h1>
                 </div>
 
-                <div className="bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-10 shadow-xl shadow-slate-200/50 dark:shadow-black/30 w-full max-w-xl border border-slate-100 dark:border-white/10 text-center">
+                <div className="bg-white rounded-3xl p-6 sm:p-10 shadow-xl shadow-slate-200/50 w-full max-w-xl border border-slate-100 text-center">
                     <div className="flex justify-center mb-4">
                         <button type="button" onClick={() => navigate("/")} className="cursor-pointer">
                             <img src="/images/logo w 1.svg" alt="صنعة" className="h-12 w-auto" />
                         </button>
                     </div>
 
-                    <p className="text-slate-500 dark:text-slate-400 text-sm mb-8 leading-relaxed max-w-md mx-auto">
+                    <p className="text-slate-500 text-sm mb-8 leading-relaxed max-w-md mx-auto">
                         {t("desc")}
                     </p>
 

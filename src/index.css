@@ -1,25 +1,11 @@
 @import "tailwindcss";
 
-@custom-variant dark (&:where(.dark, .dark *));
-
-/* لون عناصر النظام الأصلية (checkbox, select, scrollbar...) يتبع
-   وضع الموقع نفسه (.dark) مش نظام تشغيل الجهاز، عشان يفضل متسق مع
-   أي اختيار يدوي للمستخدم من زر تبديل الوضع. */
 html {
   color-scheme: light;
 }
 
-html.dark {
-  color-scheme: dark;
-}
-
 body {
-  perspective: 1200px;
   background-color: #ffffff;
-}
-
-html.dark body {
-  background-color: #0f172a;
 }
 
 .page-flip-in {
@@ -237,4 +223,144 @@ body {
     transform: translate(var(--x), var(--y)) scale(0);
     opacity: 0;
   }
+}
+@keyframes assistantPulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 6px rgba(75, 154, 210, 0.2), 0 10px 30px rgba(75, 154, 210, 0.28);
+  }
+
+  50% {
+    box-shadow: 0 0 0 16px rgba(75, 154, 210, 0.04), 0 10px 30px rgba(75, 154, 210, 0.28);
+  }
+}
+
+.assistant-pulse {
+  animation: assistantPulse 2s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .assistant-pulse {
+    animation: none;
+  }
+}
+
+section[id] {
+  scroll-margin-top: 100px;
+}
+
+/* أزرار بتفتح وبتسكر بلون يمسح الزر مثل الستارة */
+.btn-wipe {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  transition: color 0.35s ease, box-shadow 0.35s ease;
+}
+
+.btn-wipe::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--wipe, #2f6588);
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.45s cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+[dir="ltr"] .btn-wipe::before {
+  transform-origin: left;
+}
+
+.btn-wipe:not(:disabled):hover::before {
+  transform: scaleX(1);
+}
+
+.btn-wipe-alt,
+.btn-wipe-light,
+.btn-wipe-outline {
+  --wipe: #4b9ad2;
+}
+
+.btn-wipe-light:not(:disabled):hover,
+.btn-wipe-outline:not(:disabled):hover {
+  color: #ffffff;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .btn-wipe::before {
+    transition: none;
+  }
+}
+
+/* خط ناعم بيمتد تحت رابط الهيدر من جهة البداية (يمين بالعربي) */
+.nav-link {
+  position: relative;
+  padding-bottom: 6px;
+}
+
+.nav-link::after {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  height: 2px;
+  border-radius: 2px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+[dir="ltr"] .nav-link::after {
+  transform-origin: left;
+}
+
+.nav-link:hover::after,
+.nav-link-active::after {
+  transform: scaleX(1);
+}
+
+/* ظهور تدريجي للأقسام أثناء التمرير */
+.rv {
+  opacity: 0;
+  transform: translateY(36px);
+  transition: opacity 0.9s ease, transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: var(--rv-delay, 0ms);
+}
+
+.rv-in {
+  opacity: 1;
+  transform: none;
+}
+
+/* فتح نافذة تفاصيل الحرفي */
+@keyframes modalFade {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes modalPop {
+  from {
+    opacity: 0;
+    transform: translateY(24px) scale(0.96);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.modal-backdrop {
+  animation: modalFade 0.25s ease-out;
+}
+
+.modal-panel {
+  animation: modalPop 0.35s cubic-bezier(0.22, 1, 0.36, 1);
 }

@@ -1,0 +1,72 @@
+{
+    "breadcrumb": {
+        "home": "Home",
+        "craftsmen": "Craftsmen"
+    },
+    "title": "Trusted craftsmen in every field",
+    "subtitle": "Browse more than 250 verified craftsmen in Gaza and contact the best match for you directly.",
+    "search": {
+        "placeholder": "Search by craftsman name, trade or skill",
+        "button": "Search"
+    },
+    "categories": {
+        "all": "All",
+        "electricity": "Electricity",
+        "plumbing": "Plumbing",
+        "carpentry": "Carpentry",
+        "painting": "Painting",
+        "cleaning": "Cleaning",
+        "solar": "Solar energy",
+        "blacksmith": "Blacksmith",
+        "ac": "AC"
+    },
+    "filters": {
+        "location": "Location",
+        "allLocations": "All locations",
+        "sortTop": "Top rated",
+        "sortName": "Name (A - Z)",
+        "verified": "Verified",
+        "count": "Craftsmen"
+    },
+    "cities": {
+        "nuseirat": "Nuseirat",
+        "khanyounis": "Khan Younis",
+        "gaza": "Gaza",
+        "rafah": "Rafah",
+        "jabalia": "Jabalia",
+        "deirbalah": "Deir al-Balah"
+    },
+    "card": {
+        "featured": "Featured",
+        "verified": "Verified",
+        "certified": "Certified",
+        "orders": "orders",
+        "years": "years of experience",
+        "startsFrom": "Starts from",
+        "view": "View profile",
+        "profile": "View profile"
+    },
+    "empty": {
+        "title": "No matching results",
+        "desc": "Try changing your search or filters."
+    },
+    "modal": {
+        "close": "Close",
+        "rating": "Rating",
+        "reviews": "Reviews",
+        "completed": "Completed orders",
+        "experience": "Years of experience",
+        "about": "About",
+        "bio": "A professional {{craft}} from {{city}}, providing high-quality services with punctuality, clear prices and a comfortable customer experience.",
+        "gallery": "Portfolio",
+        "works": [
+            "Home projects",
+            "Repair & installation",
+            "Commercial projects",
+            "Made to order"
+        ],
+        "priceRange": "Price range",
+        "order": "Request service",
+        "chat": "Contact the craftsman"
+    }
+}

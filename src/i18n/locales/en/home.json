@@ -13,40 +13,108 @@
         "desc": "Discover the services you need or offer your skills and services easily through the Sanaa platform",
         "allCities": "All Cities",
         "searchPlaceholder": "Search for a service",
+        "serviceType": "Service type",
         "search": "Search",
-        "usersCount": "9500+",
+        "usersCount": "5000+",
         "usersLabel": "users trust us",
         "rating": "4.9/5",
         "ratingLabel": "customer rating"
     },
     "services": {
         "title": "Discover a variety of services from trusted craftsmen",
-        "featuredTag": "Painting",
-        "featuredDesc": "Renovate your wall decor with the highest quality",
         "more": "Discover more",
+        "prev": "Previous",
+        "next": "Next",
         "items": {
             "cleaning": "Cleaning",
             "painting": "Painting",
+            "building": "Building",
             "carpentry": "Carpentry",
             "electricity": "Electricity",
-            "plumbing": "Plumbing"
+            "plumbing": "Plumbing",
+            "acMaintenance": "AC Maintenance",
+            "tiling": "Tiling",
+            "gardening": "Gardening",
+            "moving": "Moving"
+        },
+        "descs": {
+            "painting": "Renovate your wall decor with the highest quality",
+            "cleaning": "Thorough cleaning for homes and offices by professionals",
+            "building": "Construction and renovation to the highest quality standards",
+            "carpentry": "Design, manufacture and installation of wooden furniture",
+            "electricity": "Safe and reliable electrical wiring and maintenance",
+            "plumbing": "Repair and installation of water and drainage networks",
+            "acMaintenance": "Maintenance and installation of air conditioning units",
+            "tiling": "Precise installation of tiles and ceramics",
+            "gardening": "Garden landscaping and care",
+            "moving": "Safe furniture moving, dismantling and assembly"
         }
     },
     "craftsmen": {
-        "title": "Craftsmen of the Month",
-        "titleHighlight": "Top Rated",
+        "titleHighlight": "Craftsmen",
+        "title": "of the Month",
         "desc": "Meet the craftsmen with the highest ratings from our customers over the past month.",
+        "profile": "View profile",
+        "prev": "Previous",
+        "next": "Next",
         "list": {
-            "c1": { "name": "Mahdi Naem", "craft": "Carpenter" },
-            "c2": { "name": "Karim Mohammed", "craft": "Plumber" },
-            "c3": { "name": "Mahmoud Fayez", "craft": "Painter" },
-            "c4": { "name": "Karim Karam", "craft": "Electrician" },
-            "c5": { "name": "Hadi Khalil", "craft": "Carpenter" }
+            "c1": {
+                "name": "Karim Karam",
+                "craft": "AC technician",
+                "city": "Nuseirat"
+            },
+            "c2": {
+                "name": "Khaled Nabhan",
+                "craft": "Electrician",
+                "city": "Khan Younis"
+            },
+            "c3": {
+                "name": "Tawfiq Misbah",
+                "craft": "Electrician",
+                "city": "Gaza"
+            },
+            "c4": {
+                "name": "Mohammed Al-Agha",
+                "craft": "Painter",
+                "city": "Rafah"
+            },
+            "c5": {
+                "name": "Ziad Hamdan",
+                "craft": "Carpenter",
+                "city": "Jabalia"
+            },
+            "c6": {
+                "name": "Mahdi Naem",
+                "craft": "Carpenter",
+                "city": "Deir al-Balah"
+            },
+            "c7": {
+                "name": "Mahmoud Fayez",
+                "craft": "Painter",
+                "city": "Khan Younis"
+            },
+            "c8": {
+                "name": "Hadi Khalil",
+                "craft": "Blacksmith",
+                "city": "Gaza"
+            },
+            "c9": {
+                "name": "Youssef Salem",
+                "craft": "Plumber",
+                "city": "Rafah"
+            },
+            "c10": {
+                "name": "Omar Shehada",
+                "craft": "Cleaner",
+                "city": "Nuseirat"
+            }
         }
     },
     "features": {
-        "tag": "Our Featured Services",
-        "title": "Why Sanaa?",
+        "tag": "Why choose Sanaa",
+        "title": "Our",
+        "titleHighlight": "Featured Services",
+        "subtitle": "The complete solution for all your handicraft needs",
         "payment": {
             "title": "Secure Payment",
             "desc": "Pay safely through the platform — funds are only released after the work is confirmed complete"
@@ -63,6 +131,8 @@
     "guide": {
         "title": "Your guide to using",
         "titleHighlight": "Sanaa",
+        "subtitle": "Learn how to use Sanaa in simple, easy steps",
+        "playVideo": "Play video",
         "trusted": {
             "title": "Trusted Craftsmen",
             "desc": "Meet craftsmen whose details and experience have been verified"
@@ -82,13 +152,28 @@
     },
     "cta": {
         "title": "Ready to get started with Sanaa?",
-        "desc": "Whether you're a client looking for a skilled craftsman to get things done, or a professional looking for work opportunities and to grow your business, Sanaa is the right destination to get services done easily.",
+        "desc": "Whether you're a client looking for a service, a craftsman offering your skills, a contractor looking for craftsmen, or an institution looking for the right talent, Sanaa helps you reach the right person with ease.",
         "button": "Create your account now"
     },
     "footer": {
-        "copyright": "Sanaa 2026 © All rights reserved"
+        "contactUs": "Contact Us",
+        "phone": "+966 50 000 0000",
+        "email": "support@sana'a.sa",
+        "location": "Palestine, Gaza",
+        "quickLinks": "Quick Links",
+        "aboutPlatform": "About Sanaa",
+        "joinAsCraftsman": "Join as a craftsman",
+        "faq": "FAQ",
+        "helpCenter": "Help Center",
+        "legalPolicies": "Legal Policies",
+        "privacyPolicy": "Privacy Policy",
+        "termsOfUse": "Terms of Use",
+        "warrantyPolicy": "Warranty Policy",
+        "craftsmenAgreement": "Craftsmen Agreement",
+        "followUs": "Follow Us",
+        "copyright": "© 2026 Sanaa. All rights reserved"
     },
     "assistant": {
-        "label": "AI Assistant"
+        "label": "Need help?"
     }
 }

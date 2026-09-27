@@ -12,15 +12,15 @@ export default function Dashboard() {
     useLangDir();
 
     return (
-        <div className="min-h-dvh flex flex-col bg-gradient-to-t from-[#dbeaf5] dark:from-slate-950 to-white dark:to-slate-900">
+        <div className="min-h-dvh flex flex-col bg-gradient-to-t from-[#dbeaf5] to-white">
             <AuthHeader />
 
             <main className="flex-1 flex flex-col items-center justify-center px-4 py-16 text-center">
-                <div className="w-16 h-16 rounded-full bg-[#DEE8FC] dark:bg-[#4B9AD2]/15 text-[#4B9AD2] flex items-center justify-center mb-5">
+                <div className="w-16 h-16 rounded-full bg-[#DEE8FC] text-[#4B9AD2] flex items-center justify-center mb-5">
                     <i className="fa-solid fa-gauge text-2xl"></i>
                 </div>
-                <h1 className="text-[#141415D1] dark:text-slate-100 text-2xl font-bold mb-2">تم إنشاء حسابك بنجاح</h1>
-                <p className="text-[#89949D] dark:text-slate-400 max-w-md mb-8">
+                <h1 className="text-[#141415D1] text-2xl font-bold mb-2">تم إنشاء حسابك بنجاح</h1>
+                <p className="text-[#89949D] max-w-md mb-8">
                     لوحة التحكم لسا قيد الإنشاء، هترجع تلاقيها جاهزة قريبًا.
                 </p>
                 <button

@@ -24,6 +24,12 @@ import arVerificationCode from "./locales/ar/verificationCode.json";
 import enVerificationCode from "./locales/en/verificationCode.json";
 import arHome from "./locales/ar/home.json";
 import enHome from "./locales/en/home.json";
+import arAbout from "./locales/ar/about.json";
+import enAbout from "./locales/en/about.json";
+import arContact from "./locales/ar/contact.json";
+import enContact from "./locales/en/contact.json";
+import arCraftsmen from "./locales/ar/craftsmen.json";
+import enCraftsmen from "./locales/en/craftsmen.json";
 
 
 i18n
@@ -43,6 +49,9 @@ i18n
                 resetPassword: arResetPassword,
                 verificationCode: arVerificationCode,
                 home: arHome,
+                about: arAbout,
+                contact: arContact,
+                craftsmen: arCraftsmen,
 
             },
             en: {
@@ -57,6 +66,9 @@ i18n
                 resetPassword: enResetPassword,
                 verificationCode: enVerificationCode,
                 home: enHome,
+                about: enAbout,
+                contact: enContact,
+                craftsmen: enCraftsmen,
 
             },
         },

@@ -145,7 +145,7 @@ export default function VerificationCode() {
     };
 
     return (
-        <div className="min-h-dvh flex flex-col bg-gradient-to-t from-[#dbeaf5] dark:from-slate-950 to-white dark:to-slate-900">
+        <div className="min-h-dvh flex flex-col bg-gradient-to-t from-[#dbeaf5] to-white">
             <AuthHeader />
 
             <main className="flex-1 flex flex-col items-center justify-center px-4 py-8">
@@ -161,12 +161,12 @@ export default function VerificationCode() {
                         <span>{t("signupCommon:back")}</span>
                     </button>
 
-                    <h1 className="col-start-2 justify-self-center text-[#141415D1] dark:text-slate-100 text-xl font-bold">
+                    <h1 className="col-start-2 justify-self-center text-[#141415D1] text-xl font-bold">
                         {t("title")}
                     </h1>
                 </div>
 
-                <div className="bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-10 shadow-xl shadow-slate-200/50 dark:shadow-black/30 w-full max-w-xl border border-slate-100 dark:border-white/10 text-center">
+                <div className="bg-white rounded-3xl p-6 sm:p-10 shadow-xl shadow-slate-200/50 w-full max-w-xl border border-slate-100 text-center">
                     {verified ? (
                         <div className="success-screen relative py-4">
                             <div className="confetti-wrapper inset-0">
@@ -188,7 +188,7 @@ export default function VerificationCode() {
                             </div>
 
                             <h2 className="text-[#4B9AD2] text-xl font-bold mb-1.5">{t("verifiedTitle")}</h2>
-                            <p className="text-slate-400 dark:text-slate-500 text-sm">{t("redirecting")}</p>
+                            <p className="text-slate-400 text-sm">{t("redirecting")}</p>
                         </div>
                     ) : (
                         <>
@@ -198,9 +198,9 @@ export default function VerificationCode() {
                                 </button>
                             </div>
 
-                            <p className="text-slate-500 dark:text-slate-400 text-sm mb-8 leading-relaxed max-w-md mx-auto">
+                            <p className="text-slate-500 text-sm mb-8 leading-relaxed max-w-md mx-auto">
                                 {t("codeSentTo")}{" "}
-                                <span className="font-medium text-slate-600 dark:text-slate-300">{email}</span>
+                                <span className="font-medium text-slate-600">{email}</span>
                             </p>
 
                             <form onSubmit={handleSubmit} noValidate>
@@ -218,7 +218,7 @@ export default function VerificationCode() {
                                             onChange={(e) => handleChange(index, e.target.value)}
                                             onKeyDown={(e) => handleKeyDown(index, e)}
                                             onPaste={handlePaste}
-                                            className="otp-input w-12 h-12 text-center text-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 rounded-xl text-slate-700 dark:text-slate-200 focus:outline-none focus:border-[#4ba0d8] focus:ring-1 focus:ring-[#4ba0d8] disabled:opacity-60"
+                                            className="otp-input w-12 h-12 text-center text-lg bg-white border border-slate-200 rounded-xl text-slate-700 focus:outline-none focus:border-[#4ba0d8] focus:ring-1 focus:ring-[#4ba0d8] disabled:opacity-60"
                                         />
                                     ))}
                                 </div>
@@ -235,7 +235,7 @@ export default function VerificationCode() {
                                 </button>
                             </form>
 
-                            <p className="text-slate-500 dark:text-slate-400 text-sm mt-5">
+                            <p className="text-slate-500 text-sm mt-5">
                                 {resendLimitReached ? (
                                     <span className="text-red-500 font-medium">
                                         {t("resendLimitReached")} {resendMinutes}:{resendSeconds}
