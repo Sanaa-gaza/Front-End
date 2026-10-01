@@ -5,11 +5,13 @@ import AuthHeader from "../../components/AuthHeader";
 import PhoneField from "../../components/PhoneField";
 import StepIndicator from "../../components/StepIndicator";
 import FormField from "../../components/FormField";
-import SelectField from "../../components/SelectField";
+import LocationFields from "../../components/LocationFields";
 import useLangDir from "../../hooks/useLangDir";
 import {
     getEmailError, getPhoneError, getPasswordError, getConfirmPasswordError, getRequiredError, cleanPhone,
 } from "../../utils/validators";
+import { errorText } from "../../api/errors";
+import { setDraftPassword } from "../../api/signupDraft";
 
 export default function ContractorSignupStep1() {
     const navigate = useNavigate();
@@ -35,14 +37,15 @@ export default function ContractorSignupStep1() {
 
     // أكواد أخطاء validators.js/الحقول المشتركة بتترجم وقت العرض (مش وقت
     // الـ submit) عشان تتحدث فورًا لو المستخدم بدّل اللغة بعد ظهور الخطأ
-    const tf = (code) => (code ? t(code) : "");
-    const tc = (code) => (code ? t(`signupCommon:${code}`) : "");
+    const tf = (code) => errorText(t, code);
+    const tc = (code) => errorText(t, code, "signupCommon");
 
     const handleSubmit = (e) => {
         e.preventDefault();
         const newErrors = {
             quadName: getRequiredError(quadName, "quadNameRequired"),
-            idNumber: getRequiredError(idNumber, "idNumberRequired"),
+            idNumber: getRequiredError(idNumber, "idNumberRequired")
+                || (/^d{9}$/.test(idNumber.trim()) ? "" : "signupCommon:idNumberInvalid"),
             phone: getPhoneError(phone),
             email: getEmailError(email),
             password: getPasswordError(password),
@@ -62,8 +65,9 @@ export default function ContractorSignupStep1() {
             area,
         }));
 
+        setDraftPassword(password);
         setSubmitting(true);
-        setTimeout(() => navigate("/contractor-signup/step-2"), 800);
+        setTimeout(() => navigate("/contractor-signup/step-2"), 400);
     };
 
     return (
@@ -120,6 +124,7 @@ export default function ContractorSignupStep1() {
                                         id="idNumber"
                                         icon="fa-regular fa-id-card"
                                         placeholder={t("idNumberPlaceholder")}
+                                        inputProps={{ inputMode: "numeric", maxLength: 9 }}
                                         value={idNumber}
                                         onChange={(e) => { setIdNumber(e.target.value); clearError("idNumber"); }}
                                         error={tf(errors.idNumber)}
@@ -186,40 +191,15 @@ export default function ContractorSignupStep1() {
                                     />
                                 </div>
 
-                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
-                                    <SelectField
-                                        label={t("signupCommon:city")}
-                                        id="city"
-                                        icon="fa-solid fa-location-dot"
-                                        placeholder={t("signupCommon:cityPlaceholder")}
-                                        value={city}
-                                        onChange={(e) => { setCity(e.target.value); clearError("city"); }}
-                                        error={tf(errors.city)}
-                                        accentColor="#4B9AD2"
-                                        options={[
-                                            { value: "rafah", label: t("signupCommon:cities.rafah") },
-                                            { value: "khanyounis", label: t("signupCommon:cities.khanyounis") },
-                                            { value: "gaza", label: t("signupCommon:cities.gaza") },
-                                            { value: "wusta", label: t("signupCommon:cities.wusta") },
-                                            { value: "north", label: t("signupCommon:cities.north") },
-                                        ]}
-                                    />
-
-                                    <div>
-                                        <label htmlFor="area" className="block text-xs font-semibold text-slate-700 mb-1.5">
-                                            {t("signupCommon:area")}
-                                        </label>
-                                        <FormField
-                                            id="area"
-                                            icon="fa-solid fa-location-dot"
-                                            placeholder={t("signupCommon:areaPlaceholder")}
-                                            value={area}
-                                            onChange={(e) => { setArea(e.target.value); clearError("area"); }}
-                                            error={tf(errors.area)}
-                                            accentColor="#4B9AD2"
-                                        />
-                                    </div>
-                                </div>
+                                <LocationFields
+                                    governorateId={city}
+                                    areaId={area}
+                                    onGovernorateChange={(v) => { setCity(v); clearError("city"); }}
+                                    onAreaChange={(v) => { setArea(v); clearError("area"); }}
+                                    governorateError={tf(errors.city)}
+                                    areaError={tf(errors.area)}
+                                    className="mb-6"
+                                />
 
                                 <button
                                     type="submit"

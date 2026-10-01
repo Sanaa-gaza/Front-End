@@ -14,6 +14,7 @@ export default function SelectField({
     error,
     options = [],
     accentColor = "#286292",
+    disabled = false,
 }) {
     const errorId = `${id}-error`;
 
@@ -30,9 +31,10 @@ export default function SelectField({
                     name={id}
                     value={value}
                     onChange={onChange}
+                    disabled={disabled}
                     aria-invalid={!!error}
                     aria-describedby={error ? errorId : undefined}
-                    className={`w-full bg-[#F5F6F8] border rounded-lg py-2.5 ps-4 pe-10 text-[12px] appearance-none focus:outline-none focus:ring-1 focus:ring-[#4ba0d8] focus:border-[#4ba0d8] cursor-pointer ${value ? "text-[#141415D1]" : "text-[#89949D]"
+                    className={`w-full bg-[#F5F6F8] border rounded-lg py-2.5 ps-4 pe-10 text-[12px] appearance-none focus:outline-none focus:ring-1 focus:ring-[#4ba0d8] focus:border-[#4ba0d8] cursor-pointer disabled:cursor-not-allowed disabled:opacity-60 ${value ? "text-[#141415D1]" : "text-[#89949D]"
                         } ${error ? "border-red-400" : "border-[#4B9AD2]"}`}
                 >
                     <option value="" disabled hidden>

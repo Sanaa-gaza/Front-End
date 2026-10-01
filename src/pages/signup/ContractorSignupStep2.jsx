@@ -6,12 +6,13 @@ import StepIndicator from "../../components/StepIndicator";
 import FormField from "../../components/FormField";
 import useLangDir from "../../hooks/useLangDir";
 import { getRequiredError } from "../../utils/validators";
+import { getDraftPassword } from "../../api/signupDraft";
 
 export default function ContractorSignupStep2() {
     const navigate = useNavigate();
     useEffect(() => {
         const step1Data = sessionStorage.getItem("contractor_step1");
-        if (!step1Data) {
+        if (!step1Data || !getDraftPassword()) {
             navigate("/contractor-signup", { replace: true });
         }
     }, [navigate]);
@@ -31,7 +32,8 @@ export default function ContractorSignupStep2() {
     const handleSubmit = (e) => {
         e.preventDefault();
         const newErrors = {
-            teamSize: getRequiredError(teamSize, "teamSizeRequired"),
+            teamSize: getRequiredError(teamSize, "teamSizeRequired")
+                || (/^[1-9]\d*$/.test(teamSize.trim()) ? "" : "signupCommon:teamSizeInvalid"),
             mainSpecialty: getRequiredError(mainSpecialty, "mainSpecialtyRequired"),
         };
         setErrors(newErrors);
@@ -44,7 +46,7 @@ export default function ContractorSignupStep2() {
         }));
 
         setSubmitting(true);
-        setTimeout(() => navigate("/contractor-signup/step-3"), 800);
+        setTimeout(() => navigate("/contractor-signup/step-3"), 400);
     };
 
     return (

@@ -74,6 +74,7 @@ export function passwordRequirements(value) {
     return {
         hasLength: value.length >= 8,
         hasLetter: /[a-zA-Z]/.test(value),
+        hasUppercase: /[A-Z]/.test(value),
         hasNumber: /[0-9]/.test(value),
         hasSpecial: /[!@#$%^&*(),.?":{}|<>_\-]/.test(value),
     };
@@ -81,6 +82,6 @@ export function passwordRequirements(value) {
 
 /** يتحقق إذا كلمة المرور القوية تحقق كل الشروط الأربعة مع بعض */
 export function meetsAllPasswordRequirements(value) {
-    const { hasLength, hasLetter, hasNumber, hasSpecial } = passwordRequirements(value);
-    return hasLength && hasLetter && hasNumber && hasSpecial;
+    const { hasLength, hasLetter, hasUppercase, hasNumber, hasSpecial } = passwordRequirements(value);
+    return hasLength && hasLetter && hasUppercase && hasNumber && hasSpecial;
 }

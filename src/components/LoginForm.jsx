@@ -2,10 +2,13 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import FormField from "./FormField";
+import FormAlert from "./FormAlert";
 import { getEmailError } from "../utils/validators";
+import { login } from "../api/endpoints";
+import { parseApiError } from "../api/errors";
+import { saveAuth, setPendingVerification, homePathForRole } from "../api/session";
 
 export default function LoginForm({
-    role = "client",
     signupPath = "/signup",
     forgotPasswordPath = "/forget-password",
 }) {
@@ -19,10 +22,7 @@ export default function LoginForm({
     const [emailError, setEmailError] = useState("");
     const [passwordError, setPasswordError] = useState("");
     const [submitting, setSubmitting] = useState(false);
-
-    useEffect(() => {
-        localStorage.setItem("sanaa_role", role);
-    }, [role]);
+    const [serverError, setServerError] = useState("");
 
     const [flip, setFlip] = useState("in");
     useEffect(() => {
@@ -43,8 +43,9 @@ export default function LoginForm({
         setTimeout(() => navigate(path), 400);
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
+        setServerError("");
 
         const emailErr = getEmailError(email);
         const passwordErr = password ? "" : "passwordRequired";
@@ -54,10 +55,23 @@ export default function LoginForm({
         if (emailErr || passwordErr) return;
 
         setSubmitting(true);
-        setTimeout(() => {
+        try {
+            const res = await login(email.trim(), password, rememberMe);
+            saveAuth(res.data, rememberMe);
+            // نفس الطلب لكل صفحات الدخول، والتوجيه حسب نوع الحساب الراجع من السيرفر
+            navigate(homePathForRole(res.data.user?.role));
+        } catch (err) {
+            const { status, message, data } = parseApiError(err);
+            // الحساب مش مفعّل: السيرفر بعت كود جديد، بنوديه على صفحة التحقق
+            if (status === 403 && data?.requires_verification) {
+                setPendingVerification(data.email || email.trim(), "register", "/dashboard");
+                navigate("/verification-code");
+                return;
+            }
+            setServerError(message || t("signupCommon:networkError"));
+        } finally {
             setSubmitting(false);
-            // navigate("/dashboard");
-        }, 1200);
+        }
     };
 
     return (
@@ -88,6 +102,8 @@ export default function LoginForm({
                                 <h1 className="text-[#000000] text-xl font-bold mb-1.5">{t("title")}</h1>
                                 <p className="text-[#4B9AD2] text-sm">{t("subtitle")}</p>
                             </div>
+
+                            <FormAlert messages={[serverError]} />
 
                             <form onSubmit={handleSubmit} noValidate>
                                 <div className="mb-1">

@@ -1,10 +1,16 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Eye, EyeOff } from "lucide-react";
 import AuthHeader from "../../components/AuthHeader";
+import FormAlert from "../../components/FormAlert";
 import useLangDir from "../../hooks/useLangDir";
 import { passwordRequirements, meetsAllPasswordRequirements } from "../../utils/validators";
+import { resetPassword } from "../../api/endpoints";
+import { parseApiError } from "../../api/errors";
+import { clearPendingVerification } from "../../api/session";
+
+const RESET_TOKEN_KEY = "sanaa_reset_token";
 
 export default function ResetPassword() {
     const { t } = useTranslation("resetPassword");
@@ -17,6 +23,12 @@ export default function ResetPassword() {
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const [touched, setTouched] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [serverError, setServerError] = useState("");
+
+    // reset_token بيجي من صفحة التحقق (purpose=reset)، بدونه ما في شي نعمله هون
+    useEffect(() => {
+        if (!sessionStorage.getItem(RESET_TOKEN_KEY)) navigate("/forget-password", { replace: true });
+    }, [navigate]);
 
     const reqs = passwordRequirements(password);
     const isValid = meetsAllPasswordRequirements(password) && password === confirmPassword;
@@ -25,19 +37,25 @@ export default function ResetPassword() {
             ? t("passwordsMismatch")
             : "";
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         setTouched(true);
+        setServerError("");
         if (!isValid) return;
 
         setIsSubmitting(true);
-        setTimeout(() => {
+        try {
+            await resetPassword(sessionStorage.getItem(RESET_TOKEN_KEY), password, confirmPassword);
+            // السيرفر بيسحب كل الجلسات، لازم يسجل دخول من جديد
+            sessionStorage.removeItem(RESET_TOKEN_KEY);
+            clearPendingVerification();
+            navigate("/login");
+        } catch (err) {
+            const { message, fields } = parseApiError(err);
+            setServerError(fields.password || message || t("signupCommon:networkError"));
+        } finally {
             setIsSubmitting(false);
-            sessionStorage.removeItem("sanaa_pending_email");
-            const redirectPath = sessionStorage.getItem("sanaa_verification_redirect") || "/login";
-            sessionStorage.removeItem("sanaa_verification_redirect");
-            navigate(redirectPath);
-        }, 800);
+        }
     };
 
     return (
@@ -72,6 +90,8 @@ export default function ResetPassword() {
                     <p className="text-slate-500 text-sm mb-8 leading-relaxed max-w-md mx-auto">
                         {t("desc")}
                     </p>
+
+                    <FormAlert messages={[serverError]} />
 
                     <form onSubmit={handleSubmit} className="space-y-5 text-start">
                         <div>
@@ -139,6 +159,15 @@ export default function ResetPassword() {
                                         {reqs.hasLength && <i className="fa-solid fa-check text-[8px]"></i>}
                                     </span>
                                     <span className="text-[#4B9AD2]">{t("min8Chars")}</span>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                    <span
+                                        className={`w-3.5 h-3.5 rounded-full border flex items-center justify-center ${reqs.hasUppercase ? "bg-[#4B9AD2] border-[#4B9AD2] text-white" : "border-slate-300"
+                                            }`}
+                                    >
+                                        {reqs.hasUppercase && <i className="fa-solid fa-check text-[8px]"></i>}
+                                    </span>
+                                    <span className="text-[#4B9AD2]">{t("atLeastOneUppercase")}</span>
                                 </div>
                                 <div className="flex items-center gap-2">
                                     <span

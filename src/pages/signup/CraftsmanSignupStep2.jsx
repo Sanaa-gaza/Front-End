@@ -5,14 +5,31 @@ import AuthHeader from "../../components/AuthHeader";
 import StepIndicator from "../../components/StepIndicator";
 import SelectField from "../../components/SelectField";
 import DropzoneField from "../../components/DropzoneField";
+import FormAlert from "../../components/FormAlert";
 import useLangDir from "../../hooks/useLangDir";
+import { useServices } from "../../hooks/useReferenceData";
+import { registerCraftsman, uploadFile } from "../../api/endpoints";
+import { parseApiError, mapServerErrors, errorText } from "../../api/errors";
+import { setPendingVerification } from "../../api/session";
+import { getDraftPassword, clearDraftPassword } from "../../api/signupDraft";
+
+// قيمة خيار "أخرى" بقائمة الحرف — وقتها بنبعت custom_craft_name بدل craft_id
+const OTHER_CRAFT = "other";
+
+const SERVER_FIELDS = {
+    personal_photo_path: "avatar",
+    id_selfie_path: "idPhoto",
+    craft_id: "craft",
+    custom_craft_name: "craft",
+    bio: "bio",
+    terms_accepted: "agreeTerms",
+};
 
 export default function CraftsmanSignupStep2() {
     const navigate = useNavigate();
-    // داخل CraftsmanSignupStep2.jsx
     useEffect(() => {
         const step1Data = sessionStorage.getItem("craftsman_step1");
-        if (!step1Data) {
+        if (!step1Data || !getDraftPassword()) {
             navigate("/craftsman-signup", { replace: true });
         }
     }, [navigate]);
@@ -20,6 +37,7 @@ export default function CraftsmanSignupStep2() {
     useLangDir();
 
     const [avatarPreview, setAvatarPreview] = useState(null);
+    const [avatarFile, setAvatarFile] = useState(null);
     const [idPhotoFile, setIdPhotoFile] = useState(null);
     const [craft, setCraft] = useState("");
     const [otherCraft, setOtherCraft] = useState("");
@@ -28,12 +46,17 @@ export default function CraftsmanSignupStep2() {
 
     const [errors, setErrors] = useState({});
     const [submitting, setSubmitting] = useState(false);
+    const [serverMessages, setServerMessages] = useState([]);
+    const services = useServices();
+    const te = (code) => errorText(t, code);
 
     const clearError = (field) => { if (errors[field]) setErrors((p) => ({ ...p, [field]: "" })); };
 
     const handleAvatarChange = (e) => {
         const file = e.target.files[0];
         if (!file) return;
+        setAvatarFile(file);
+        clearError("avatar");
         const reader = new FileReader();
         reader.onload = (ev) => setAvatarPreview(ev.target.result);
         reader.readAsDataURL(file);
@@ -45,31 +68,17 @@ export default function CraftsmanSignupStep2() {
         clearError("idPhoto");
     };
 
-    const CRAFT_OPTIONS = [
-        { value: "plumber", label: t("craftOptions.plumber") },
-        { value: "electrician", label: t("craftOptions.electrician") },
-        { value: "carpenter", label: t("craftOptions.carpenter") },
-        { value: "painter", label: t("craftOptions.painter") },
-        { value: "blacksmith", label: t("craftOptions.blacksmith") },
-        { value: "tiler", label: t("craftOptions.tiler") },
-        { value: "plasterer", label: t("craftOptions.plasterer") },
-        { value: "aluminum", label: t("craftOptions.aluminum") },
-        { value: "acTechnician", label: t("craftOptions.acTechnician") },
-        { value: "mechanic", label: t("craftOptions.mechanic") },
-        { value: "gardener", label: t("craftOptions.gardener") },
-        { value: "mover", label: t("craftOptions.mover") },
-        { value: "cleaner", label: t("craftOptions.cleaner") },
-        { value: "other", label: t("craftOptions.other") },
-    ];
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
+        setServerMessages([]);
 
         const newErrors = {
+            avatar: avatarFile ? "" : "avatarRequired",
             idPhoto: idPhotoFile ? "" : "idPhotoRequired",
             craft: !craft
                 ? "craftRequired"
-                : craft === "other" && !otherCraft.trim()
+                : craft === OTHER_CRAFT && !otherCraft.trim()
                     ? "craftOtherRequired"
                     : "",
             bio: bio.trim().length === 0
@@ -83,19 +92,50 @@ export default function CraftsmanSignupStep2() {
         setErrors(newErrors);
         if (Object.values(newErrors).some(Boolean)) return;
 
-        const step1Data = JSON.parse(sessionStorage.getItem("craftsman_step1") || "{}");
-        const step2Data = {
-            craft: craft === "other" ? otherCraft.trim() : craft,
-            bio: bio.trim(),
-            hasAvatar: !!avatarPreview,
-            hasIdPhoto: !!idPhotoFile,
-        };
-        sessionStorage.setItem("craftsman_step2", JSON.stringify(step2Data));
-        sessionStorage.setItem("sanaa_pending_email", step1Data.email || "");
-        sessionStorage.setItem("sanaa_verification_redirect", "/dashboard");
+        const step1 = JSON.parse(sessionStorage.getItem("craftsman_step1") || "{}");
+        const password = getDraftPassword();
 
         setSubmitting(true);
-        setTimeout(() => navigate("/verification-code"), 800);
+        try {
+            // الملفات لازم تنرفع أول، وبعدين بنبعت مساراتها مع التسجيل
+            const [personalPhotoPath, idSelfiePath] = await Promise.all([
+                uploadFile(avatarFile),
+                uploadFile(idPhotoFile),
+            ]);
+
+            await registerCraftsman({
+                full_name: step1.fullName,
+                email: step1.email,
+                phone: step1.phone,
+                password,
+                password_confirmation: password,
+                governorate_id: Number(step1.city),
+                area_id: Number(step1.area),
+                personal_photo_path: personalPhotoPath,
+                id_selfie_path: idSelfiePath,
+                ...(craft === OTHER_CRAFT
+                    ? { custom_craft_name: otherCraft.trim() }
+                    : { craft_id: Number(craft) }),
+                bio: bio.trim(),
+                terms_accepted: agreeTerms,
+            });
+
+            sessionStorage.removeItem("craftsman_step1");
+            clearDraftPassword();
+            setPendingVerification(step1.email, "register", "/dashboard");
+            navigate("/verification-code");
+        } catch (err) {
+            const { message, fields } = parseApiError(err);
+            const { mapped, unmapped } = mapServerErrors(fields, SERVER_FIELDS);
+            setErrors(mapped);
+            // أخطاء حقول الخطوة الأولى (زي إيميل مستخدم) بتظهر فوق الفورم
+            setServerMessages(
+                Object.keys(fields).length ? unmapped : [message || t("signupCommon:networkError")]
+            );
+            window.scrollTo({ top: 0, behavior: "smooth" });
+        } finally {
+            setSubmitting(false);
+        }
     };
 
     return (
@@ -125,6 +165,8 @@ export default function CraftsmanSignupStep2() {
 
                     <section className="bg-white border border-[#0000001A] rounded-2xl shadow-sm overflow-hidden">
                         <div className="p-8">
+                            <FormAlert messages={serverMessages} />
+
                             <form onSubmit={handleSubmit} noValidate>
                                 {/* الصورة الشخصية */}
                                 <div className="flex flex-col items-center justify-center mb-6">
@@ -142,9 +184,10 @@ export default function CraftsmanSignupStep2() {
                                         >
                                             <i className="fa-solid fa-plus text-[18px]"></i>
                                         </label>
-                                        <input type="file" id="avatarInput" accept="image/*" className="hidden" onChange={handleAvatarChange} />
+                                        <input type="file" id="avatarInput" accept="image/jpeg,image/png" className="hidden" onChange={handleAvatarChange} />
                                     </div>
                                     <p className="text-[#89949D] text-sm">{t("addPhoto")}</p>
+                                    <p className={`text-red-500 text-xs mt-1 ${errors.avatar ? "" : "hidden"}`}>{te(errors.avatar)}</p>
                                 </div>
 
                                 {/* صورة الهوية */}
@@ -155,37 +198,39 @@ export default function CraftsmanSignupStep2() {
                                     dropHint={t("dropHint")}
                                     file={idPhotoFile}
                                     onChange={handleIdPhotoChange}
-                                    error={errors.idPhoto && t(errors.idPhoto)}
+                                    error={te(errors.idPhoto)}
                                 />
 
                                 {/* تحديد الحرفة */}
                                 <SelectField
                                     label={t("craft")}
                                     id="craft"
-                                    placeholder={t("craftPlaceholder")}
+                                    placeholder={services.loading ? t("signupCommon:loadingOptions") : t("craftPlaceholder")}
                                     value={craft}
                                     onChange={(e) => {
                                         setCraft(e.target.value);
                                         clearError("craft");
-                                        if (e.target.value !== "other") setOtherCraft("");
+                                        if (e.target.value !== OTHER_CRAFT) setOtherCraft("");
                                     }}
-                                    error={craft === "other" ? "" : (errors.craft && t(errors.craft))}
+                                    error={craft === OTHER_CRAFT ? "" : te(errors.craft)}
                                     accentColor="#4B9AD2"
-                                    options={CRAFT_OPTIONS}
+                                    options={[...services.options, { value: OTHER_CRAFT, label: t("craftOptions.other") }]}
                                 />
 
-                                {craft === "other" && (
+                                {craft === OTHER_CRAFT && (
                                     <div className="relative mb-4 -mt-2">
                                         <input
                                             type="text"
                                             value={otherCraft}
                                             onChange={(e) => { setOtherCraft(e.target.value); clearError("craft"); }}
                                             placeholder={t("craftOtherPlaceholder")}
-                                            className="w-full bg-[#F5F6F8] border border-[#0000001A] rounded-lg py-2.5 px-4 text-sm text-[#141415D1] placeholder-[#89949D] focus:outline-none focus:ring-1 focus:ring-[#4ba0d8] focus:border-[#4ba0d8]"
+                                            aria-label={t("craftOtherPlaceholder")}
+                                            className={`w-full bg-[#F5F6F8] border rounded-lg py-2.5 px-4 text-sm text-[#141415D1] placeholder-[#89949D] focus:outline-none focus:ring-1 focus:ring-[#4ba0d8] focus:border-[#4ba0d8] ${errors.craft ? "border-red-400" : "border-[#0000001A]"}`}
                                         />
-                                        <p className={`text-red-500 text-xs mt-1 text-start ${errors.craft ? "" : "hidden"}`}>{errors.craft && t(errors.craft)}</p>
+                                        <p className={`text-red-500 text-xs mt-1 text-start ${errors.craft ? "" : "hidden"}`}>{te(errors.craft)}</p>
                                     </div>
                                 )}
+
 
                                 {/* نبذة عني */}
                                 <div className="mb-4">
@@ -201,7 +246,7 @@ export default function CraftsmanSignupStep2() {
                                         className={`w-full bg-[#F5F6F8] border rounded-lg py-2.5 px-4 text-sm text-[#141415D1] placeholder-[#89949D] focus:outline-none focus:ring-1 focus:ring-[#4ba0d8] focus:border-[#4ba0d8] resize-none ${errors.bio ? "border-red-400" : "border-[#0000001A]"
                                             }`}
                                     />
-                                    <p className={`text-red-500 text-xs mt-1 text-start ${errors.bio ? "" : "hidden"}`}>{errors.bio && t(errors.bio)}</p>
+                                    <p className={`text-red-500 text-xs mt-1 text-start ${errors.bio ? "" : "hidden"}`}>{te(errors.bio)}</p>
                                 </div>
 
                                 <div className="flex items-center gap-2 mb-6 ">
@@ -218,7 +263,7 @@ export default function CraftsmanSignupStep2() {
 
                                 </div>
                                 {errors.agreeTerms && (
-                                    <p className="text-red-500 text-xs mb-4 -mt-4 text-start">{t(errors.agreeTerms)}</p>
+                                    <p className="text-red-500 text-xs mb-4 -mt-4 text-start">{te(errors.agreeTerms)}</p>
                                 )}
 
                                 <button

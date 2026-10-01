@@ -1,8 +1,162 @@
-import React, { useState } from "react";
+import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import SiteLayout from "../../components/home/SiteLayout";
-import { CONTACT_TOPICS, WHATSAPP_NUMBER } from "../../data/contact";
+import Header from "../../components/layout/Header";
+import Footer from "../../components/layout/Footer";
+
+// ==================== بيانات التواصل ====================
+
+// رقم الواتساب بصيغة دولية بدون + أو أصفار (مثال: 970592123456). غيّره للرقم الحقيقي
+const WHATSAPP_NUMBER = "966500000000";
+
+const CONTACT_TOPICS = ["general", "technical", "payment", "join", "complaint", "other"];
+
+// ==================== اتجاه الصفحة حسب اللغة ====================
+
+function useLangDir() {
+    const { i18n } = useTranslation();
+    useEffect(() => {
+        document.documentElement.dir = i18n.language === "ar" ? "rtl" : "ltr";
+        document.documentElement.lang = i18n.language;
+    }, [i18n.language]);
+    return i18n;
+}
+
+// ==================== ظهور الأقسام أثناء التمرير ====================
+
+const STAGGER_MS = 110;
+const DURATION_MS = 900;
+const SPLASH_END_MS = 2100;
+
+const isDecor = (el) =>
+    el.tagName === "svg" || el.classList.contains("absolute") || el.hasAttribute("aria-hidden");
+
+const contentChildren = (el) => Array.from(el.children).filter((c) => !isDecor(c));
+
+// بيجمع عناصر القسم اللي رح تظهر بالتتابع (العناوين، الكروت، الصور...)
+function collectBlocks(root) {
+    if (root.className && String(root.className).includes("shadow-[")) return [[root]];
+
+    let container = root;
+    let kids = contentChildren(container);
+    while (kids.length === 1 && kids[0].tagName === "DIV") {
+        if (String(kids[0].className).includes("shadow-[")) return [[kids[0]]];
+        container = kids[0];
+        kids = contentChildren(container);
+    }
+
+    const groups = [];
+    const loose = [];
+    kids.forEach((kid) => {
+        if (kid.classList.contains("grid") && kid.children.length > 1) {
+            groups.push(contentChildren(kid));
+        } else {
+            loose.push(kid);
+        }
+    });
+    return [loose, ...groups].filter((g) => g.length);
+}
+
+function useScrollReveal(rootRef) {
+    useLayoutEffect(() => {
+        const root = rootRef.current;
+        if (!root) return undefined;
+        if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return undefined;
+        if (!("IntersectionObserver" in window)) return undefined;
+
+        const targets = root.querySelectorAll("main section, footer");
+        const items = [];
+        targets.forEach((section) => {
+            collectBlocks(section).forEach((group) => {
+                group.forEach((el, i) => items.push({ el, delay: i * STAGGER_MS }));
+            });
+        });
+
+        const timers = [];
+        const observer = new IntersectionObserver(
+            (entries) => {
+                entries.forEach((entry) => {
+                    if (!entry.isIntersecting) return;
+                    const item = items.find((it) => it.el === entry.target);
+                    observer.unobserve(entry.target);
+                    const boot = Math.max(0, SPLASH_END_MS - performance.now());
+                    const delay = item.delay + boot;
+                    entry.target.style.setProperty("--rv-delay", `${delay}ms`);
+                    requestAnimationFrame(() => entry.target.classList.add("rv-in"));
+                    // بعد ما تخلص الحركة بنرجع العنصر لحالته الطبيعية عشان الهوفر يشتغل
+                    timers.push(
+                        setTimeout(() => {
+                            entry.target.classList.remove("rv", "rv-in");
+                            entry.target.style.removeProperty("--rv-delay");
+                        }, delay + DURATION_MS + 100),
+                    );
+                });
+            },
+            { threshold: 0, rootMargin: "0px 0px 12% 0px" },
+        );
+
+        items.forEach(({ el }) => {
+            el.classList.add("rv");
+            observer.observe(el);
+        });
+
+        return () => {
+            observer.disconnect();
+            timers.forEach(clearTimeout);
+            items.forEach(({ el }) => {
+                el.classList.remove("rv", "rv-in");
+                el.style.removeProperty("--rv-delay");
+            });
+        };
+    }, [rootRef]);
+}
+
+// ==================== زر المساعد ====================
+
+function AssistantButton() {
+    const { t } = useTranslation("home");
+
+    return (
+        <div className="fixed bottom-5 right-4 z-50 sm:bottom-6 sm:right-8">
+            <button
+                type="button"
+                aria-label={t("assistant.label")}
+                className="group relative block h-[76px] w-[76px] cursor-pointer sm:h-[88px] sm:w-[88px]"
+            >
+                <span className="absolute inset-0 rounded-full bg-white assistant-pulse transition-transform group-hover:scale-105"></span>
+                <img
+                    src="/images/تنزيل (3)-Photoroom 1.svg"
+                    alt=""
+                    className="absolute bottom-[8px] left-1/2 h-[62px] w-auto -translate-x-1/2 object-contain transition-transform group-hover:scale-105 sm:h-[74px]"
+                />
+
+                <span className="absolute right-[58px] top-1 z-10 whitespace-nowrap rounded-2xl bg-[#4B9AD2] px-3.5 py-1.5 text-[11px] font-semibold text-white shadow-[0_6px_18px_rgba(75,154,210,0.3)] sm:right-[68px] sm:top-2 sm:text-[12px]">
+                    {t("assistant.label")}
+                    <span className="absolute -bottom-[5px] right-3 h-0 w-0 border-l-[6px] border-r-[2px] border-t-[7px] border-l-transparent border-r-transparent border-t-[#4B9AD2]"></span>
+                </span>
+            </button>
+        </div>
+    );
+}
+
+// ==================== هيكل الصفحة (هيدر + محتوى + فوتر) ====================
+
+function SiteLayout({ children }) {
+    useLangDir();
+    const rootRef = useRef(null);
+    useScrollReveal(rootRef);
+
+    return (
+        <div ref={rootRef} className="relative min-h-dvh overflow-x-hidden bg-white">
+            <Header />
+            <main>{children}</main>
+            <Footer />
+            <AssistantButton />
+        </div>
+    );
+}
+
+// ==================== الصفحة ====================
 
 const inputBase =
     "h-11 w-full rounded-lg border bg-white text-[13px] text-[#141415] outline-none transition-colors placeholder:text-[#89949D] focus:border-[#4B9AD2] focus:ring-1 focus:ring-[#4B9AD2]";

@@ -7,7 +7,7 @@
     "city": "المحافظة",
     "cityPlaceholder": "اختر المحافظة",
     "area": "عنوان السكن",
-    "areaPlaceholder": "اكتب عنوان سكنك بالتفصيل",
+    "areaPlaceholder": "اختر المنطقة",
     "phone": "رقم الهاتف",
     "countryCode": "مفتاح الدولة",
     "phonePlaceholder": "59x xxx xxx",
@@ -32,7 +32,7 @@
     "phoneRequired": "رقم الهاتف مطلوب",
     "phoneInvalid": "يرجى إدخال رقم جوال صحيح يبدأ بـ 59 أو 56",
     "passwordRequired": "كلمة المرور مطلوبة",
-    "passwordWeak": "كلمة المرور يجب أن تحتوي على 8 أحرف، حرف، رقم، ورمز خاص على الأقل",
+    "passwordWeak": "كلمة المرور يجب أن تحتوي على 8 أحرف على الأقل، حرف إنجليزي كبير، رقم، ورمز خاص",
     "confirmPasswordRequired": "يرجى تأكيد كلمة المرور",
     "passwordMismatch": "كلمتا المرور غير متطابقتين",
     "cities": {
@@ -41,5 +41,11 @@
         "gaza": "غزة",
         "wusta": "الوسطى",
         "north": "الشمال"
-    }
+    },
+    "networkError": "تعذّر الاتصال بالخادم، تحقق من اتصالك وحاول مرة أخرى.",
+    "noOptions": "لا توجد خيارات متاحة حالياً",
+    "loadingOptions": "جارِ التحميل...",
+    "uploading": "جارِ رفع الملفات...",
+    "idNumberInvalid": "رقم الهوية يجب أن يتكون من 9 أرقام",
+    "teamSizeInvalid": "يرجى إدخال عدد صحيح أكبر من صفر"
 }

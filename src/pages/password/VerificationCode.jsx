@@ -2,7 +2,11 @@ import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import AuthHeader from "../../components/AuthHeader";
+import FormAlert from "../../components/FormAlert";
 import useLangDir from "../../hooks/useLangDir";
+import { verifyEmail, resendCode } from "../../api/endpoints";
+import { parseApiError } from "../../api/errors";
+import { saveAuth, getPendingVerification, clearPendingVerification, homePathForRole } from "../../api/session";
 
 const OTP_LENGTH = 6;
 const TIMER_SECONDS = 3 * 60;
@@ -30,9 +34,16 @@ export default function VerificationCode() {
     const [codeError, setCodeError] = useState("");
     const [verifying, setVerifying] = useState(false);
     const [verified, setVerified] = useState(false);
+    const [serverError, setServerError] = useState("");
+    const [resending, setResending] = useState(false);
 
-    const rawEmail = sessionStorage.getItem("sanaa_pending_email");
-    const email = rawEmail ? maskEmail(rawEmail) : "m•••••@gmail.com";
+    const { email: rawEmail, purpose, redirect } = getPendingVerification();
+    const email = maskEmail(rawEmail);
+
+    // ما في إيميل بانتظار التحقق → ما في شي نعمله هون
+    useEffect(() => {
+        if (!rawEmail) navigate("/", { replace: true });
+    }, [rawEmail, navigate]);
 
     useEffect(() => {
         inputsRef.current[0]?.focus();
@@ -47,7 +58,7 @@ export default function VerificationCode() {
         return () => clearInterval(interval);
     }, [remaining <= 0, resendCooldown <= 0]); // eslint-disable-line react-hooks/exhaustive-deps
 
-    // لما تنتهي مدة الحظر الطويلة (15 دقيقة)، ترجع دورة المحاولات من جديد
+    // لما تنتهي مدة الحظر الطويلة (10 دقائق)، ترجع دورة المحاولات من جديد
     useEffect(() => {
         if (resendCooldown <= 0 && resendCount >= MAX_RESENDS) {
             setResendCount(0);
@@ -109,8 +120,19 @@ export default function VerificationCode() {
         inputsRef.current[nextEmptyIndex === -1 ? OTP_LENGTH - 1 : nextEmptyIndex]?.focus();
     };
 
-    const handleResend = () => {
-        if (!canResend) return;
+    const handleResend = async () => {
+        if (!canResend || resending) return;
+
+        setServerError("");
+        setResending(true);
+        try {
+            await resendCode(rawEmail, purpose);
+        } catch (err) {
+            setServerError(parseApiError(err).message || t("signupCommon:networkError"));
+            return;
+        } finally {
+            setResending(false);
+        }
 
         setOtp(Array(OTP_LENGTH).fill(""));
         inputsRef.current[0]?.focus();
@@ -121,8 +143,9 @@ export default function VerificationCode() {
         setResendCooldown(nextCount >= MAX_RESENDS ? LONG_LOCKOUT : RESEND_COOLDOWN);
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
+        setServerError("");
 
         const code = otp.join("");
         if (code.length < OTP_LENGTH) {
@@ -132,16 +155,26 @@ export default function VerificationCode() {
         setCodeError("");
 
         setVerifying(true);
-        setTimeout(() => {
-            setVerifying(false);
+        try {
+            const res = await verifyEmail(rawEmail, code, purpose);
+            let next = redirect;
+            if (purpose === "reset") {
+                // مش توكن دخول — بس لصفحة تغيير كلمة المرور (صالح 10 دقائق)
+                sessionStorage.setItem("sanaa_reset_token", res.data.reset_token);
+            } else {
+                saveAuth(res.data);
+                clearPendingVerification();
+                next = homePathForRole(res.data.user?.role);
+            }
             setVerified(true);
-
-            setTimeout(() => {
-                const redirectPath = sessionStorage.getItem("sanaa_verification_redirect") || "/login";
-                sessionStorage.removeItem("sanaa_verification_redirect");
-                navigate(redirectPath);
-            }, 1500);
-        }, 1000);
+            setTimeout(() => navigate(next), 1500);
+        } catch (err) {
+            setServerError(parseApiError(err).message || t("signupCommon:networkError"));
+            setOtp(Array(OTP_LENGTH).fill(""));
+            inputsRef.current[0]?.focus();
+        } finally {
+            setVerifying(false);
+        }
     };
 
     return (
@@ -203,6 +236,8 @@ export default function VerificationCode() {
                                 <span className="font-medium text-slate-600">{email}</span>
                             </p>
 
+                            <FormAlert messages={[serverError]} />
+
                             <form onSubmit={handleSubmit} noValidate>
                                 <div className="flex items-center justify-center gap-2.5 mb-2" dir="ltr">
                                     {otp.map((digit, index) => (
@@ -246,7 +281,7 @@ export default function VerificationCode() {
                                         <button
                                             type="button"
                                             onClick={handleResend}
-                                            disabled={!canResend}
+                                            disabled={!canResend || resending}
                                             className={`text-[#4B9AD2] font-medium ${canResend ? "cursor-pointer" : "pointer-events-none opacity-60"}`}
                                         >
                                             {t("resendCode")} {resendCooldown > 0 && t("resendIn")}

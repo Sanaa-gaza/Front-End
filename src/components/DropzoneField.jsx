@@ -3,7 +3,7 @@ import React, { useState } from "react";
 /**
  * صندوق رفع ملف بشكل منقّط (drag & drop) — يستخدم لصورة الهوية، رخصة تجارية...
  */
-export default function DropzoneField({ id, label, hint, icon = "fa-regular fa-image", dropHint, file, onChange, error }) {
+export default function DropzoneField({ id, label, hint, icon = "fa-regular fa-image", dropHint, file, onChange, error, accept = "image/jpeg,image/png" }) {
     const [isDragging, setIsDragging] = useState(false);
 
     const handleDrop = (e) => {
@@ -29,7 +29,7 @@ export default function DropzoneField({ id, label, hint, icon = "fa-regular fa-i
                 <i className={`${icon} text-[#4B9AD2] text-[18px]`}></i>
                 <span className="text-sm text-[#89949D]">{file ? file.name : dropHint}</span>
             </label>
-            <input type="file" id={id} accept="image/*" className="hidden" onChange={onChange} />
+            <input type="file" id={id} accept={accept} className="hidden" onChange={onChange} />
             <p className={`text-red-500 text-xs mt-1 text-start ${error ? "" : "hidden"}`}>{error}</p>
         </div>
     );

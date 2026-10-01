@@ -4,14 +4,24 @@ import { useTranslation } from "react-i18next";
 import AuthHeader from "../../components/AuthHeader";
 import StepIndicator from "../../components/StepIndicator";
 import DropzoneField from "../../components/DropzoneField";
+import FormAlert from "../../components/FormAlert";
 import useLangDir from "../../hooks/useLangDir";
+import { registerInstitution, uploadFile } from "../../api/endpoints";
+import { parseApiError, mapServerErrors, errorText } from "../../api/errors";
+import { setPendingVerification } from "../../api/session";
+import { getDraftPassword, clearDraftPassword } from "../../api/signupDraft";
+
+const SERVER_FIELDS = {
+    license_file_path: "license",
+    description: "bio",
+    terms_accepted: "agreeTerms",
+};
 
 export default function InstitutionSignupStep2() {
     const navigate = useNavigate();
-    // داخل InstitutionSignupStep2.jsx
     useEffect(() => {
         const step1Data = sessionStorage.getItem("institution_step1");
-        if (!step1Data) {
+        if (!step1Data || !getDraftPassword()) {
             navigate("/institution-signup", { replace: true });
         }
     }, [navigate]);
@@ -24,6 +34,8 @@ export default function InstitutionSignupStep2() {
 
     const [errors, setErrors] = useState({});
     const [submitting, setSubmitting] = useState(false);
+    const [serverMessages, setServerMessages] = useState([]);
+    const te = (code) => errorText(t, code);
 
     const clearError = (field) => { if (errors[field]) setErrors((p) => ({ ...p, [field]: "" })); };
 
@@ -33,8 +45,9 @@ export default function InstitutionSignupStep2() {
         clearError("license");
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
+        setServerMessages([]);
 
         const newErrors = {
             license: licenseFile ? "" : "licenseRequired",
@@ -45,16 +58,45 @@ export default function InstitutionSignupStep2() {
         setErrors(newErrors);
         if (Object.values(newErrors).some(Boolean)) return;
 
-        const step1Data = JSON.parse(sessionStorage.getItem("institution_step1") || "{}");
-        sessionStorage.setItem("institution_step2", JSON.stringify({
-            bio: bio.trim(),
-            hasLicense: !!licenseFile,
-        }));
-        sessionStorage.setItem("sanaa_pending_email", step1Data.email || "");
-        sessionStorage.setItem("sanaa_verification_redirect", "/dashboard");
+        const step1 = JSON.parse(sessionStorage.getItem("institution_step1") || "{}");
+        const password = getDraftPassword();
 
         setSubmitting(true);
-        setTimeout(() => navigate("/verification-code"), 800);
+        try {
+            // الملف لازم ينرفع أول، وبعدين بنبعت مساره مع التسجيل
+            const licensePath = await uploadFile(licenseFile);
+
+            await registerInstitution({
+                institution_name: step1.name,
+                commercial_registration_number: step1.regNumber,
+                email: step1.email,
+                phone: step1.phone,
+                password,
+                password_confirmation: password,
+                governorate_id: Number(step1.city),
+                area_id: Number(step1.area),
+                activity_type: step1.activityType,
+                license_file_path: licensePath,
+                description: bio.trim(),
+                terms_accepted: agreeTerms,
+            });
+
+            sessionStorage.removeItem("institution_step1");
+            clearDraftPassword();
+            setPendingVerification(step1.email, "register", "/dashboard");
+            navigate("/verification-code");
+        } catch (err) {
+            const { message, fields } = parseApiError(err);
+            const { mapped, unmapped } = mapServerErrors(fields, SERVER_FIELDS);
+            setErrors(mapped);
+            // أخطاء حقول الخطوات السابقة (زي إيميل مستخدم) بتظهر فوق الفورم
+            setServerMessages(
+                Object.keys(fields).length ? unmapped : [message || t("signupCommon:networkError")]
+            );
+            window.scrollTo({ top: 0, behavior: "smooth" });
+        } finally {
+            setSubmitting(false);
+        }
     };
 
     return (
@@ -84,6 +126,8 @@ export default function InstitutionSignupStep2() {
 
                     <section className="bg-white border border-[#0000001A] rounded-2xl shadow-sm overflow-hidden">
                         <div className="p-8">
+                            <FormAlert messages={serverMessages} />
+
                             <form onSubmit={handleSubmit} noValidate>
                                 <DropzoneField
                                     id="licenseInput"
@@ -91,9 +135,10 @@ export default function InstitutionSignupStep2() {
                                     hint={t("licenseHint")}
                                     dropHint={t("licenseNote")}
                                     icon="fa-solid fa-paperclip"
+                                    accept="image/jpeg,image/png,application/pdf"
                                     file={licenseFile}
                                     onChange={handleLicenseChange}
-                                    error={errors.license && t(errors.license)}
+                                    error={te(errors.license)}
                                 />
 
                                 <div className="mb-4">
@@ -109,7 +154,7 @@ export default function InstitutionSignupStep2() {
                                         className={`w-full bg-[#F5F6F8] border rounded-lg py-2.5 px-4 text-sm text-[#141415D1] placeholder-[#89949D] focus:outline-none focus:ring-1 focus:ring-[#4ba0d8] focus:border-[#4ba0d8] resize-none ${errors.bio ? "border-red-400" : "border-[#0000001A]"
                                             }`}
                                     />
-                                    <p className={`text-red-500 text-xs mt-1 text-start ${errors.bio ? "" : "hidden"}`}>{errors.bio && t(errors.bio)}</p>
+                                    <p className={`text-red-500 text-xs mt-1 text-start ${errors.bio ? "" : "hidden"}`}>{te(errors.bio)}</p>
                                 </div>
 
                                 <div className="flex items-center gap-2 mb-6">
@@ -126,7 +171,7 @@ export default function InstitutionSignupStep2() {
 
                                 </div>
                                 {errors.agreeTerms && (
-                                    <p className="text-red-500 text-xs mb-4 -mt-4 text-start">{t(errors.agreeTerms)}</p>
+                                    <p className="text-red-500 text-xs mb-4 -mt-4 text-start">{te(errors.agreeTerms)}</p>
                                 )}
 
                                 <button

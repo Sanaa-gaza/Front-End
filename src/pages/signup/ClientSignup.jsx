@@ -4,11 +4,27 @@ import { useTranslation } from "react-i18next";
 import AuthHeader from "../../components/AuthHeader";
 import PhoneField from "../../components/PhoneField";
 import FormField from "../../components/FormField";
-import SelectField from "../../components/SelectField";
+import LocationFields from "../../components/LocationFields";
+import FormAlert from "../../components/FormAlert";
 import useLangDir from "../../hooks/useLangDir";
 import {
     getEmailError, getPhoneError, getPasswordError, getConfirmPasswordError, cleanPhone, getRequiredError,
 } from "../../utils/validators";
+import { registerCustomer } from "../../api/endpoints";
+import { parseApiError, mapServerErrors, errorText } from "../../api/errors";
+import { setPendingVerification } from "../../api/session";
+
+// اسم الحقل بالباك إند → اسم الحقل بالفورم
+const SERVER_FIELDS = {
+    full_name: "fullName",
+    email: "email",
+    phone: "phone",
+    password: "password",
+    password_confirmation: "confirmPassword",
+    governorate_id: "city",
+    area_id: "area",
+    terms_accepted: "agreeTerms",
+};
 
 export default function ClientSignup() {
     const navigate = useNavigate();
@@ -29,6 +45,7 @@ export default function ClientSignup() {
 
     const [errors, setErrors] = useState({});
     const [status, setStatus] = useState("idle");
+    const [serverMessages, setServerMessages] = useState([]);
 
     const clearError = (field) => {
         if (errors[field]) setErrors((prev) => ({ ...prev, [field]: "" }));
@@ -36,11 +53,12 @@ export default function ClientSignup() {
 
     // أكواد أخطاء validators.js/الحقول المشتركة بتترجم وقت العرض (مش وقت
     // الـ submit) عشان تتحدث فورًا لو المستخدم بدّل اللغة بعد ظهور الخطأ
-    const tf = (code) => (code ? t(code) : "");
-    const tc = (code) => (code ? t(`signupCommon:${code}`) : "");
+    const tf = (code) => errorText(t, code);
+    const tc = (code) => errorText(t, code, "signupCommon");
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
+        setServerMessages([]);
 
         const newErrors = {
             fullName: getRequiredError(fullName, "fullNameRequired"),
@@ -56,25 +74,30 @@ export default function ClientSignup() {
         setErrors(newErrors);
         if (Object.values(newErrors).some(Boolean)) return;
 
-        const registerData = {
-            fullName: fullName.trim(),
-            email: email.trim(),
-            phone: `${countryCode}${cleanPhone(phone)}`,
-            city,
-            area,
-        };
-        sessionStorage.setItem("sanaa_client_register", JSON.stringify(registerData));
-        sessionStorage.setItem("sanaa_pending_email", email.trim());
-        sessionStorage.setItem("sanaa_verification_redirect", "/dashboard");
-
         setStatus("creating");
-        setTimeout(() => {
+        try {
+            await registerCustomer({
+                full_name: fullName.trim(),
+                email: email.trim(),
+                phone: `${countryCode}${cleanPhone(phone)}`,
+                password,
+                password_confirmation: confirmPassword,
+                governorate_id: Number(city),
+                area_id: Number(area),
+                terms_accepted: agreeTerms,
+            });
+            setPendingVerification(email.trim(), "register", "/dashboard");
             setStatus("created");
-            setTimeout(() => {
-                setStatus("idle");
-                navigate("/verification-code");
-            }, 1200);
-        }, 1000);
+            setTimeout(() => navigate("/verification-code"), 1200);
+        } catch (err) {
+            const { message, fields } = parseApiError(err);
+            const { mapped, unmapped } = mapServerErrors(fields, SERVER_FIELDS);
+            setErrors(mapped);
+            setServerMessages(
+                Object.keys(fields).length ? unmapped : [message || t("signupCommon:networkError")]
+            );
+            setStatus("idle");
+        }
     };
 
     const buttonLabel =
@@ -109,6 +132,8 @@ export default function ClientSignup() {
                     </div>
 
                     <section className="bg-white border border-[#0000001A] rounded-2xl shadow-sm p-8">
+                        <FormAlert messages={serverMessages} />
+
                         <form onSubmit={handleSubmit} noValidate>
                             <div className="mb-4">
                                 <label htmlFor="fullName" className="block text-xs font-semibold text-slate-700 mb-1.5">
@@ -185,40 +210,14 @@ export default function ClientSignup() {
                                 />
                             </div>
 
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
-                                <SelectField
-                                    label={t("signupCommon:city")}
-                                    id="city"
-                                    icon="fa-solid fa-location-dot"
-                                    placeholder={t("signupCommon:cityPlaceholder")}
-                                    value={city}
-                                    onChange={(e) => { setCity(e.target.value); clearError("city"); }}
-                                    error={tf(errors.city)}
-                                    accentColor="#4B9AD2"
-                                    options={[
-                                        { value: "rafah", label: t("signupCommon:cities.rafah") },
-                                        { value: "khanyounis", label: t("signupCommon:cities.khanyounis") },
-                                        { value: "gaza", label: t("signupCommon:cities.gaza") },
-                                        { value: "wusta", label: t("signupCommon:cities.wusta") },
-                                        { value: "north", label: t("signupCommon:cities.north") },
-                                    ]}
-                                />
-
-                                <div>
-                                    <label htmlFor="area" className="block text-xs font-semibold text-slate-700 mb-1.5">
-                                        {t("signupCommon:area")}
-                                    </label>
-                                    <FormField
-                                        id="area"
-                                        icon="fa-solid fa-location-dot"
-                                        placeholder={t("signupCommon:areaPlaceholder")}
-                                        value={area}
-                                        onChange={(e) => { setArea(e.target.value); clearError("area"); }}
-                                        error={tf(errors.area)}
-                                        accentColor="#4B9AD2"
-                                    />
-                                </div>
-                            </div>
+                            <LocationFields
+                                governorateId={city}
+                                areaId={area}
+                                onGovernorateChange={(v) => { setCity(v); clearError("city"); }}
+                                onAreaChange={(v) => { setArea(v); clearError("area"); }}
+                                governorateError={tf(errors.city)}
+                                areaError={tf(errors.area)}
+                            />
 
                             <div className="flex items-center  gap-2 mb-2">
                                 <input

@@ -3,8 +3,12 @@ import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import AuthHeader from "../../components/AuthHeader";
 import FormField from "../../components/FormField";
+import FormAlert from "../../components/FormAlert";
 import useLangDir from "../../hooks/useLangDir";
 import { getEmailError } from "../../utils/validators";
+import { forgotPassword } from "../../api/endpoints";
+import { parseApiError } from "../../api/errors";
+import { setPendingVerification } from "../../api/session";
 
 export default function ForgotPassword() {
     const { t } = useTranslation("forgotPassword");
@@ -14,9 +18,11 @@ export default function ForgotPassword() {
     const [email, setEmail] = useState("");
     const [error, setError] = useState("");
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [serverError, setServerError] = useState("");
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
+        setServerError("");
         const emailErr = getEmailError(email);
         if (emailErr) {
             setError(emailErr);
@@ -24,13 +30,16 @@ export default function ForgotPassword() {
         }
 
         setIsSubmitting(true);
-        sessionStorage.setItem("sanaa_pending_email", email);
-        sessionStorage.setItem("sanaa_verification_redirect", "/reset-password");
-
-        setTimeout(() => {
-            setIsSubmitting(false);
+        try {
+            // السيرفر بيرجع نفس الرد سواء الإيميل مسجل أو لا
+            await forgotPassword(email.trim());
+            setPendingVerification(email.trim(), "reset", "/reset-password");
             navigate("/verification-code");
-        }, 600);
+        } catch (err) {
+            setServerError(parseApiError(err).message || t("signupCommon:networkError"));
+        } finally {
+            setIsSubmitting(false);
+        }
     };
 
     return (
@@ -65,6 +74,8 @@ export default function ForgotPassword() {
                     <p className="text-slate-500 text-sm mb-8 leading-relaxed max-w-md mx-auto">
                         {t("desc")}
                     </p>
+
+                    <FormAlert messages={[serverError]} />
 
                     <form onSubmit={handleSubmit} className="space-y-6 text-start">
                         <FormField

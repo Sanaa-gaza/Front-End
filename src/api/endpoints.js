@@ -1,0 +1,42 @@
+import api from "./client";
+
+/**
+ * كل endpoints الباك إند بمكان واحد. كل دالة بترجع response.data
+ * اللي شكلها: { success, data, message }.
+ */
+const post = (url, body) => api.post(url, body).then((r) => r.data);
+const get = (url) => api.get(url).then((r) => r.data);
+
+// ===== Auth =====
+export const registerCustomer = (body) => post("/auth/register/customer", body);
+export const registerCraftsman = (body) => post("/auth/register/craftsman", body);
+export const registerInstitution = (body) => post("/auth/register/institution", body);
+export const registerContractor = (body) => post("/auth/register/contractor", body);
+
+/** purpose: "register" (بيرجع token + user) أو "reset" (بيرجع reset_token) */
+export const verifyEmail = (email, code, purpose) => post("/auth/verify-email", { email, code, purpose });
+export const resendCode = (email, purpose) => post("/auth/resend-code", { email, purpose });
+
+export const login = (email, password, remember) => post("/auth/login", { email, password, remember });
+export const getMe = () => get("/auth/me");
+export const logout = () => post("/auth/logout");
+
+// ===== Password reset =====
+export const forgotPassword = (email) => post("/auth/forgot-password", { email });
+export const resetPassword = (reset_token, password, password_confirmation) =>
+    post("/auth/reset-password", { reset_token, password, password_confirmation });
+
+// ===== Reference data =====
+export const getGovernorates = () => get("/governorates").then((r) => r.data);
+export const getAreas = (governorateId) => get(`/governorates/${governorateId}/areas`).then((r) => r.data);
+export const getServices = () => get("/services").then((r) => r.data);
+
+// ===== Profile =====
+/** يرفع ملف (JPG/PNG/PDF حتى 10MB) ويرجع المسار اللي بينبعت مع التسجيل */
+export const uploadFile = (file) => {
+    const form = new FormData();
+    form.append("file", file);
+    return api.post("/uploads", form).then((r) => r.data.data.path);
+};
+export const getProfile = () => get("/profile");
+export const updateProfile = (body) => api.put("/profile", body).then((r) => r.data);
