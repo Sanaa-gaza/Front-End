@@ -1,0 +1,221 @@
+{
+    "nav": {
+        "home": "Home",
+        "tenders": "Tenders",
+        "offers": "Offers",
+        "projects": "Active projects",
+        "providers": "Service providers",
+        "reports": "Financial reports",
+        "settings": "Settings & verification"
+    },
+    "stats": {
+        "openTenders": "Open tenders",
+        "newOffers": "New offers",
+        "activeProjects": "Active projects",
+        "pendingReviews": "Projects awaiting your review"
+    },
+    "kyc": {
+        "title": "Notice: institution account verification (KYC) is under review",
+        "desc": "Your institution account is under review or not fully approved yet. You cannot publish new public tenders or officially award contracts until you upload your commercial registration and official licenses.",
+        "action": "Complete verification"
+    },
+    "tenders": {
+        "title": "Active tenders",
+        "offers": "{{count}} offers submitted",
+        "remaining": "{{time}} left",
+        "status": {
+            "open": "Open",
+            "submitting": "Submitting"
+        }
+    },
+    "actions": {
+        "title": "Needs your action",
+        "subtitle": "{{count}} critical tasks awaiting approval",
+        "completeKyc": {
+            "title": "Complete institution verification",
+            "sub": "Profile"
+        },
+        "unanswered": {
+            "title": "Unanswered questions",
+            "sub": "Open tenders"
+        },
+        "unrated": {
+            "title": "Completed project without a review",
+            "sub": "Rate the service provider"
+        },
+        "draft": {
+            "title": "Unpublished draft",
+            "sub": "Continue editing"
+        }
+    },
+    "sample": {
+        "t1": {
+            "title": "Electromechanical works - Al-Waha Medical Complex",
+            "location": "Gaza - Al-Rimal",
+            "remaining": "18 hours 24 minutes"
+        },
+        "t2": {
+            "title": "Directorate sewage repairs",
+            "location": "Gaza - Al-Rimal",
+            "remaining": "6 days"
+        },
+        "t3": {
+            "title": "Field hospital construction",
+            "location": "Gaza - Al-Rimal",
+            "remaining": "6 days"
+        }
+    },
+    "tendersPage": {
+        "search": "Search by tender title",
+        "tabs": {
+            "all": "All",
+            "open": "Open",
+            "executing": "In progress",
+            "submitting": "Submitting",
+            "completed": "Completed",
+            "cancelled": "Cancelled",
+            "draft": "Draft"
+        },
+        "status": {
+            "open": "Open",
+            "executing": "In progress",
+            "submitting": "Submitting",
+            "completed": "Completed",
+            "cancelled": "Cancelled",
+            "draft": "Draft"
+        },
+        "columns": {
+            "title": "Title",
+            "category": "Category",
+            "area": "Area",
+            "deadline": "Deadline",
+            "status": "Status",
+            "actions": "Actions"
+        },
+        "view": "View",
+        "empty": "No matching tenders",
+        "remaining": "{{time}} left",
+        "sample": {
+            "r1": {
+                "title": "Building facade restoration",
+                "category": "Construction",
+                "area": "Nuseirat - Al-Qassam St.",
+                "time": "1 week"
+            },
+            "r2": {
+                "title": "Full building rebuild and finishing",
+                "category": "Restoration",
+                "area": "Gaza - Al-Jalaa",
+                "time": "1 day 6 hours"
+            },
+            "r3": {
+                "title": "Contracting works",
+                "category": "Electromechanical",
+                "area": "Gaza - Al-Rimal",
+                "time": "1 day 6 hours"
+            },
+            "r4": {
+                "title": "Water network maintenance",
+                "category": "Plumbing",
+                "area": "Khan Yunis - Center"
+            },
+            "r5": {
+                "title": "Solar panel installation",
+                "category": "Solar energy",
+                "area": "Rafah - Tal Al-Sultan"
+            },
+            "r6": {
+                "title": "Primary school rehabilitation",
+                "category": "Restoration",
+                "area": "Deir Al-Balah - Al-Mahatta"
+            },
+            "r7": {
+                "title": "Electrical equipment supply",
+                "category": "Electricity",
+                "area": "Gaza - Al-Shujaiya"
+            },
+            "r8": {
+                "title": "Medical clinic finishing",
+                "category": "Finishing",
+                "area": "Jabalia - Camp"
+            }
+        }
+    },
+    "projectsPage": {
+        "search": "Search by project title",
+        "tabs": {
+            "all": "All",
+            "executing": "In progress",
+            "pending": "Awaiting confirmation",
+            "completed": "Completed"
+        },
+        "status": {
+            "executing": "In progress",
+            "pending": "Pending",
+            "completed": "Completed"
+        },
+        "remaining": "{{time}} left",
+        "done": "Completed",
+        "value": "Service value {{amount}} ILS",
+        "open": "Open",
+        "review": "Review",
+        "empty": "No matching projects",
+        "sample": {
+            "p1": {
+                "title": "Second floor painting and finishing",
+                "provider": "Golden Paint Co.",
+                "time": "18 hours 24 minutes"
+            },
+            "p2": {
+                "title": "School construction and finishing",
+                "provider": "Real Estate Co."
+            },
+            "p3": {
+                "title": "Clinic construction",
+                "provider": "Golden Paint Co.",
+                "time": "18 hours 24 minutes"
+            },
+            "p4": {
+                "title": "Electrical network maintenance",
+                "provider": "Al-Noor Electric",
+                "time": "3 days"
+            }
+        }
+    },
+    "settingsPage": {
+        "tabs": {
+            "general": "General settings",
+            "notifications": "Notifications & privacy",
+            "security": "Security",
+            "verification": "Institution verification"
+        },
+        "info": {
+            "title": "Institution details",
+            "name": "Institution name",
+            "activity": "Activity type",
+            "phone": "Phone number",
+            "governorate": "Governorate",
+            "area": "Headquarters",
+            "password": "Password",
+            "changePassword": "Change password",
+            "readOnly": "This field cannot be edited right now",
+            "nameRequired": "Institution name is required",
+            "areaRequired": "Select the headquarters"
+        },
+        "appearance": {
+            "title": "Appearance & language",
+            "language": "Language",
+            "theme": "Theme",
+            "themes": {
+                "auto": "Automatic",
+                "light": "Light",
+                "dark": "Dark"
+            }
+        },
+        "save": "Save changes",
+        "saving": "Saving...",
+        "saved": "Changes saved successfully",
+        "loading": "Loading data...",
+        "select": "Select"
+    }
+}

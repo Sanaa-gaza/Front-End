@@ -34,13 +34,14 @@ export function clearAuth() {
 
 /**
  * وين يروح المستخدم بعد الدخول حسب نوع حسابه (role من رد السيرفر، مش من صفحة الدخول).
- * حالياً في لوحة تحكم وحدة للكل — لما تنبنى لوحة لكل نوع، غيّري المسار هون بس.
+ * كل نوع حساب إله لوحة تحكم بمجلده داخل src/pages/dashboard/
  */
 const ROLE_HOME = {
-    customer: "/dashboard",
-    craftsman: "/dashboard",
-    institution: "/dashboard",
-    contractor: "/dashboard",
+    customer: "/dashboard/customer",
+    craftsman: "/dashboard/craftsman",
+    institution: "/dashboard/institution",
+    contractor: "/dashboard/contractor",
+    admin: "/dashboard/admin",
 };
 
 export function homePathForRole(role) {

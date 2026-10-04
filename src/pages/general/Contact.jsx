@@ -6,8 +6,8 @@ import Footer from "../../components/layout/Footer";
 
 // ==================== بيانات التواصل ====================
 
-// رقم الواتساب بصيغة دولية بدون + أو أصفار (مثال: 970592123456). غيّره للرقم الحقيقي
-const WHATSAPP_NUMBER = "966500000000";
+// الإيميل اللي بتوصله رسائل صفحة "تواصل معنا" — غيّريه للإيميل الحقيقي
+const SUPPORT_EMAIL = "support@example.com";
 
 const CONTACT_TOPICS = ["general", "technical", "payment", "join", "complaint", "other"];
 
@@ -182,18 +182,29 @@ export default function Contact() {
         setErrors(next);
         if (Object.values(next).some(Boolean)) return;
 
-        const text = [
-            t("whatsapp.greeting"),
-            `${t("whatsapp.name")}: ${form.name.trim()}`,
-            `${t("whatsapp.city")}: ${form.city.trim()}`,
-            `${t("whatsapp.topic")}: ${t(`topics.${form.topic}`)}`,
-            `${t("whatsapp.message")}: ${form.message.trim()}`,
+        const topic = t(`topics.${form.topic}`);
+        const body = [
+            t("mail.greeting"),
+            "",
+            `${t("mail.name")}: ${form.name.trim()}`,
+            `${t("mail.city")}: ${form.city.trim()}`,
+            `${t("mail.topic")}: ${topic}`,
+            "",
+            `${t("mail.message")}:`,
+            form.message.trim(),
         ].join("\n");
-        window.open(
-            `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(text)}`,
-            "_blank",
-            "noopener,noreferrer",
-        );
+
+        // بيفتح نافذة كتابة رسالة جديدة بـ Gmail وكل الحقول معبّاة
+        const params = Object.entries({
+            view: "cm",
+            fs: "1",
+            to: SUPPORT_EMAIL,
+            su: t("mail.subject", { topic }),
+            body,
+        })
+            .map(([k, v]) => `${k}=${encodeURIComponent(v)}`)
+            .join("&");
+        window.open(`https://mail.google.com/mail/?${params}`, "_blank", "noopener,noreferrer");
     };
 
     const borderFor = (field) => (errors[field] ? "border-red-400" : "border-[#4B9AD2]");
@@ -309,9 +320,9 @@ export default function Contact() {
 
                             <button
                                 type="submit"
-                                className="btn-wipe mt-5 flex h-11 w-full cursor-pointer items-center justify-center gap-2 rounded-lg bg-[#12C044] text-[14px] font-semibold text-white [--wipe:#0E9C36]"
+                                className="btn-wipe mt-5 flex h-11 w-full cursor-pointer items-center justify-center gap-2 rounded-lg bg-[#4B9AD2] text-[14px] font-semibold text-white"
                             >
-                                <i className="fa-brands fa-whatsapp text-[17px]"></i>
+                                <i className="fa-regular fa-envelope text-[17px]"></i>
                                 {t("form.send")}
                             </button>
 

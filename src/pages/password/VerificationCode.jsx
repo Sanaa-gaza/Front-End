@@ -264,7 +264,7 @@ export default function VerificationCode() {
                                 <button
                                     type="submit"
                                     disabled={verifying || expired}
-                                    className="w-full bg-[#4ba0d8] hover:bg-[#3b8cc4] active:bg-[#327cae] text-white font-bold py-3.5 rounded-xl transition duration-200 shadow-md shadow-blue-400/20 text-base mt-4 disabled:opacity-60 disabled:cursor-not-allowed"
+                                    className="w-full bg-[#4ba0d8] text-white font-bold py-3.5 rounded-xl btn-wipe shadow-md shadow-blue-400/20 text-base mt-4 disabled:opacity-60 disabled:cursor-not-allowed"
                                 >
                                     {verifying ? t("verifying") : t("confirmCode")}
                                 </button>

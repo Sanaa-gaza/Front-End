@@ -6,7 +6,7 @@
     "title": "Trusted craftsmen in every field",
     "subtitle": "Browse more than 250 verified craftsmen in Gaza and contact the best match for you directly.",
     "search": {
-        "placeholder": "Search by craftsman name, trade or skill",
+        "placeholder": "Search",
         "button": "Search"
     },
     "categories": {
@@ -23,10 +23,10 @@
     "filters": {
         "location": "Location",
         "allLocations": "All locations",
-        "sortTop": "Top rated",
-        "sortName": "Name (A - Z)",
         "verified": "Verified",
-        "count": "Craftsmen"
+        "count": "Craftsmen",
+        "rating": "Rating",
+        "ratingAtLeast": "{{rating}} and up"
     },
     "cities": {
         "nuseirat": "Nuseirat",
@@ -44,7 +44,10 @@
         "years": "years of experience",
         "startsFrom": "Starts from",
         "view": "View profile",
-        "profile": "View profile"
+        "profile": "View profile",
+        "available": "Available",
+        "professionalProfile": "Professional profile",
+        "reviews": "({{count}} reviews)"
     },
     "empty": {
         "title": "No matching results",
@@ -68,5 +71,10 @@
         "priceRange": "Price range",
         "order": "Request service",
         "chat": "Contact the craftsman"
+    },
+    "profilePage": {
+        "title": "Craftsman professional profile",
+        "desc": "The professional profile page is under construction and will be available soon.",
+        "back": "Back to craftsmen"
     }
 }

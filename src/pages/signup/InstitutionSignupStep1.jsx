@@ -216,7 +216,7 @@ export default function InstitutionSignupStep1() {
                                 <button
                                     type="submit"
                                     disabled={submitting}
-                                    className="w-full text-white bg-[#4B9AD2] hover:bg-[#3d82b3] transition-colors rounded-lg py-2.5 font-medium cursor-pointer disabled:opacity-60"
+                                    className="w-full text-white bg-[#4B9AD2] btn-wipe rounded-lg py-2.5 font-medium cursor-pointer disabled:opacity-60"
                                 >
                                     {submitting ? t("signupCommon:creating") : t("signupCommon:next")}
                                 </button>

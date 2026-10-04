@@ -168,7 +168,7 @@ export default function LoginForm({
                                     <button
                                         type="button"
                                         onClick={() => goTo(forgotPasswordPath)}
-                                        className="text-[#000] text-xs font-medium cursor-pointer"
+                                        className="text-[#000] text-xs font-medium cursor-pointer underline-offset-4 hover:underline"
                                     >
                                         {t("forgotPassword")}
                                     </button>
@@ -177,7 +177,7 @@ export default function LoginForm({
                                 <button
                                     type="submit"
                                     disabled={submitting}
-                                    className="w-full text-white bg-[#4B9AD2] hover:bg-[#1f4d73] transition-colors rounded-lg py-2.5 font-medium mt-4 cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
+                                    className="w-full text-white bg-[#4B9AD2] btn-wipe rounded-lg py-2.5 font-medium mt-4 cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
                                 >
                                     {submitting ? t("submitting") : t("submit")}
                                 </button>

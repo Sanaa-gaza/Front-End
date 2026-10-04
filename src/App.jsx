@@ -8,7 +8,13 @@ import NotFound from "./pages/general/NotFound";
 import About from "./pages/general/About";
 import Contact from "./pages/general/Contact";
 import Craftsmen from "./pages/general/Craftsmen";
+import CraftsmanProfile from "./pages/general/CraftsmanProfile";
 import Dashboard from "./pages/dashboard/Dashboard";
+import InstitutionDashboard from "./pages/dashboard/institution/InstitutionDashboard";
+import CraftsmanDashboard from "./pages/dashboard/craftsman/CraftsmanDashboard";
+import ContractorDashboard from "./pages/dashboard/contractor/ContractorDashboard";
+import CustomerDashboard from "./pages/dashboard/customer/CustomerDashboard";
+import AdminDashboard from "./pages/dashboard/admin/AdminDashboard";
 
 import ClientLogin from "./pages/login/ClientLogin";
 import CraftsmanLogin from "./pages/login/CraftsmanLogin";
@@ -37,8 +43,14 @@ export default function App() {
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/craftsmen" element={<Craftsmen />} />
+        <Route path="/craftsmen/:craftsmanKey" element={<CraftsmanProfile />} />
         <Route path="/get-started" element={<RoleSelection />} />
         <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/dashboard/institution/*" element={<InstitutionDashboard />} />
+        <Route path="/dashboard/craftsman" element={<CraftsmanDashboard />} />
+        <Route path="/dashboard/contractor" element={<ContractorDashboard />} />
+        <Route path="/dashboard/customer" element={<CustomerDashboard />} />
+        <Route path="/dashboard/admin" element={<AdminDashboard />} />
         <Route path="/login" element={<ClientLogin />} />
         <Route path="/craftsman-login" element={<CraftsmanLogin />} />
         <Route path="/forget-password" element={<ForgotPassword />} />

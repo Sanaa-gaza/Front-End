@@ -1,6 +1,7 @@
 import React, { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
-import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { ChevronDown, LayoutGrid, Search } from "lucide-react";
 import Header from "../../components/layout/Header";
 import Footer from "../../components/layout/Footer";
 
@@ -195,237 +196,103 @@ function SiteLayout({ children }) {
 
 // ==================== بطاقة الحرفي ====================
 
-function CraftsmanCard({ craftsman, onView }) {
+function CraftsmanCard({ craftsman }) {
     const { t } = useTranslation(["home", "craftsmen"]);
     const c = craftsman;
-
-    return (
-        <article className="group rounded-2xl bg-white p-4 shadow-[0_6px_20px_rgba(43,91,120,0.14)] transition-all duration-300 ease-out hover:-translate-y-2 hover:shadow-[0_16px_32px_rgba(75,154,210,0.28)]">
-            <div className="flex items-start justify-between gap-3">
-                <img
-                    src={c.avatar}
-                    alt={t(`home:craftsmen.list.${c.key}.name`)}
-                    draggable="false"
-                    className="h-16 w-16 rounded-full object-cover ring-2 ring-[#1F4E70] transition-transform duration-300 group-hover:scale-105"
-                />
-                <div className="flex flex-col items-start gap-2">
-                    {c.featured && (
-                        <span className="rounded-full bg-[#FFF3C7] px-5 py-1 text-[11px] font-medium text-[#B58A00]">
-                            {t("craftsmen:card.featured")}
-                        </span>
-                    )}
-                    {c.verified && (
-                        <span className="rounded-full bg-[#CFE2F2] px-5 py-1 text-[11px] font-medium text-[#38749E]">
-                            {t("craftsmen:card.verified")}
-                        </span>
-                    )}
-                </div>
-            </div>
-
-            <h3 className="mt-3 text-[15px] font-bold text-[#414141]">
-                {t(`home:craftsmen.list.${c.key}.name`)}
-            </h3>
-            <p className="mt-0.5 text-[12px] text-[#575757]">
-                {t(`home:craftsmen.list.${c.key}.craft`)} {t("craftsmen:card.certified")}
-            </p>
-
-            <div className="mt-2 flex items-center justify-between text-[11px] text-[#89949D]">
-                <div className="flex items-center gap-1.5">
-                    <span className="flex text-[12px] text-[#F6C90E]">
-                        {[0, 1, 2, 3, 4].map((i) => (
-                            <i key={i} className="fa-solid fa-star"></i>
-                        ))}
-                    </span>
-                    <bdi dir="ltr" className="font-semibold text-[#141415]">
-                        {c.rating}
-                    </bdi>
-                    <bdi dir="ltr">({c.reviews})</bdi>
-                </div>
-                <span>
-                    <bdi dir="ltr">({c.orders})</bdi> {t("craftsmen:card.orders")}
-                </span>
-            </div>
-
-            <div className="mt-4 flex items-center justify-between">
-                <span className="flex items-center gap-1.5 text-[12px] font-semibold text-[#38749E]">
-                    <i className="fa-solid fa-location-dot text-[#4B9AD2]"></i>
-                    {t(`craftsmen:cities.${c.city}`)}
-                </span>
-                <span className="text-[10.5px] text-[#89949D]">
-                    <bdi dir="ltr">{c.years}</bdi> {t("craftsmen:card.years")}
-                </span>
-            </div>
-
-            <div className="mt-3 flex items-end justify-between gap-3">
-                <div>
-                    <p className="text-[10.5px] text-[#575757]">{t("craftsmen:card.startsFrom")}</p>
-                    <bdi dir="ltr" className="text-[15px] font-bold text-[#38749E]">
-                        {c.price[0]}$
-                    </bdi>
-                </div>
-                <button
-                    type="button"
-                    onClick={() => onView(c)}
-                    className="h-10 cursor-pointer rounded-xl border border-[#CFE2F2] bg-[#F1F7FC] px-6 text-[13px] font-medium text-[#38749E] shadow-[0_2px_6px_rgba(0,0,0,0.1)] btn-wipe btn-wipe-light"
-                >
-                    {t("craftsmen:card.view")}
-                </button>
-            </div>
-        </article>
-    );
-}
-
-// ==================== نافذة تفاصيل الحرفي ====================
-
-function CraftsmanModal({ craftsman, onClose }) {
-    const navigate = useNavigate();
-    const { t } = useTranslation(["home", "craftsmen"]);
-    const c = craftsman;
-
-    useEffect(() => {
-        const onKey = (e) => e.key === "Escape" && onClose();
-        document.addEventListener("keydown", onKey);
-        const prev = document.body.style.overflow;
-        document.body.style.overflow = "hidden";
-        return () => {
-            document.removeEventListener("keydown", onKey);
-            document.body.style.overflow = prev;
-        };
-    }, [onClose]);
-
     const name = t(`home:craftsmen.list.${c.key}.name`);
-    const craft = t(`home:craftsmen.list.${c.key}.craft`);
-    const city = t(`craftsmen:cities.${c.city}`);
-    const works = t("craftsmen:modal.works", { returnObjects: true });
-
-    const stats = [
-        { value: c.rating, label: t("craftsmen:modal.rating") },
-        { value: c.reviews, label: t("craftsmen:modal.reviews") },
-        { value: c.orders, label: t("craftsmen:modal.completed") },
-        { value: c.years, label: t("craftsmen:modal.experience") },
-    ];
 
     return (
-        <div
-            className="modal-backdrop fixed inset-0 z-[70] flex items-center justify-center bg-[#2B5B78]/35 p-4 backdrop-blur-sm"
-            onMouseDown={(e) => e.target === e.currentTarget && onClose()}
-        >
-            <div
-                role="dialog"
-                aria-modal="true"
-                aria-label={name}
-                className="modal-panel relative max-h-[92vh] w-full max-w-[520px] overflow-y-auto rounded-3xl bg-white p-6 shadow-[0_20px_60px_rgba(15,50,80,0.3)] sm:p-8"
-            >
-                <button
-                    type="button"
-                    onClick={onClose}
-                    aria-label={t("craftsmen:modal.close")}
-                    className="absolute end-4 top-4 flex h-8 w-8 cursor-pointer items-center justify-center rounded-full bg-[#F1F7FC] text-[#38749E] transition-colors hover:bg-[#CFE2F2]"
-                >
-                    <i className="fa-solid fa-xmark"></i>
-                </button>
+        <article className="group relative overflow-hidden rounded-[24px] border border-[#0000000F] bg-white p-5 shadow-[0_6px_20px_rgba(43,91,120,0.08)] transition-all duration-300 ease-out hover:-translate-y-1.5 hover:shadow-[0_16px_32px_rgba(75,154,210,0.22)]">
+            {/* خط أزرق متدرج أعلى البطاقة */}
+            <span
+                aria-hidden="true"
+                className="absolute inset-x-0 top-0 h-1 bg-linear-to-r from-[#4B9AD2]/40 via-[#4B9AD2]/80 to-[#4B9AD2]/40"
+            />
 
-                <div className="flex items-center gap-4">
+            <div className="flex items-center gap-4">
+                <div className="relative shrink-0">
                     <img
                         src={c.avatar}
                         alt={name}
-                        className="h-[72px] w-[72px] rounded-full object-cover ring-2 ring-[#1F4E70]"
+                        draggable="false"
+                        className="h-20 w-20 rounded-full object-cover ring-4 ring-[#E4EFFA] transition-transform duration-300 group-hover:scale-105"
                     />
-                    <div>
-                        <div className="flex flex-wrap items-center gap-2">
-                            <h3 className="text-[19px] font-bold text-[#414141]">{name}</h3>
-                            {c.verified && (
-                                <span className="rounded-full bg-[#CFE2F2] px-3 py-0.5 text-[10px] font-medium text-[#38749E]">
-                                    {t("craftsmen:card.verified")}
-                                </span>
-                            )}
-                        </div>
-                        <p className="mt-1 text-[12.5px] text-[#575757]">
-                            {craft} {t("craftsmen:card.certified")}
-                        </p>
-                        <p className="mt-0.5 flex items-center gap-1.5 text-[12px] text-[#38749E]">
-                            <i className="fa-solid fa-location-dot text-[#4B9AD2]"></i>
-                            {city}
-                        </p>
-                    </div>
-                </div>
-
-                <div className="mt-6 grid grid-cols-4 gap-2 sm:gap-3">
-                    {stats.map((s) => (
-                        <div
-                            key={s.label}
-                            className="rounded-xl border border-[#CFE2F2] bg-[#F8FBFE] px-1 py-3 text-center"
+                    {c.verified && (
+                        <span
+                            title={t("craftsmen:card.verified")}
+                            className="absolute -bottom-1 end-0 flex h-7 w-7 items-center justify-center rounded-full border-2 border-white bg-[#4B9AD2] text-white"
                         >
-                            <bdi dir="ltr" className="block text-[16px] font-bold text-[#38749E]">
-                                {s.value}
-                            </bdi>
-                            <span className="mt-1 block text-[10px] text-[#575757]">{s.label}</span>
-                        </div>
-                    ))}
+                            <i className="fa-solid fa-check text-[11px]"></i>
+                        </span>
+                    )}
                 </div>
 
-                <div className="mt-4 flex items-center gap-2 text-[12px] text-[#89949D]">
-                    <span className="flex text-[13px] text-[#F6C90E]">
-                        {[0, 1, 2, 3, 4].map((i) => (
-                            <i key={i} className="fa-solid fa-star"></i>
-                        ))}
+                <div className="min-w-0 flex-1">
+                    <h3 className="truncate text-[17px] font-bold text-[#414141]">{name}</h3>
+                    <p className="mt-0.5 text-[13px] text-[#4B9AD2]">{t(`home:craftsmen.list.${c.key}.craft`)}</p>
+                    <p className="mt-1 flex items-center gap-1.5 text-[11px] text-[#89949D]">
+                        <i className="fa-solid fa-star text-[12px] text-[#F6C90E]"></i>
+                        <bdi dir="ltr" className="font-bold text-[#414141]">
+                            {c.rating}
+                        </bdi>
+                        <span>{t("craftsmen:card.reviews", { count: c.reviews })}</span>
+                    </p>
+                </div>
+
+                {/* حالة التوفر لسا مش من الباك إند، فكل الحرفيين متاحين مؤقتاً */}
+                {c.available !== false && (
+                    <span className="shrink-0 self-start whitespace-nowrap rounded-full border border-[#BFEBCD] bg-[#E8F8EE] px-3 py-0.5 text-[10px] font-medium text-[#2EAF4E]">
+                        {t("craftsmen:card.available")}
                     </span>
-                    <bdi dir="ltr" className="font-semibold text-[#141415]">
-                        {c.rating}
-                    </bdi>
-                    <bdi dir="ltr">({c.reviews})</bdi>
-                </div>
-
-                <h4 className="mt-5 text-[14px] font-bold text-[#414141]">{t("craftsmen:modal.about")}</h4>
-                <p className="mt-2 text-[12.5px] leading-[2] text-[#575757]">
-                    {t("craftsmen:modal.bio", { craft, city })}
-                </p>
-
-                <h4 className="mt-5 text-[14px] font-bold text-[#414141]">{t("craftsmen:modal.gallery")}</h4>
-                <div className="mt-3 grid grid-cols-4 gap-2">
-                    {(Array.isArray(works) ? works : []).map((w) => (
-                        <figure key={w} className="text-center">
-                            <div className="flex aspect-square items-center justify-center rounded-xl border border-[#E3EBF2] bg-[#F5F9FC] text-[#B7CCDD]">
-                                <i className="fa-regular fa-image text-[20px]"></i>
-                            </div>
-                            <figcaption className="mt-1.5 text-[9.5px] leading-[1.5] text-[#575757]">{w}</figcaption>
-                        </figure>
-                    ))}
-                </div>
-
-                <div className="mt-5 rounded-xl border border-[#CFE2F2] bg-[#EEF5FB] px-4 py-3">
-                    <p className="text-[11px] text-[#575757]">{t("craftsmen:modal.priceRange")}</p>
-                    <bdi dir="ltr" className="mt-0.5 block text-[18px] font-bold text-[#1F4E70]">
-                        {c.price[0]}-{c.price[1]}$
-                    </bdi>
-                </div>
-
-                <div className="mt-5 flex items-center gap-3">
-                    <button
-                        type="button"
-                        onClick={() => navigate("/contact")}
-                        className="h-11 flex-1 cursor-pointer rounded-xl bg-[#4B9AD2] text-[14px] font-semibold text-white btn-wipe"
-                    >
-                        {t("craftsmen:modal.order")}
-                    </button>
-                    <button
-                        type="button"
-                        onClick={() => navigate("/contact")}
-                        aria-label={t("craftsmen:modal.chat")}
-                        className="flex h-11 w-11 cursor-pointer items-center justify-center rounded-xl border border-[#4B9AD2] text-[#4B9AD2] btn-wipe btn-wipe-outline"
-                    >
-                        <i className="fa-regular fa-comment-dots text-[17px]"></i>
-                    </button>
-                </div>
+                )}
             </div>
-        </div>
+
+            <div className="mt-5 flex flex-wrap items-center gap-x-6 gap-y-2 text-[13px] text-[#414141]">
+                <span className="flex items-center gap-1.5">
+                    <i className="fa-solid fa-wrench text-[12px] text-[#4B9AD2]"></i>
+                    <bdi dir="ltr">{c.years}</bdi> {t("craftsmen:card.years")}
+                </span>
+                <span className="flex items-center gap-1.5">
+                    <i className="fa-solid fa-location-dot text-[12px] text-[#4B9AD2]"></i>
+                    {t(`craftsmen:cities.${c.city}`)}
+                </span>
+            </div>
+
+            <Link
+                to={`/craftsmen/${c.key}`}
+                className="mt-5 flex h-12 w-full items-center justify-center rounded-xl bg-[#4B9AD2] text-[16px] font-medium text-white btn-wipe"
+            >
+                {t("craftsmen:card.professionalProfile")}
+            </Link>
+        </article>
     );
 }
 
 // ==================== الصفحة ====================
 
-const selectClass =
-    "h-10 cursor-pointer appearance-none rounded-lg border border-[#4B9AD2] bg-white text-[12px] text-[#38749E] outline-none transition-colors focus:ring-1 focus:ring-[#4B9AD2]";
+// أقل تقييم بفلتر "التقييم"
+const RATING_OPTIONS = ["4.5", "4", "3"];
+
+const fieldClass =
+    "h-11 w-full rounded-lg border border-[#8EC0E4] bg-white text-[12px] text-[#414141] outline-none transition-colors focus:border-[#4B9AD2] focus:ring-1 focus:ring-[#4B9AD2]";
+
+/** قائمة منسدلة بأيقونة شبكة بالبداية وسهم بالنهاية زي التصميم */
+function FilterSelect({ value, onChange, label, children }) {
+    return (
+        <div className="relative md:w-[180px]">
+            <LayoutGrid size={15} className="pointer-events-none absolute start-3 top-1/2 -translate-y-1/2 text-[#4B9AD2]" />
+            <select
+                value={value}
+                onChange={onChange}
+                aria-label={label}
+                className={`${fieldClass} cursor-pointer appearance-none ps-9 pe-9 ${value === "all" ? "text-[#89949D]" : ""}`}
+            >
+                {children}
+            </select>
+            <ChevronDown size={16} className="pointer-events-none absolute end-3 top-1/2 -translate-y-1/2 text-[#4B9AD2]" />
+        </div>
+    );
+}
 
 export default function Craftsmen() {
     const { t } = useTranslation(["craftsmen", "home"]);
@@ -439,15 +306,15 @@ export default function Craftsmen() {
         CATEGORY_KEYS.includes(paramCategory) ? paramCategory : SERVICE_TO_CATEGORY[params.get("service")] || "all",
     );
     const [city, setCity] = useState("all");
-    const [sort, setSort] = useState("top");
+    const [minRating, setMinRating] = useState("all");
     const [verifiedOnly, setVerifiedOnly] = useState(false);
-    const [selected, setSelected] = useState(null);
 
     const results = useMemo(() => {
         const q = submitted.trim().toLowerCase();
         const list = CRAFTSMEN.filter((c) => {
             if (category !== "all" && c.category !== category) return false;
             if (city !== "all" && c.city !== city) return false;
+            if (minRating !== "all" && parseFloat(c.rating) < parseFloat(minRating)) return false;
             if (verifiedOnly && !c.verified) return false;
             if (!q) return true;
             const haystack = [
@@ -460,12 +327,9 @@ export default function Craftsmen() {
                 .toLowerCase();
             return haystack.includes(q);
         });
-        return [...list].sort((a, b) =>
-            sort === "top"
-                ? parseFloat(b.rating) - parseFloat(a.rating)
-                : t(`home:craftsmen.list.${a.key}.name`).localeCompare(t(`home:craftsmen.list.${b.key}.name`)),
-        );
-    }, [submitted, category, city, sort, verifiedOnly, t]);
+        // الأعلى تقييماً أولاً
+        return [...list].sort((a, b) => parseFloat(b.rating) - parseFloat(a.rating));
+    }, [submitted, category, city, minRating, verifiedOnly, t]);
 
     return (
         <SiteLayout>
@@ -492,25 +356,47 @@ export default function Craftsmen() {
                         e.preventDefault();
                         setSubmitted(query);
                     }}
-                    className="mx-auto mt-10 flex max-w-[820px] items-center gap-3 rounded-2xl bg-white px-4 py-3 shadow-[0_6px_18px_rgba(0,0,0,0.13)] sm:px-6 sm:py-4"
+                    className="mx-auto mt-10 flex max-w-[820px] flex-col gap-3 rounded-2xl border border-[#0000000D] bg-white p-4 shadow-[0_6px_24px_rgba(35,74,100,0.08)] md:flex-row md:items-center md:px-5"
                 >
-                    <i className="fa-solid fa-magnifying-glass text-[14px] text-[#4B9AD2]"></i>
-                    <input
-                        value={query}
-                        onChange={(e) => setQuery(e.target.value)}
-                        placeholder={t("search.placeholder")}
-                        aria-label={t("search.placeholder")}
-                        className="h-11 min-w-0 flex-1 bg-transparent text-[13px] text-[#141415] outline-none placeholder:text-[#89949D]"
-                    />
+                    <div className="relative min-w-0 flex-1">
+                        <Search size={16} className="pointer-events-none absolute start-3 top-1/2 -translate-y-1/2 text-[#4B9AD2]" />
+                        <input
+                            type="search"
+                            value={query}
+                            onChange={(e) => setQuery(e.target.value)}
+                            placeholder={t("search.placeholder")}
+                            aria-label={t("search.placeholder")}
+                            className={`${fieldClass} ps-9 pe-4 placeholder:text-[#89949D]`}
+                        />
+                    </div>
+
+                    <FilterSelect value={city} onChange={(e) => setCity(e.target.value)} label={t("filters.location")}>
+                        <option value="all">{t("filters.location")}</option>
+                        {CITY_KEYS.map((k) => (
+                            <option key={k} value={k}>
+                                {t(`cities.${k}`)}
+                            </option>
+                        ))}
+                    </FilterSelect>
+
+                    <FilterSelect value={minRating} onChange={(e) => setMinRating(e.target.value)} label={t("filters.rating")}>
+                        <option value="all">{t("filters.rating")}</option>
+                        {RATING_OPTIONS.map((r) => (
+                            <option key={r} value={r}>
+                                {t("filters.ratingAtLeast", { rating: r })}
+                            </option>
+                        ))}
+                    </FilterSelect>
+
                     <button
                         type="submit"
-                        className="h-11 shrink-0 cursor-pointer rounded-lg bg-[#4B9AD2] px-8 text-[14px] font-semibold text-white btn-wipe"
+                        className="h-11 shrink-0 cursor-pointer rounded-lg bg-[#4B9AD2] px-10 text-[14px] font-semibold text-white btn-wipe"
                     >
                         {t("search.button")}
                     </button>
                 </form>
 
-                <div className="mx-auto mt-8 flex max-w-[900px] flex-wrap items-center justify-center gap-3">
+                <div className="mx-auto mt-8 flex max-w-[1000px] flex-wrap items-center justify-center gap-3">
                     {["all", ...CATEGORY_KEYS].map((key) => {
                         const active = category === key;
                         return (
@@ -519,10 +405,10 @@ export default function Craftsmen() {
                                 type="button"
                                 onClick={() => setCategory(key)}
                                 aria-pressed={active}
-                                className={`h-10 cursor-pointer rounded-xl px-5 text-[13px] font-medium transition-all duration-300 ${
+                                className={`h-12 cursor-pointer rounded-xl border px-5 text-[15px] font-semibold transition-all duration-300 ${
                                     active
-                                        ? "bg-[#4B9AD2] text-white shadow-[0_4px_10px_rgba(75,154,210,0.4)]"
-                                        : "bg-white text-[#38749E] shadow-[0_2px_8px_rgba(0,0,0,0.12)] hover:-translate-y-0.5 hover:text-[#4B9AD2] hover:shadow-[0_6px_14px_rgba(75,154,210,0.25)]"
+                                        ? "border-[#4B9AD2] bg-[#4B9AD2] text-white shadow-[0_4px_12px_rgba(75,154,210,0.35)]"
+                                        : "border-[#BFD9EC] bg-white text-[#38749E] hover:-translate-y-0.5 hover:border-[#4B9AD2] hover:text-[#4B9AD2]"
                                 }`}
                             >
                                 {t(`categories.${key}`)}
@@ -531,51 +417,19 @@ export default function Craftsmen() {
                     })}
                 </div>
 
-                <div className="mt-8 flex flex-col gap-4 rounded-2xl border border-[#DCEAF8] bg-white/80 px-5 py-4 shadow-[0_4px_14px_rgba(43,91,120,0.08)] sm:flex-row sm:items-center sm:justify-between sm:px-7">
-                    <div className="flex flex-wrap items-center gap-3">
-                        <div className="relative">
-                            <i className="fa-solid fa-location-dot pointer-events-none absolute end-3 top-1/2 -translate-y-1/2 text-[11px] text-[#4B9AD2]"></i>
-                            <select
-                                value={city}
-                                onChange={(e) => setCity(e.target.value)}
-                                aria-label={t("filters.location")}
-                                className={`${selectClass} ps-4 pe-9`}
-                            >
-                                <option value="all">{t("filters.location")}</option>
-                                {CITY_KEYS.map((k) => (
-                                    <option key={k} value={k}>
-                                        {t(`cities.${k}`)}
-                                    </option>
-                                ))}
-                            </select>
-                        </div>
-
-                        <div className="relative">
-                            <i className="fa-solid fa-chevron-down pointer-events-none absolute start-3 top-1/2 -translate-y-1/2 text-[9px] text-[#4B9AD2]"></i>
-                            <select
-                                value={sort}
-                                onChange={(e) => setSort(e.target.value)}
-                                aria-label={t("filters.sortTop")}
-                                className={`${selectClass} pe-4 ps-8`}
-                            >
-                                <option value="top">{t("filters.sortTop")}</option>
-                                <option value="name">{t("filters.sortName")}</option>
-                            </select>
-                        </div>
-
-                        <button
-                            type="button"
-                            onClick={() => setVerifiedOnly((v) => !v)}
-                            aria-pressed={verifiedOnly}
-                            className={`h-10 cursor-pointer rounded-lg border px-5 text-[12px] font-medium transition-colors duration-300 ${
-                                verifiedOnly
-                                    ? "border-[#4B9AD2] bg-[#4B9AD2] text-white"
-                                    : "border-[#9DB7CB] bg-white text-[#38749E] hover:border-[#4B9AD2]"
-                            }`}
-                        >
-                            {t("filters.verified")}
-                        </button>
-                    </div>
+                <div className="mt-8 flex flex-wrap items-center justify-between gap-4">
+                    <button
+                        type="button"
+                        onClick={() => setVerifiedOnly((v) => !v)}
+                        aria-pressed={verifiedOnly}
+                        className={`h-10 cursor-pointer rounded-lg border px-5 text-[12px] font-medium transition-colors duration-300 ${
+                            verifiedOnly
+                                ? "border-[#4B9AD2] bg-[#4B9AD2] text-white"
+                                : "border-[#BFD9EC] bg-white text-[#38749E] hover:border-[#4B9AD2]"
+                        }`}
+                    >
+                        {t("filters.verified")}
+                    </button>
 
                     <p className="text-[15px] font-bold text-[#4B9AD2]">
                         {t("filters.count")}{" "}
@@ -586,9 +440,9 @@ export default function Craftsmen() {
                 </div>
 
                 {results.length ? (
-                    <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4">
+                    <div className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
                         {results.map((c) => (
-                            <CraftsmanCard key={c.key} craftsman={c} onView={setSelected} />
+                            <CraftsmanCard key={c.key} craftsman={c} />
                         ))}
                     </div>
                 ) : (
@@ -598,7 +452,6 @@ export default function Craftsmen() {
                     </div>
                 )}
             </section>
-            {selected && <CraftsmanModal craftsman={selected} onClose={() => setSelected(null)} />}
         </SiteLayout>
     );
 }

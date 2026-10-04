@@ -238,7 +238,7 @@ export default function ClientSignup() {
                             <button
                                 type="submit"
                                 disabled={status !== "idle"}
-                                className="w-full text-white bg-[#4B9AD2] hover:bg-[#3d82b3] transition-colors rounded-lg py-2.5 font-medium mt-2 cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
+                                className="w-full text-white bg-[#4B9AD2] btn-wipe rounded-lg py-2.5 font-medium mt-2 cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
                             >
                                 {buttonLabel}
                             </button>

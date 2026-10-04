@@ -30,6 +30,10 @@ import arContact from "./locales/ar/contact.json";
 import enContact from "./locales/en/contact.json";
 import arCraftsmen from "./locales/ar/craftsmen.json";
 import enCraftsmen from "./locales/en/craftsmen.json";
+import arDashboard from "./locales/ar/dashboard.json";
+import enDashboard from "./locales/en/dashboard.json";
+import arInstitutionDashboard from "./locales/ar/institutionDashboard.json";
+import enInstitutionDashboard from "./locales/en/institutionDashboard.json";
 
 
 i18n
@@ -52,6 +56,8 @@ i18n
                 about: arAbout,
                 contact: arContact,
                 craftsmen: arCraftsmen,
+                dashboard: arDashboard,
+                institutionDashboard: arInstitutionDashboard,
 
             },
             en: {
@@ -69,6 +75,8 @@ i18n
                 about: enAbout,
                 contact: enContact,
                 craftsmen: enCraftsmen,
+                dashboard: enDashboard,
+                institutionDashboard: enInstitutionDashboard,
 
             },
         },
@@ -76,5 +84,11 @@ i18n
         defaultNS: "roleSelection",
         interpolation: { escapeValue: false },
     });
+
+// وقت التطوير: لما ينضاف أو يتعدل نص بملف ترجمة، بنعمل reload للصفحة
+// لأن i18next بيقرأ النصوص مرة وحدة بس وقت التشغيل
+if (import.meta.hot) {
+    import.meta.hot.accept(() => window.location.reload());
+}
 
 export default i18n;

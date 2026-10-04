@@ -12,8 +12,8 @@
         "topic": "Message subject",
         "topicPlaceholder": "Choose a subject",
         "message": "Message",
-        "send": "Send message via WhatsApp",
-        "note": "When you press send, WhatsApp will open with an organized message containing your name, city, subject and message.",
+        "send": "Send message via Gmail",
+        "note": "When you press send, Gmail will open with a ready message containing your name, city, subject and message — just press Send.",
         "errors": {
             "name": "Please enter your full name",
             "city": "Please enter your city",
@@ -29,11 +29,12 @@
         "complaint": "Complaint or suggestion",
         "other": "Other"
     },
-    "whatsapp": {
+    "mail": {
         "name": "Name",
         "city": "City",
         "topic": "Subject",
         "message": "Message",
-        "greeting": "Hello Sanaa,"
+        "greeting": "Hello Sanaa,",
+        "subject": "Message from the Sanaa website: {{topic}}"
     }
 }

@@ -115,7 +115,7 @@ function RoleCard({ icon, iconAlt, title, description, buttonLabel, onClick }) {
             <button
                 type="button"
                 onClick={onClick}
-                className="mt-auto text-[#141415D1] bg-[#DEE8FC] hover:bg-[#d9e9f4] transition-colors rounded-lg py-2.5 w-full font-medium cursor-pointer text-sm"
+                className="mt-auto text-[#141415D1] bg-[#DEE8FC] btn-wipe btn-wipe-light rounded-lg py-2.5 w-full font-medium cursor-pointer text-sm"
             >
                 {buttonLabel}
             </button>
