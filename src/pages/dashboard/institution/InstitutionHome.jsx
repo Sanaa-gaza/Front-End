@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { CircleAlert, Hourglass } from "lucide-react";
+import { getProfile } from "../../../api/endpoints";
 
 const BASE = "/dashboard/institution";
 
@@ -36,8 +37,29 @@ const STATUS_STYLES = {
 
 const card = "rounded-[20px] border border-[#0000000D] bg-white shadow-[0_4px_24px_rgba(35,74,100,0.08)]";
 
+/**
+ * حالة توثيق المؤسسة من GET /profile (pending | approved | rejected).
+ * الأدمن بيغيرها من لوحته؛ شكل الرد للمؤسسة مش موثق، فبندوّر بأكثر من مكان.
+ * ملاحظة: users.status (active/suspended) شي ثاني — هاد حالة الحساب مش التوثيق.
+ */
+function readVerification(d = {}) {
+    const inst = d.institution || d.institution_profile || {};
+    return {
+        status: inst.status || d.verification_status || d.account_status || "pending",
+        reason: inst.rejection_reason || d.rejection_reason || "",
+    };
+}
+
 export default function InstitutionHome() {
     const { t } = useTranslation("institutionDashboard");
+    // null = لسا عم نحمّل، عشان التنبيه ما يطلع ويختفي فجأة
+    const [verification, setVerification] = useState(null);
+
+    useEffect(() => {
+        getProfile()
+            .then((res) => setVerification(readVerification(res.data)))
+            .catch(() => setVerification(readVerification()));
+    }, []);
 
     return (
         <div className="mx-auto flex max-w-[1100px] flex-col gap-6">
@@ -51,24 +73,29 @@ export default function InstitutionHome() {
                 ))}
             </section>
 
-            {/* تنبيه التوثيق */}
-            <section className={`${card} flex flex-col gap-5 p-5 sm:flex-row sm:items-center sm:p-6`}>
-                <div className="flex flex-1 items-start gap-4">
+            {/* تنبيه التوثيق — بيختفي لما الأدمن يعتمد حساب المؤسسة */}
+            {verification && verification.status !== "approved" && (
+                <section className={`${card} flex items-start gap-4 p-5 sm:p-6`}>
                     <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-[#F9D6D9] text-[#A61B29]">
                         <CircleAlert size={24} strokeWidth={1.8} />
                     </span>
                     <div>
-                        <h2 className="text-[16px] font-bold text-[#414141]">{t("kyc.title")}</h2>
-                        <p className="mt-1.5 text-[12px] leading-[1.9] text-[#89949D]">{t("kyc.desc")}</p>
+                        {verification.status === "rejected" ? (
+                            <>
+                                <h2 className="text-[16px] font-bold text-[#414141]">{t("kyc.rejectedTitle")}</h2>
+                                <p className="mt-1.5 text-[12px] leading-[1.9] text-[#89949D]">
+                                    {verification.reason || t("kyc.rejectedDesc")}
+                                </p>
+                            </>
+                        ) : (
+                            <>
+                                <h2 className="text-[16px] font-bold text-[#414141]">{t("kyc.title")}</h2>
+                                <p className="mt-1.5 text-[12px] leading-[1.9] text-[#89949D]">{t("kyc.desc")}</p>
+                            </>
+                        )}
                     </div>
-                </div>
-                <Link
-                    to={`${BASE}/settings`}
-                    className="shrink-0 self-start rounded-[10px] bg-[#4B9AD2] px-6 py-3 text-center text-[15px] font-medium text-white btn-wipe sm:self-center"
-                >
-                    {t("kyc.action")}
-                </Link>
-            </section>
+                </section>
+            )}
 
             <div className="grid gap-6 lg:grid-cols-[1fr_300px]">
                 {/* المناقصات الجارية */}

@@ -270,8 +270,8 @@ function CraftsmanCard({ craftsman }) {
 
 // ==================== الصفحة ====================
 
-// أقل تقييم بفلتر "التقييم"
-const RATING_OPTIONS = ["4.5", "4", "3"];
+// خيارات فلتر "التقييم": اختيار 3 بيعرض الحرفيين اللي تقييمهم 3 فأعلى
+const RATING_OPTIONS = ["1", "2", "3", "4", "5"];
 
 const fieldClass =
     "h-11 w-full rounded-lg border border-[#8EC0E4] bg-white text-[12px] text-[#414141] outline-none transition-colors focus:border-[#4B9AD2] focus:ring-1 focus:ring-[#4B9AD2]";
@@ -306,7 +306,7 @@ export default function Craftsmen() {
         CATEGORY_KEYS.includes(paramCategory) ? paramCategory : SERVICE_TO_CATEGORY[params.get("service")] || "all",
     );
     const [city, setCity] = useState("all");
-    const [minRating, setMinRating] = useState("all");
+    const [rating, setRating] = useState("all");
     const [verifiedOnly, setVerifiedOnly] = useState(false);
 
     const results = useMemo(() => {
@@ -314,7 +314,7 @@ export default function Craftsmen() {
         const list = CRAFTSMEN.filter((c) => {
             if (category !== "all" && c.category !== category) return false;
             if (city !== "all" && c.city !== city) return false;
-            if (minRating !== "all" && parseFloat(c.rating) < parseFloat(minRating)) return false;
+            if (rating !== "all" && parseFloat(c.rating) < Number(rating)) return false;
             if (verifiedOnly && !c.verified) return false;
             if (!q) return true;
             const haystack = [
@@ -329,7 +329,7 @@ export default function Craftsmen() {
         });
         // الأعلى تقييماً أولاً
         return [...list].sort((a, b) => parseFloat(b.rating) - parseFloat(a.rating));
-    }, [submitted, category, city, minRating, verifiedOnly, t]);
+    }, [submitted, category, city, rating, verifiedOnly, t]);
 
     return (
         <SiteLayout>
@@ -373,16 +373,16 @@ export default function Craftsmen() {
                     <FilterSelect value={city} onChange={(e) => setCity(e.target.value)} label={t("filters.location")}>
                         <option value="all">{t("filters.location")}</option>
                         {CITY_KEYS.map((k) => (
-                            <option key={k} value={k}>
+                            <option key={k} value={k} className="font-bold">
                                 {t(`cities.${k}`)}
                             </option>
                         ))}
                     </FilterSelect>
 
-                    <FilterSelect value={minRating} onChange={(e) => setMinRating(e.target.value)} label={t("filters.rating")}>
+                    <FilterSelect value={rating} onChange={(e) => setRating(e.target.value)} label={t("filters.rating")}>
                         <option value="all">{t("filters.rating")}</option>
                         {RATING_OPTIONS.map((r) => (
-                            <option key={r} value={r}>
+                            <option key={r} value={r} className="font-bold">
                                 {t("filters.ratingAtLeast", { rating: r })}
                             </option>
                         ))}

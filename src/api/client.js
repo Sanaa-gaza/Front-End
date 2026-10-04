@@ -29,4 +29,15 @@ api.interceptors.response.use(
     }
 );
 
+/**
+ * رابط كامل لملف مرفوع على السيرفر من مساره (مثلاً uploads/x.jpg).
+ * Laravel بيخدم الملفات من /storage على نفس دومين الـ API.
+ */
+export function fileUrl(pathOrUrl) {
+    if (!pathOrUrl) return "";
+    if (/^https?:\/\//.test(pathOrUrl)) return pathOrUrl;
+    const origin = api.defaults.baseURL.replace(/\/api\/?$/, "");
+    return `${origin}/storage/${pathOrUrl.replace(/^\/+/, "")}`;
+}
+
 export default api;

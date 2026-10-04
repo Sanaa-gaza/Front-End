@@ -9,6 +9,9 @@ import InstitutionHome from "./InstitutionHome";
 import InstitutionTenders from "./InstitutionTenders";
 import InstitutionProjects from "./InstitutionProjects";
 import InstitutionSettings from "./InstitutionSettings";
+import InstitutionReports from "./InstitutionReports";
+import InstitutionProviders from "./InstitutionProviders";
+import InstitutionOffers from "./InstitutionOffers";
 
 const BASE = "/dashboard/institution";
 
@@ -35,7 +38,10 @@ export default function InstitutionDashboard() {
                 <Routes>
                     <Route index element={<InstitutionHome />} />
                     <Route path="tenders" element={<InstitutionTenders />} />
+                    <Route path="offers" element={<InstitutionOffers />} />
                     <Route path="projects" element={<InstitutionProjects />} />
+                    <Route path="providers" element={<InstitutionProviders />} />
+                    <Route path="reports" element={<InstitutionReports />} />
                     <Route path="settings" element={<InstitutionSettings />} />
                     <Route path="*" element={<ComingSoon homePath={BASE} />} />
                 </Routes>

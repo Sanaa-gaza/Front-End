@@ -38,5 +38,11 @@ export const uploadFile = (file) => {
     form.append("file", file);
     return api.post("/uploads", form).then((r) => r.data.data.path);
 };
+// ===== Security =====
+// ⚠️ هدول مش موجودين بالباك إند لسا (سبرنت 1) — الأسماء مقترحة، لازم تتأكد مع مطور الباك إند
+export const changePassword = (current_password, password, password_confirmation) =>
+    post("/auth/change-password", { current_password, password, password_confirmation });
+export const deleteAccount = (password) => api.delete("/profile", { data: { password } }).then((r) => r.data);
+
 export const getProfile = () => get("/profile");
 export const updateProfile = (body) => api.put("/profile", body).then((r) => r.data);

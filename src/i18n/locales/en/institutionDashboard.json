@@ -17,7 +17,8 @@
     "kyc": {
         "title": "Notice: institution account verification (KYC) is under review",
         "desc": "Your institution account is under review or not fully approved yet. You cannot publish new public tenders or officially award contracts until you upload your commercial registration and official licenses.",
-        "action": "Complete verification"
+        "rejectedTitle": "Institution account verification was rejected",
+        "rejectedDesc": "Review your institution details and commercial license in Settings, then contact support."
     },
     "tenders": {
         "title": "Active tenders",
@@ -186,8 +187,7 @@
         "tabs": {
             "general": "General settings",
             "notifications": "Notifications & privacy",
-            "security": "Security",
-            "verification": "Institution verification"
+            "security": "Security"
         },
         "info": {
             "title": "Institution details",
@@ -196,26 +196,318 @@
             "phone": "Phone number",
             "governorate": "Governorate",
             "area": "Headquarters",
-            "password": "Password",
-            "changePassword": "Change password",
-            "readOnly": "This field cannot be edited right now",
             "nameRequired": "Institution name is required",
-            "areaRequired": "Select the headquarters"
-        },
-        "appearance": {
-            "title": "Appearance & language",
-            "language": "Language",
-            "theme": "Theme",
-            "themes": {
-                "auto": "Automatic",
-                "light": "Light",
-                "dark": "Dark"
-            }
+            "areaRequired": "Select the headquarters",
+            "activityRequired": "Activity type is required",
+            "photo": "Institution profile photo",
+            "addPhoto": "Add photo",
+            "changePhoto": "Change photo",
+            "license": "Commercial license",
+            "viewLicense": "View current license",
+            "noLicense": "No license uploaded",
+            "replaceLicense": "Click or drop a file to replace the license",
+            "licenseHint": "File up to 10MB in JPG/PNG/PDF format"
         },
         "save": "Save changes",
         "saving": "Saving...",
         "saved": "Changes saved successfully",
         "loading": "Loading data...",
-        "select": "Select"
+        "select": "Select",
+        "notSaved": "Changes were sent, but the server did not save these fields: {{fields}}"
+    },
+    "securityPage": {
+        "password": {
+            "title": "Change password",
+            "current": "Current password",
+            "forgot": "Forgot password?",
+            "new": "New password",
+            "confirm": "Confirm new password",
+            "submit": "Update password",
+            "submitting": "Updating...",
+            "success": "Password updated successfully",
+            "currentRequired": "Enter your current password",
+            "sameAsCurrent": "The new password must be different from the current one"
+        },
+        "delete": {
+            "title": "Delete institution account",
+            "desc": "The institution profile, its offers and linked user accounts will be permanently deleted. This cannot be undone.",
+            "button": "Delete institution account",
+            "confirmTitle": "Are you sure? Enter your password to confirm permanent deletion.",
+            "confirm": "Confirm deletion",
+            "cancel": "Cancel",
+            "deleting": "Deleting..."
+        },
+        "unavailable": "This feature is not available yet; it is still being built on the server side."
+    },
+    "preferencesPage": {
+        "notifications": {
+            "title": "Notifications",
+            "newTenders": {
+                "title": "New tenders matching my institution's field",
+                "desc": "Alert when a tender is published in my area"
+            },
+            "offerReplies": {
+                "title": "Replies to my offers",
+                "desc": "Accepted, rejected or change requested"
+            },
+            "messages": {
+                "title": "Messages",
+                "desc": "Messages from project owners"
+            },
+            "deadlines": {
+                "title": "Closing date reminders",
+                "desc": "24 hours before a tender closes"
+            },
+            "email": {
+                "title": "Email notifications",
+                "desc": "Weekly summary"
+            }
+        },
+        "privacy": {
+            "title": "Privacy",
+            "showContact": {
+                "title": "Show contact details on the institution profile",
+                "desc": "Visible only after your offer is accepted"
+            },
+            "searchVisible": {
+                "title": "Appear in search results",
+                "desc": "Turning it off hides your institution from the service providers list"
+            }
+        }
+    },
+    "reportsPage": {
+        "stats": {
+            "total": {
+                "title": "Total maintenance/service requests",
+                "chip": "This month",
+                "value": "{{value}} ILS"
+            },
+            "pending": {
+                "title": "Pending requests",
+                "chip": "Out of {{total}}",
+                "value": "{{value}} requests"
+            },
+            "cancelled": {
+                "title": "Cancelled requests",
+                "chip": "This month",
+                "value": "{{value}} requests"
+            },
+            "newOrders": {
+                "title": "New requests",
+                "chip": "+{{count}} new",
+                "value": "{{value}} requests"
+            }
+        },
+        "chart": {
+            "title": "Monthly spending analysis",
+            "subtitle": "Overview of actual spending vs. planned budget for {{year}}",
+            "actual": "Actual spending",
+            "planned": "Planned budget",
+            "unit": "{{value}}K ILS",
+            "months": [
+                "Jan",
+                "Feb",
+                "Mar",
+                "Apr",
+                "May",
+                "Jun",
+                "Jul"
+            ],
+            "showTable": "Show data as a table",
+            "hideTable": "Hide table",
+            "month": "Month"
+        }
+    },
+    "providersPage": {
+        "search": "Search by name",
+        "allTypes": "All types",
+        "types": {
+            "craftsman": "Craftsman",
+            "team": "Team",
+            "contractor": "Contractor"
+        },
+        "serviceType": "Service type",
+        "rating": "Rating",
+        "ratingAtLeast": "{{rating}} and up",
+        "searchButton": "Search",
+        "available": "Available",
+        "years": "{{count}} years of experience",
+        "reviews": "({{count}} reviews)",
+        "profile": "Professional profile",
+        "verified": "Verified",
+        "empty": "No matching service providers",
+        "prev": "Previous page",
+        "next": "Next page",
+        "sample": {
+            "p1": {
+                "name": "Al-Noor Technical Team",
+                "specialty": "Plumbing team",
+                "location": "Nuseirat",
+                "tags": [
+                    "Plumbing",
+                    "Pipe repair",
+                    "Repairs"
+                ]
+            },
+            "p2": {
+                "name": "Ahmad Khatib",
+                "specialty": "Electrician",
+                "location": "Gaza - Al-Rimal",
+                "tags": [
+                    "Wiring",
+                    "Panels",
+                    "Maintenance"
+                ]
+            },
+            "p3": {
+                "name": "Modern Building Co.",
+                "specialty": "Building contractor",
+                "location": "Khan Yunis",
+                "tags": [
+                    "Construction",
+                    "Finishing",
+                    "Restoration"
+                ]
+            },
+            "p4": {
+                "name": "Mohammad Abu Saada",
+                "specialty": "Carpenter",
+                "location": "Deir Al-Balah",
+                "tags": [
+                    "Doors",
+                    "Kitchens",
+                    "Furniture"
+                ]
+            },
+            "p5": {
+                "name": "Colors Team",
+                "specialty": "Painting team",
+                "location": "Gaza - Al-Shujaiya",
+                "tags": [
+                    "Painting",
+                    "Decor",
+                    "Insulation"
+                ]
+            },
+            "p6": {
+                "name": "Sami Hamdan",
+                "specialty": "AC & refrigeration technician",
+                "location": "Rafah",
+                "tags": [
+                    "AC",
+                    "Refrigeration",
+                    "Maintenance"
+                ]
+            },
+            "p7": {
+                "name": "United Construction Co.",
+                "specialty": "Construction contractor",
+                "location": "Gaza - Tal Al-Hawa",
+                "tags": [
+                    "Construction",
+                    "Structures",
+                    "Finishing"
+                ]
+            },
+            "p8": {
+                "name": "Khaled Al-Najjar",
+                "specialty": "Tiler",
+                "location": "Jabalia",
+                "tags": [
+                    "Tiles",
+                    "Ceramics",
+                    "Marble"
+                ]
+            },
+            "p9": {
+                "name": "Green Energy Team",
+                "specialty": "Solar energy team",
+                "location": "Khan Yunis",
+                "tags": [
+                    "Solar",
+                    "Installation",
+                    "Maintenance"
+                ]
+            },
+            "p10": {
+                "name": "Yousef Odeh",
+                "specialty": "Blacksmith",
+                "location": "Nuseirat",
+                "tags": [
+                    "Iron doors",
+                    "Windows",
+                    "Welding"
+                ]
+            },
+            "p11": {
+                "name": "Al-Aman Contracting",
+                "specialty": "Restoration contractor",
+                "location": "Deir Al-Balah",
+                "tags": [
+                    "Restoration",
+                    "Insulation",
+                    "Finishing"
+                ]
+            },
+            "p12": {
+                "name": "Rami Al-Shawa",
+                "specialty": "Plumber",
+                "location": "Gaza - Al-Rimal",
+                "tags": [
+                    "Plumbing",
+                    "Water lines",
+                    "Repairs"
+                ]
+            }
+        }
+    },
+    "offersPage": {
+        "search": "Search by tender name",
+        "newTender": "New tender",
+        "tabs": {
+            "all": "All",
+            "new": "New",
+            "reviewed": "Reviewed",
+            "shortlisted": "Shortlisted",
+            "excluded": "Excluded"
+        },
+        "status": {
+            "new": "New",
+            "reviewed": "Reviewed",
+            "shortlisted": "Shortlisted",
+            "excluded": "Excluded"
+        },
+        "columns": {
+            "tender": "Tender",
+            "applicants": "Applicants",
+            "bidder": "Bidder",
+            "experience": "Experience",
+            "price": "Total price",
+            "duration": "Duration",
+            "status": "Status",
+            "actions": "Actions"
+        },
+        "years": "{{count}} years",
+        "price": "{{amount}} ILS",
+        "view": "View details",
+        "empty": "No matching offers",
+        "sample": {
+            "o1": {
+                "tender": "Board hall renovation",
+                "bidder": "Al-Ufuq Contracting Co."
+            },
+            "o2": {
+                "tender": "Electrical installations",
+                "bidder": "Electricity Team"
+            },
+            "o3": {
+                "tender": "School renovation",
+                "bidder": "Eng. Samer Al-Haddad"
+            },
+            "o4": {
+                "tender": "Medical complex construction",
+                "bidder": "Al-Nukhba Foundation"
+            }
+        }
     }
 }

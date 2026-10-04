@@ -177,6 +177,15 @@ export default function DashboardLayout({ navItems, children }) {
                         </label>
                         <button
                             type="button"
+                            onClick={() => i18n.changeLanguage(isRtl ? "en" : "ar")}
+                            aria-label={t("language")}
+                            title={t("language")}
+                            className="flex h-9 w-9 items-center justify-center rounded-full border border-[#4B9AD2] text-[11px] font-bold text-[#4B9AD2] cursor-pointer btn-wipe btn-wipe-outline"
+                        >
+                            {isRtl ? "EN" : "AR"}
+                        </button>
+                        <button
+                            type="button"
                             aria-label={t("addNew")}
                             className="flex h-9 w-9 items-center justify-center rounded-full border border-[#4B9AD2] text-[#4B9AD2] cursor-pointer btn-wipe btn-wipe-outline"
                         >
