@@ -371,8 +371,8 @@ function ServicesSection() {
             <span
                 className={`block h-[2px] rounded-full transition-all ${
                     i === active
-                        ? "w-7 bg-[#4B9AD2]"
-                        : "w-5 bg-[#D5DEE6] group-hover:bg-[#9DB7CB]"
+                        ? "w-5 sm:w-7 bg-[#4B9AD2]"
+                        : "w-3 sm:w-5 bg-[#D5DEE6] group-hover:bg-[#9DB7CB]"
                 }`}
             ></span>
         </button>
@@ -471,13 +471,13 @@ function ServicesSection() {
                     <span className="text-[#4B9AD2]">{pad(active + 1)}</span> / {pad(total)}
                 </span>
 
-                <div className="flex items-center gap-4" dir="ltr">
+                <div className="flex items-center gap-3 sm:gap-4" dir="ltr">
                     <button
                         type="button"
                         onClick={isRtl ? goNext : goPrev}
                         disabled={isRtl ? !canNext : !canPrev}
                         aria-label={isRtl ? t("services.next") : t("services.prev")}
-                        className="flex h-9 w-9 items-center justify-center rounded-full bg-[#4B9AD2] text-white disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer btn-wipe"
+                        className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#4B9AD2] text-white disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer btn-wipe"
                     >
                         <i className="fa-solid fa-arrow-left text-sm"></i>
                     </button>
@@ -491,7 +491,7 @@ function ServicesSection() {
                         onClick={isRtl ? goPrev : goNext}
                         disabled={isRtl ? !canPrev : !canNext}
                         aria-label={isRtl ? t("services.prev") : t("services.next")}
-                        className="flex h-9 w-9 items-center justify-center rounded-full bg-[#4B9AD2] text-white disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer btn-wipe"
+                        className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#4B9AD2] text-white disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer btn-wipe"
                     >
                         <i className="fa-solid fa-arrow-right text-sm"></i>
                     </button>
@@ -604,8 +604,8 @@ function CraftsmenSection() {
             <span
                 className={`block h-[2px] rounded-full transition-all ${
                     i === active
-                        ? "w-7 bg-[#4B9AD2]"
-                        : "w-5 bg-[#D5DEE6] group-hover:bg-[#9DB7CB]"
+                        ? "w-5 sm:w-7 bg-[#4B9AD2]"
+                        : "w-3 sm:w-5 bg-[#D5DEE6] group-hover:bg-[#9DB7CB]"
                 }`}
             ></span>
         </button>
@@ -641,13 +641,13 @@ function CraftsmenSection() {
                     <span className="text-[#4B9AD2]">{pad(active + 1)}</span> / {pad(total)}
                 </span>
 
-                <div className="flex items-center gap-4" dir="ltr">
+                <div className="flex items-center gap-3 sm:gap-4" dir="ltr">
                     <button
                         type="button"
                         onClick={() => scrollStep(-1)}
                         disabled={isRtl ? atEnd : atStart}
                         aria-label={isRtl ? t("craftsmen.next") : t("craftsmen.prev")}
-                        className="flex h-9 w-9 items-center justify-center rounded-full bg-[#4B9AD2] text-white disabled:cursor-not-allowed disabled:opacity-40 cursor-pointer btn-wipe"
+                        className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#4B9AD2] text-white disabled:cursor-not-allowed disabled:opacity-40 cursor-pointer btn-wipe"
                     >
                         <i className="fa-solid fa-arrow-left text-sm"></i>
                     </button>
@@ -661,7 +661,7 @@ function CraftsmenSection() {
                         onClick={() => scrollStep(1)}
                         disabled={isRtl ? atStart : atEnd}
                         aria-label={isRtl ? t("craftsmen.prev") : t("craftsmen.next")}
-                        className="flex h-9 w-9 items-center justify-center rounded-full bg-[#4B9AD2] text-white disabled:cursor-not-allowed disabled:opacity-40 cursor-pointer btn-wipe"
+                        className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#4B9AD2] text-white disabled:cursor-not-allowed disabled:opacity-40 cursor-pointer btn-wipe"
                     >
                         <i className="fa-solid fa-arrow-right text-sm"></i>
                     </button>
