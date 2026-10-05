@@ -1,7 +1,7 @@
 import React from "react";
 import { Route, Routes } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { Briefcase, CircleDollarSign, ClipboardList, House, SquareActivity, UserRound, Users } from "lucide-react";
+import { Briefcase, CircleDollarSign, ClipboardList, FileText, House, SquareActivity, UserRound, Users } from "lucide-react";
 import RequireRole from "../../../components/dashboard/RequireRole";
 import DashboardLayout from "../../../components/dashboard/DashboardLayout";
 import ComingSoon from "../../../components/dashboard/ComingSoon";
@@ -12,6 +12,7 @@ import InstitutionSettings from "./InstitutionSettings";
 import InstitutionReports from "./InstitutionReports";
 import InstitutionProviders from "./InstitutionProviders";
 import InstitutionOffers from "./InstitutionOffers";
+import InstitutionMessages from "./InstitutionMessages";
 
 const BASE = "/dashboard/institution";
 
@@ -27,6 +28,7 @@ export default function InstitutionDashboard() {
         { key: "tenders", icon: SquareActivity, to: `${BASE}/tenders` },
         { key: "offers", icon: Briefcase, to: `${BASE}/offers` },
         { key: "projects", icon: ClipboardList, to: `${BASE}/projects` },
+        { key: "messages", icon: FileText, to: `${BASE}/messages` },
         { key: "providers", icon: Users, to: `${BASE}/providers` },
         { key: "reports", icon: CircleDollarSign, to: `${BASE}/reports` },
         { key: "settings", icon: UserRound, to: `${BASE}/settings` },
@@ -40,6 +42,7 @@ export default function InstitutionDashboard() {
                     <Route path="tenders" element={<InstitutionTenders />} />
                     <Route path="offers" element={<InstitutionOffers />} />
                     <Route path="projects" element={<InstitutionProjects />} />
+                    <Route path="messages" element={<InstitutionMessages />} />
                     <Route path="providers" element={<InstitutionProviders />} />
                     <Route path="reports" element={<InstitutionReports />} />
                     <Route path="settings" element={<InstitutionSettings />} />

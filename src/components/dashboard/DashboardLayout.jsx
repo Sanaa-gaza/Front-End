@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { NavLink, useLocation, useNavigate } from "react-router-dom";
+import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Bell, ChevronsLeft, ChevronsRight, LogOut, Menu, Plus, Search, X } from "lucide-react";
 import useLangDir from "../../hooks/useLangDir";
@@ -60,11 +60,14 @@ export default function DashboardLayout({ navItems, children }) {
             <div className="flex h-full flex-col bg-linear-to-b from-[#9FCBEA] via-[#79B3DE] to-[#4B9AD2] px-4 py-5 text-white">
                 <div className={`flex items-center ${compact ? "justify-center" : "justify-between"} mb-8`}>
                     {!compact && (
-                        <img
-                            src="/images/logo w 1.svg"
-                            alt="صنعة"
-                            className="w-[92px] brightness-0 invert"
-                        />
+                        // الشعار بيرجّع للصفحة الرئيسية للموقع
+                        <Link to="/" className="rounded-md focus-visible:outline-2 focus-visible:outline-white">
+                            <img
+                                src="/images/logo w 1.svg"
+                                alt="صنعة"
+                                className="w-[92px] brightness-0 invert transition-opacity hover:opacity-80"
+                            />
+                        </Link>
                     )}
                     {isMobile ? (
                         <button

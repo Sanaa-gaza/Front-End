@@ -4,6 +4,7 @@
         "tenders": "Tenders",
         "offers": "Offers",
         "projects": "Active projects",
+        "messages": "Correspondence",
         "providers": "Service providers",
         "reports": "Financial reports",
         "settings": "Settings & verification"
@@ -508,6 +509,112 @@
                 "tender": "Medical complex construction",
                 "bidder": "Al-Nukhba Foundation"
             }
+        }
+    },
+    "messagesPage": {
+        "search": "Search by subject or reference number",
+        "allProjects": "All projects",
+        "status": "Status",
+        "searchButton": "Search",
+        "tabs": {
+            "inbox": "Inbox",
+            "outbox": "Sent",
+            "archive": "Archived"
+        },
+        "statuses": {
+            "new": "New",
+            "read": "Read",
+            "replied": "Replied",
+            "reviewing": "Under review",
+            "forwarded": "Forwarded"
+        },
+        "title": "Official correspondence",
+        "subtitle": "Official letters from contractors and service providers, and the institution's outgoing replies.",
+        "empty": "No matching correspondence",
+        "selectHint": "Select a message to view its details",
+        "reply": "Official reply",
+        "forward": "Forward to staff",
+        "ref": "Reference",
+        "from": "From",
+        "to": "To",
+        "project": "Project",
+        "date": "Date",
+        "sample": {
+            "m1": {
+                "title": "Request to extend the execution period",
+                "party": "Golden Paint Co.",
+                "body": "We kindly request approval to extend the painting works by two additional weeks due to a delay in material supply.",
+                "type": "Extension request"
+            },
+            "m2": {
+                "title": "Request for a due payment",
+                "party": "Al-Noor Contracting",
+                "body": "Attached is the invoice for the second phase of the project. Please release the due payment according to the agreed schedule.",
+                "type": "Payment request"
+            },
+            "m3": {
+                "title": "Request to extend the execution period",
+                "party": "Golden Paint Co.",
+                "body": "Further to our previous request, please consider extending the execution period by one week to complete the finishing works.",
+                "type": "Extension request"
+            },
+            "m4": {
+                "title": "Phase completion notice",
+                "party": "Abu Zaid Co.",
+                "body": "We would like to inform you that the foundation phase is fully completed. Please set a date for inspection and handover.",
+                "type": "Notice"
+            },
+            "m5": {
+                "title": "Approval of the period extension",
+                "party": "Golden Paint Co.",
+                "body": "The extension of the execution period by two weeks is approved, provided the contractor adheres to the revised schedule.",
+                "type": "Approval"
+            },
+            "m6": {
+                "title": "Request for missing documents",
+                "party": "Al-Noor Contracting",
+                "body": "Please provide the warranty certificates for the materials used before the third payment is released.",
+                "type": "Documents request"
+            },
+            "m7": {
+                "title": "Invitation to a coordination meeting",
+                "party": "Abu Zaid Co.",
+                "body": "You are invited to a coordination meeting next Sunday at the institution's office to discuss the progress of work.",
+                "type": "Meeting invitation"
+            },
+            "m8": {
+                "title": "Final handover report",
+                "party": "Real Estate Co.",
+                "body": "Attached is the final handover report for the school construction project after all remarks were resolved.",
+                "type": "Handover report"
+            }
+        },
+        "type": "Type",
+        "text": "Message",
+        "attachments": "Attachments",
+        "noAttachments": "No attachments",
+        "replyModal": {
+            "title": "Official reply",
+            "ref": "Ref.",
+            "subject": "Subject",
+            "subjectDefault": "Re: {{title}}",
+            "body": "Reply",
+            "bodyPlaceholder": "Write the official reply",
+            "attachments": "Attachments",
+            "dropHint": "Drag files here or click to upload (PDF, images)",
+            "removeFile": "Remove {{name}}",
+            "send": "Send reply",
+            "sending": "Sending...",
+            "close": "Close",
+            "subjectRequired": "Subject is required",
+            "bodyRequired": "Write the reply",
+            "sent": "The reply was sent and added to Sent.",
+            "replyType": "Official reply",
+            "forwardTitle": "Forward to staff",
+            "forwardSend": "Forward",
+            "forwardSubjectDefault": "Fwd: {{title}}",
+            "forwardType": "Forwarded to staff",
+            "forwarded": "The message was forwarded to staff and added to Sent."
         }
     }
 }
