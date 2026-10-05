@@ -3,62 +3,45 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import Header from "../../components/layout/Header";
 import Footer from "../../components/layout/Footer";
+import { getFeaturedCraftsmen } from "../../api/endpoints";
+import { fileUrl } from "../../api/client";
+import { useAreas, useGovernorates, useServices } from "../../hooks/useReferenceData";
 
-// ==================== بيانات الحرفيين ====================
+// ==================== مساعدات بيانات الحرفيين ====================
 
-// صور الحرفيين اللي بخوذة متوفرة 5 بس، فبتتكرر لحد ما تنضاف صور جديدة
-const HELMET_AVATARS = [
-    "/images/Ellipse 1595 (1).svg",
-    "/images/Ellipse 1595 (2).svg",
-    "/images/Ellipse 1595 (3).svg",
-    "/images/Ellipse 1595 (4).svg",
-    "/images/Ellipse 1595 (5).svg",
-];
+/**
+ * صورة الحرفي من السيرفر، ولو ما انفتحت (أو ما في صورة) بنعرض أول حرف من اسمه.
+ */
+function CraftsmanPhoto({ path, name, className = "" }) {
+    const [failed, setFailed] = useState(false);
+    const src = fileUrl(path);
 
-// category: تصنيف الصفحة، city: مفتاح المدينة، verified: موثوق
-const DATA = [
-    { rating: "4.5", category: "ac", city: "nuseirat", verified: true, reviews: 120, orders: 200, years: 12, price: [100, 500], featured: true },
-    { rating: "4.5", category: "electricity", city: "khanyounis", verified: true, reviews: 86, orders: 140, years: 8, price: [80, 400], featured: false },
-    { rating: "4.9", category: "electricity", city: "gaza", verified: true, reviews: 210, orders: 320, years: 15, price: [120, 600], featured: true },
-    { rating: "4.8", category: "painting", city: "rafah", verified: false, reviews: 64, orders: 95, years: 6, price: [60, 300], featured: false },
-    { rating: "4.7", category: "carpentry", city: "jabalia", verified: true, reviews: 98, orders: 150, years: 10, price: [90, 450], featured: false },
-    { rating: "4.5", category: "carpentry", city: "deirbalah", verified: true, reviews: 55, orders: 80, years: 5, price: [70, 350], featured: false },
-    { rating: "4.6", category: "painting", city: "khanyounis", verified: false, reviews: 73, orders: 110, years: 7, price: [60, 320], featured: false },
-    { rating: "4.9", category: "blacksmith", city: "gaza", verified: true, reviews: 180, orders: 260, years: 14, price: [110, 550], featured: true },
-    { rating: "4.7", category: "plumbing", city: "rafah", verified: true, reviews: 92, orders: 130, years: 9, price: [50, 280], featured: false },
-    { rating: "4.8", category: "cleaning", city: "nuseirat", verified: true, reviews: 140, orders: 210, years: 11, price: [40, 200], featured: false },
-];
+    if (!src || failed) {
+        return (
+            <div className={`${className} flex items-center justify-center bg-[#EAF3FB] text-[32px] font-bold text-[#4B9AD2]`}>
+                {name.charAt(0)}
+            </div>
+        );
+    }
+    return (
+        <img
+            src={src}
+            alt={name}
+            draggable="false"
+            onError={() => setFailed(true)}
+            className={`${className} object-cover`}
+        />
+    );
+}
 
-const CRAFTSMEN = DATA.map((d, i) => ({
-    key: `c${i + 1}`,
-    avatar: HELMET_AVATARS[i % HELMET_AVATARS.length],
-    ...d,
-}));
-
-const CATEGORY_KEYS = ["electricity", "plumbing", "carpentry", "painting", "cleaning", "solar", "blacksmith", "ac"];
-
-// ==================== بيانات الخدمات ====================
-
-// الصور المتوفرة حاليًا 4 فقط، فبتتكرر على الخدمات الباقية لحد ما تنضاف صور جديدة
-const IMG = {
-    painting: "/images/Rectangle 39574.svg",
-    building: "/images/Rectangle 39574 (1).svg",
-    carpentry: "/images/Rectangle 39574 (2).svg",
-    cleaning: "/images/Rectangle 39574 (3).svg",
-};
-
-const SERVICES = [
-    { key: "painting", image: IMG.painting },
-    { key: "cleaning", image: IMG.cleaning },
-    { key: "building", image: IMG.building },
-    { key: "carpentry", image: IMG.carpentry },
-    { key: "electricity", image: IMG.building },
-    { key: "plumbing", image: IMG.cleaning },
-    { key: "acMaintenance", image: IMG.carpentry },
-    { key: "tiling", image: IMG.painting },
-    { key: "gardening", image: IMG.building },
-    { key: "moving", image: IMG.cleaning },
-];
+/** اسم المنطقة والمحافظة من القوائم المرجعية (محفوظة بالكاش) */
+function useLocationName(governorateId, areaId) {
+    const governorates = useGovernorates();
+    const areas = useAreas(governorateId ? String(governorateId) : "");
+    const area = areas.items.find((x) => x.id === areaId)?.name;
+    const governorate = governorates.items.find((g) => g.id === governorateId)?.name;
+    return [area, governorate].filter(Boolean).join("، ");
+}
 
 // ==================== اتجاه الصفحة حسب اللغة ====================
 
@@ -217,6 +200,7 @@ const AVATARS = [
 function HeroSection() {
     const navigate = useNavigate();
     const { t } = useTranslation(["home", "craftsmen"]);
+    const services = useServices();
     const [query, setQuery] = useState("");
     const [service, setService] = useState("");
 
@@ -267,7 +251,7 @@ function HeroSection() {
                             e.preventDefault();
                             const params = new URLSearchParams();
                             if (query.trim()) params.set("q", query.trim());
-                            if (service) params.set("category", service);
+                            if (service) params.set("service_id", service);
                             const qs = params.toString();
                             navigate(qs ? `/craftsmen?${qs}` : "/craftsmen");
                         }}
@@ -293,9 +277,9 @@ function HeroSection() {
                                     }`}
                             >
                                 <option value="">{t("hero.serviceType")}</option>
-                                {CATEGORY_KEYS.map((key) => (
-                                    <option key={key} value={key}>
-                                        {t(`craftsmen:categories.${key}`)}
+                                {services.options.map((o) => (
+                                    <option key={o.value} value={o.value}>
+                                        {o.label}
                                     </option>
                                 ))}
                             </select>
@@ -344,10 +328,15 @@ function ServicesSection() {
     const navigate = useNavigate();
     const { t, i18n } = useTranslation("home");
     const isRtl = i18n.language === "ar";
-    const [active, setActive] = useState(2);
+    // الخدمات (الاسم + الوصف + الصورة) من GET /services
+    const SERVICES = useServices().items;
+    const [selected, setSelected] = useState(2);
     const touchStartX = useRef(null);
 
     const total = SERVICES.length;
+    // لو عدد الخدمات أقل من المختار، بنوقف على آخر وحدة
+    const active = Math.min(selected, Math.max(total - 1, 0));
+    const setActive = (value) => setSelected(typeof value === "function" ? value(active) : value);
     const canPrev = active > 0;
     const canNext = active < total - 1;
     const goPrev = () => canPrev && setActive((a) => a - 1);
@@ -373,10 +362,10 @@ function ServicesSection() {
 
     const dashes = SERVICES.map((s, i) => (
         <button
-            key={s.key}
+            key={s.id}
             type="button"
             onClick={() => setActive(i)}
-            aria-label={t(`services.items.${s.key}`)}
+            aria-label={s.name}
             className="group flex h-4 items-center cursor-pointer"
         >
             <span
@@ -411,7 +400,7 @@ function ServicesSection() {
 
                     return (
                         <article
-                            key={service.key}
+                            key={service.id}
                             onClick={() => !isActive && setActive(i)}
                             aria-hidden={!isActive}
                             className={`absolute top-4 left-1/2 w-[210px] rounded-2xl bg-white p-2.5 shadow-[0_10px_35px_rgba(43,91,120,0.16)] transition-all duration-500 ease-out sm:w-[270px] sm:p-3 ${
@@ -427,8 +416,8 @@ function ServicesSection() {
                         >
                             <div className="relative overflow-hidden rounded-xl">
                                 <img
-                                    src={service.image}
-                                    alt={t(`services.items.${service.key}`)}
+                                    src={fileUrl(service.image_path)}
+                                    alt={service.name}
                                     className="aspect-[16/10] w-full object-cover"
                                     draggable="false"
                                 />
@@ -451,20 +440,20 @@ function ServicesSection() {
                                             : "polygon(0 0, calc(100% - 12px) 0, 100% 50%, calc(100% - 12px) 100%, 0 100%)",
                                     }}
                                 >
-                                    {t(`services.items.${service.key}`)}
+                                    {service.name}
                                 </span>
                             </div>
 
                             <div className="px-1.5 pb-1 pt-4">
                                 <p className="min-h-[3.2em] text-[14px] font-bold leading-[1.6] text-[#141415] sm:text-[16px]">
-                                    {t(`services.descs.${service.key}`)}
+                                    {service.description}
                                 </p>
                                 <button
                                     type="button"
                                     tabIndex={isActive ? 0 : -1}
                                     onClick={(e) => {
                                         e.stopPropagation();
-                                        if (isActive) navigate(`/craftsmen?service=${service.key}`);
+                                        if (isActive) navigate(`/craftsmen?service_id=${service.id}`);
                                     }}
                                     className="mt-2 inline-flex items-center gap-1.5 text-[12px] text-[#4B9AD2] cursor-pointer hover:underline"
                                 >
@@ -477,7 +466,7 @@ function ServicesSection() {
                 })}
             </div>
 
-            <div className="mt-2 flex flex-col items-center gap-3">
+            <div className={`mt-2 flex flex-col items-center gap-3 ${total ? "" : "invisible"}`}>
                 <span className="text-[12px] text-[#575757]" dir="ltr">
                     <span className="text-[#4B9AD2]">{pad(active + 1)}</span> / {pad(total)}
                 </span>
@@ -514,12 +503,59 @@ function ServicesSection() {
 
 // ==================== قسم الحرفيين ====================
 
-function CraftsmenSection() {
+/** بطاقة حرفي بقسم "الحرفيين المتميزين" */
+function FeaturedCraftsmanCard({ craftsman: c }) {
     const navigate = useNavigate();
+    const { t } = useTranslation("home");
+    const location = useLocationName(c.governorate_id, c.area_id);
+
+    return (
+        <article className="group relative w-[210px] shrink-0 snap-start transition-all duration-300 ease-out hover:-translate-y-2 hover:shadow-[0_16px_32px_rgba(75,154,210,0.28)] rounded-2xl bg-white px-5 pb-5 pt-10 text-center shadow-[0_8px_28px_rgba(43,91,120,0.13)] sm:w-[250px]">
+            <span className="absolute start-4 top-3 text-[10px] font-medium text-[#4B9AD2]">{c.craft?.name}</span>
+
+            <div className="relative mx-auto h-[112px] w-[112px] sm:h-[120px] sm:w-[120px]">
+                <CraftsmanPhoto
+                    path={c.personal_photo_path}
+                    name={c.full_name}
+                    className="h-full w-full rounded-full ring-4 ring-[#EAF3FB] transition-all duration-300 group-hover:scale-105 group-hover:ring-[#CFE2F2]"
+                />
+                <span className="absolute -bottom-3 left-1/2 flex -translate-x-1/2 items-center gap-1 rounded-md bg-[#F6C90E] px-2.5 py-0.5 text-[11px] font-bold text-[#141415] shadow-sm">
+                    <i className="fa-regular fa-star text-[10px]"></i>
+                    <bdi dir="ltr">{Number(c.avg_rating || 0).toFixed(1)}</bdi>
+                </span>
+            </div>
+
+            <h3 className="mt-6 text-[15px] font-bold text-[#414141]">{c.full_name}</h3>
+            <p className="mt-1 min-h-[1.5em] text-[11px] text-[#575757]">{location}</p>
+
+            <button
+                type="button"
+                onClick={() => navigate(`/craftsmen/${c.id}`)}
+                className="mt-4 h-9 w-full rounded-lg bg-[#CFE2F2] text-[12px] font-semibold text-[#1F4E70] cursor-pointer btn-wipe btn-wipe-light"
+            >
+                {t("craftsmen.profile")}
+            </button>
+        </article>
+    );
+}
+
+function CraftsmenSection() {
     const { t, i18n } = useTranslation("home");
     const isRtl = i18n.language === "ar";
     const trackRef = useRef(null);
     const [progress, setProgress] = useState(0);
+    const [CRAFTSMEN, setCraftsmen] = useState([]);
+
+    // أفضل 10 حرفيين موثّقين من GET /craftsmen/featured
+    useEffect(() => {
+        let active = true;
+        getFeaturedCraftsmen()
+            .then((list) => active && setCraftsmen(Array.isArray(list) ? list : []))
+            .catch(() => active && setCraftsmen([]));
+        return () => {
+            active = false;
+        };
+    }, []);
 
     const total = CRAFTSMEN.length;
     const active = Math.round(progress * (total - 1));
@@ -551,7 +587,7 @@ function CraftsmenSection() {
         const el = trackRef.current;
         if (!el) return;
         const max = el.scrollWidth - el.clientWidth;
-        const target = (i / (total - 1)) * max;
+        const target = total > 1 ? (i / (total - 1)) * max : 0;
         el.scrollTo({ left: isRtl ? -target : target, behavior: "smooth" });
     };
 
@@ -559,10 +595,10 @@ function CraftsmenSection() {
 
     const dashes = CRAFTSMEN.map((c, i) => (
         <button
-            key={c.key}
+            key={c.id}
             type="button"
             onClick={() => scrollToIndex(i)}
-            aria-label={t(`craftsmen.list.${c.key}.name`)}
+            aria-label={c.full_name}
             className="group flex h-4 items-center cursor-pointer"
         >
             <span
@@ -574,6 +610,9 @@ function CraftsmenSection() {
             ></span>
         </button>
     ));
+
+    // لسا ما وصلت البيانات أو ما في حرفيين متميزين
+    if (!total) return null;
 
     return (
         <section id="craftsmen" className="overflow-hidden bg-white pb-20 pt-6 sm:pt-10">
@@ -593,42 +632,7 @@ function CraftsmenSection() {
                 className="mt-10 flex snap-x snap-mandatory gap-5 overflow-x-auto px-[9%] [scroll-padding-inline:9%] py-6 [mask-image:linear-gradient(to_right,transparent,black_6%,black_94%,transparent)] [scrollbar-width:none] sm:gap-6 [&::-webkit-scrollbar]:hidden"
             >
                 {CRAFTSMEN.map((c) => (
-                    <article
-                        key={c.key}
-                        className="group relative w-[210px] shrink-0 snap-start transition-all duration-300 ease-out hover:-translate-y-2 hover:shadow-[0_16px_32px_rgba(75,154,210,0.28)] rounded-2xl bg-white px-5 pb-5 pt-10 text-center shadow-[0_8px_28px_rgba(43,91,120,0.13)] sm:w-[250px]"
-                    >
-                        <span className="absolute start-4 top-3 text-[10px] font-medium text-[#4B9AD2]">
-                            {t(`craftsmen.list.${c.key}.craft`)}
-                        </span>
-
-                        <div className="relative mx-auto h-[112px] w-[112px] sm:h-[120px] sm:w-[120px]">
-                            <img
-                                src={c.avatar}
-                                alt={t(`craftsmen.list.${c.key}.name`)}
-                                draggable="false"
-                                className="h-full w-full rounded-full object-cover ring-4 ring-[#EAF3FB] transition-all duration-300 group-hover:scale-105 group-hover:ring-[#CFE2F2]"
-                            />
-                            <span className="absolute -bottom-3 left-1/2 flex -translate-x-1/2 items-center gap-1 rounded-md bg-[#F6C90E] px-2.5 py-0.5 text-[11px] font-bold text-[#141415] shadow-sm">
-                                <i className="fa-regular fa-star text-[10px]"></i>
-                                <bdi dir="ltr">{c.rating}</bdi>
-                            </span>
-                        </div>
-
-                        <h3 className="mt-6 text-[15px] font-bold text-[#414141]">
-                            {t(`craftsmen.list.${c.key}.name`)}
-                        </h3>
-                        <p className="mt-1 text-[11px] text-[#575757]">
-                            {t(`craftsmen.list.${c.key}.city`)}
-                        </p>
-
-                        <button
-                            type="button"
-                            onClick={() => navigate(`/craftsmen/${c.key}`)}
-                            className="mt-4 h-9 w-full rounded-lg bg-[#CFE2F2] text-[12px] font-semibold text-[#1F4E70] cursor-pointer btn-wipe btn-wipe-light"
-                        >
-                            {t("craftsmen.profile")}
-                        </button>
-                    </article>
+                    <FeaturedCraftsmanCard key={c.id} craftsman={c} />
                 ))}
             </div>
 

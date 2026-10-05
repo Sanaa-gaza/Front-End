@@ -1,53 +1,13 @@
-import React, { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { ChevronDown, LayoutGrid, Search } from "lucide-react";
 import Header from "../../components/layout/Header";
 import Footer from "../../components/layout/Footer";
-
-// ==================== بيانات الحرفيين ====================
-
-// صور الحرفيين اللي بخوذة متوفرة 5 بس، فبتتكرر لحد ما تنضاف صور جديدة
-const HELMET_AVATARS = [
-    "/images/Ellipse 1595 (1).svg",
-    "/images/Ellipse 1595 (2).svg",
-    "/images/Ellipse 1595 (3).svg",
-    "/images/Ellipse 1595 (4).svg",
-    "/images/Ellipse 1595 (5).svg",
-];
-
-// category: تصنيف الصفحة، city: مفتاح المدينة، verified: موثوق
-const DATA = [
-    { rating: "4.5", category: "ac", city: "nuseirat", verified: true, reviews: 120, orders: 200, years: 12, price: [100, 500], featured: true },
-    { rating: "4.5", category: "electricity", city: "khanyounis", verified: true, reviews: 86, orders: 140, years: 8, price: [80, 400], featured: false },
-    { rating: "4.9", category: "electricity", city: "gaza", verified: true, reviews: 210, orders: 320, years: 15, price: [120, 600], featured: true },
-    { rating: "4.8", category: "painting", city: "rafah", verified: false, reviews: 64, orders: 95, years: 6, price: [60, 300], featured: false },
-    { rating: "4.7", category: "carpentry", city: "jabalia", verified: true, reviews: 98, orders: 150, years: 10, price: [90, 450], featured: false },
-    { rating: "4.5", category: "carpentry", city: "deirbalah", verified: true, reviews: 55, orders: 80, years: 5, price: [70, 350], featured: false },
-    { rating: "4.6", category: "painting", city: "khanyounis", verified: false, reviews: 73, orders: 110, years: 7, price: [60, 320], featured: false },
-    { rating: "4.9", category: "blacksmith", city: "gaza", verified: true, reviews: 180, orders: 260, years: 14, price: [110, 550], featured: true },
-    { rating: "4.7", category: "plumbing", city: "rafah", verified: true, reviews: 92, orders: 130, years: 9, price: [50, 280], featured: false },
-    { rating: "4.8", category: "cleaning", city: "nuseirat", verified: true, reviews: 140, orders: 210, years: 11, price: [40, 200], featured: false },
-];
-
-const CRAFTSMEN = DATA.map((d, i) => ({
-    key: `c${i + 1}`,
-    avatar: HELMET_AVATARS[i % HELMET_AVATARS.length],
-    ...d,
-}));
-
-const CATEGORY_KEYS = ["electricity", "plumbing", "carpentry", "painting", "cleaning", "solar", "blacksmith", "ac"];
-const CITY_KEYS = ["nuseirat", "khanyounis", "gaza", "rafah", "jabalia", "deirbalah"];
-
-// مفاتيح الخدمات بالصفحة الرئيسية -> تصنيف الحرفيين
-const SERVICE_TO_CATEGORY = {
-    painting: "painting",
-    cleaning: "cleaning",
-    carpentry: "carpentry",
-    electricity: "electricity",
-    plumbing: "plumbing",
-    acMaintenance: "ac",
-};
+import { getCraftsmen } from "../../api/endpoints";
+import { fileUrl } from "../../api/client";
+import { parseApiError } from "../../api/errors";
+import { useAreas, useGovernorates, useServices } from "../../hooks/useReferenceData";
 
 // ==================== اتجاه الصفحة حسب اللغة ====================
 
@@ -194,12 +154,48 @@ function SiteLayout({ children }) {
     );
 }
 
+// ==================== صورة الحرفي ====================
+
+/**
+ * صورة الحرفي من السيرفر، ولو ما انفتحت (أو ما في صورة) بنعرض أول حرف من اسمه.
+ */
+function CraftsmanPhoto({ path, name, className = "" }) {
+    const [failed, setFailed] = useState(false);
+    const src = fileUrl(path);
+
+    if (!src || failed) {
+        return (
+            <div className={`${className} flex items-center justify-center bg-[#EAF3FB] text-[24px] font-bold text-[#4B9AD2]`}>
+                {name.charAt(0)}
+            </div>
+        );
+    }
+    return (
+        <img
+            src={src}
+            alt={name}
+            draggable="false"
+            onError={() => setFailed(true)}
+            className={`${className} object-cover`}
+        />
+    );
+}
+
+/** اسم المنطقة والمحافظة من القوائم المرجعية (محفوظة بالكاش، فما بتنطلب أكثر من مرة) */
+function useLocationName(governorateId, areaId) {
+    const governorates = useGovernorates();
+    const areas = useAreas(governorateId ? String(governorateId) : "");
+    const area = areas.items.find((a) => a.id === areaId)?.name;
+    const governorate = governorates.items.find((g) => g.id === governorateId)?.name;
+    return [area, governorate].filter(Boolean).join("، ");
+}
+
 // ==================== بطاقة الحرفي ====================
 
-function CraftsmanCard({ craftsman }) {
-    const { t } = useTranslation(["home", "craftsmen"]);
-    const c = craftsman;
-    const name = t(`home:craftsmen.list.${c.key}.name`);
+function CraftsmanCard({ craftsman: c }) {
+    const { t } = useTranslation("craftsmen");
+    const location = useLocationName(c.governorate_id, c.area_id);
+    const rating = Number(c.avg_rating || 0);
 
     return (
         <article className="group relative overflow-hidden rounded-[24px] border border-[#0000000F] bg-white p-5 shadow-[0_6px_20px_rgba(43,91,120,0.08)] transition-all duration-300 ease-out hover:-translate-y-1.5 hover:shadow-[0_16px_32px_rgba(75,154,210,0.22)]">
@@ -211,15 +207,14 @@ function CraftsmanCard({ craftsman }) {
 
             <div className="flex items-center gap-4">
                 <div className="relative shrink-0">
-                    <img
-                        src={c.avatar}
-                        alt={name}
-                        draggable="false"
-                        className="h-20 w-20 rounded-full object-cover ring-4 ring-[#E4EFFA] transition-transform duration-300 group-hover:scale-105"
+                    <CraftsmanPhoto
+                        path={c.personal_photo_path}
+                        name={c.full_name}
+                        className="h-20 w-20 rounded-full ring-4 ring-[#E4EFFA] transition-transform duration-300 group-hover:scale-105"
                     />
-                    {c.verified && (
+                    {c.is_trusted && (
                         <span
-                            title={t("craftsmen:card.verified")}
+                            title={t("card.verified")}
                             className="absolute -bottom-1 end-0 flex h-7 w-7 items-center justify-center rounded-full border-2 border-white bg-[#4B9AD2] text-white"
                         >
                             <i className="fa-solid fa-check text-[11px]"></i>
@@ -228,43 +223,80 @@ function CraftsmanCard({ craftsman }) {
                 </div>
 
                 <div className="min-w-0 flex-1">
-                    <h3 className="truncate text-[17px] font-bold text-[#414141]">{name}</h3>
-                    <p className="mt-0.5 text-[13px] text-[#4B9AD2]">{t(`home:craftsmen.list.${c.key}.craft`)}</p>
+                    <h3 className="truncate text-[17px] font-bold text-[#414141]">{c.full_name}</h3>
+                    <p className="mt-0.5 text-[13px] text-[#4B9AD2]">{c.craft?.name}</p>
                     <p className="mt-1 flex items-center gap-1.5 text-[11px] text-[#89949D]">
                         <i className="fa-solid fa-star text-[12px] text-[#F6C90E]"></i>
                         <bdi dir="ltr" className="font-bold text-[#414141]">
-                            {c.rating}
+                            {rating.toFixed(1)}
                         </bdi>
-                        <span>{t("craftsmen:card.reviews", { count: c.reviews })}</span>
+                        <span>{t("card.reviews", { count: c.reviews_count || 0 })}</span>
                     </p>
                 </div>
 
-                {/* حالة التوفر لسا مش من الباك إند، فكل الحرفيين متاحين مؤقتاً */}
-                {c.available !== false && (
+                {c.is_available && (
                     <span className="shrink-0 self-start whitespace-nowrap rounded-full border border-[#BFEBCD] bg-[#E8F8EE] px-3 py-0.5 text-[10px] font-medium text-[#2EAF4E]">
-                        {t("craftsmen:card.available")}
+                        {t("card.available")}
                     </span>
                 )}
             </div>
 
-            <div className="mt-5 flex flex-wrap items-center gap-x-6 gap-y-2 text-[13px] text-[#414141]">
-                <span className="flex items-center gap-1.5">
-                    <i className="fa-solid fa-wrench text-[12px] text-[#4B9AD2]"></i>
-                    <bdi dir="ltr">{c.years}</bdi> {t("craftsmen:card.years")}
-                </span>
-                <span className="flex items-center gap-1.5">
-                    <i className="fa-solid fa-location-dot text-[12px] text-[#4B9AD2]"></i>
-                    {t(`craftsmen:cities.${c.city}`)}
-                </span>
-            </div>
+            {location && (
+                <div className="mt-5 flex flex-wrap items-center gap-x-6 gap-y-2 text-[13px] text-[#414141]">
+                    <span className="flex items-center gap-1.5">
+                        <i className="fa-solid fa-location-dot text-[12px] text-[#4B9AD2]"></i>
+                        {location}
+                    </span>
+                </div>
+            )}
 
+            {/* صفحة الملف المهني لسا مؤجلة من الباك إند (سبرنت لاحق) — حالياً بتعرض "قيد الإنشاء" */}
             <Link
-                to={`/craftsmen/${c.key}`}
+                to={`/craftsmen/${c.id}`}
                 className="mt-5 flex h-12 w-full items-center justify-center rounded-xl bg-[#4B9AD2] text-[16px] font-medium text-white btn-wipe"
             >
-                {t("craftsmen:card.professionalProfile")}
+                {t("card.professionalProfile")}
             </Link>
         </article>
+    );
+}
+
+// ==================== التنقل بين الصفحات ====================
+
+function Pagination({ page, pages, onChange }) {
+    const { t, i18n } = useTranslation("craftsmen");
+    if (pages <= 1) return null;
+    const isRtl = i18n.language === "ar";
+    const pad = (n) => String(n).padStart(2, "0");
+    const arrow =
+        "flex h-10 w-10 cursor-pointer items-center justify-center rounded-full bg-[#4B9AD2] text-white btn-wipe disabled:cursor-not-allowed disabled:opacity-40";
+
+    return (
+        <nav aria-label="pagination" className="mt-10 flex flex-col items-center gap-2">
+            <p className="text-[12px] text-[#575757] tabular-nums" dir="ltr">
+                <span className="font-semibold text-[#4B9AD2]">{pad(page)}</span> / {pad(pages)}
+            </p>
+            <div className="flex items-center gap-4">
+                <button type="button" onClick={() => onChange(page - 1)} disabled={page === 1} aria-label={t("pagination.prev")} className={arrow}>
+                    <i className={`fa-solid ${isRtl ? "fa-arrow-right" : "fa-arrow-left"} text-sm`}></i>
+                </button>
+                <div className="flex items-center gap-1.5">
+                    {Array.from({ length: pages }, (_, i) => i + 1).map((n) => (
+                        <button
+                            key={n}
+                            type="button"
+                            onClick={() => onChange(n)}
+                            aria-label={String(n)}
+                            aria-current={n === page ? "page" : undefined}
+                            className={`h-[3px] cursor-pointer rounded-full transition-all ${n === page ? "w-8 bg-[#4B9AD2]" : "w-4 bg-[#BFD9EC] hover:bg-[#8EC0E4]"}`}
+                        />
+                    ))}
+                </div>
+                <button type="button" onClick={() => onChange(page + 1)} disabled={page === pages} aria-label={t("pagination.next")} className={arrow}>
+                    <i className={`fa-solid ${isRtl ? "fa-arrow-left" : "fa-arrow-right"} text-sm`}></i>
+                </button>
+            </div>
+        </nav>
     );
 }
 
@@ -295,41 +327,56 @@ function FilterSelect({ value, onChange, label, children }) {
 }
 
 export default function Craftsmen() {
-    const { t } = useTranslation(["craftsmen", "home"]);
+    const { t } = useTranslation(["craftsmen", "signupCommon"]);
     const [params] = useSearchParams();
+    const services = useServices();
+    const governorates = useGovernorates();
 
+    // ?q= و ?service_id= بيجوا من بحث الصفحة الرئيسية وقسم الخدمات
     const initialQuery = params.get("q") || "";
-    const paramCategory = params.get("category");
     const [query, setQuery] = useState(initialQuery);
     const [submitted, setSubmitted] = useState(initialQuery);
-    const [category, setCategory] = useState(
-        CATEGORY_KEYS.includes(paramCategory) ? paramCategory : SERVICE_TO_CATEGORY[params.get("service")] || "all",
-    );
-    const [city, setCity] = useState("all");
+    const [serviceId, setServiceId] = useState(params.get("service_id") || "all");
+    const [governorateId, setGovernorateId] = useState("all");
     const [rating, setRating] = useState("all");
-    const [verifiedOnly, setVerifiedOnly] = useState(false);
+    const [trustedOnly, setTrustedOnly] = useState(false);
+    const [page, setPage] = useState(1);
+    const [retry, setRetry] = useState(0);
 
-    const results = useMemo(() => {
-        const q = submitted.trim().toLowerCase();
-        const list = CRAFTSMEN.filter((c) => {
-            if (category !== "all" && c.category !== category) return false;
-            if (city !== "all" && c.city !== city) return false;
-            if (rating !== "all" && parseFloat(c.rating) < Number(rating)) return false;
-            if (verifiedOnly && !c.verified) return false;
-            if (!q) return true;
-            const haystack = [
-                t(`home:craftsmen.list.${c.key}.name`),
-                t(`home:craftsmen.list.${c.key}.craft`),
-                t(`craftsmen:categories.${c.category}`),
-                t(`craftsmen:cities.${c.city}`),
-            ]
-                .join(" ")
-                .toLowerCase();
-            return haystack.includes(q);
-        });
-        // الأعلى تقييماً أولاً
-        return [...list].sort((a, b) => parseFloat(b.rating) - parseFloat(a.rating));
-    }, [submitted, category, city, rating, verifiedOnly, t]);
+    // كل الفلترة بتصير بالسيرفر (GET /craftsmen)
+    const request = {
+        search: submitted.trim(),
+        service_id: serviceId === "all" ? "" : serviceId,
+        governorate_id: governorateId === "all" ? "" : governorateId,
+        min_rating: rating === "all" ? "" : rating,
+        trusted: trustedOnly ? 1 : "",
+        page,
+    };
+    const key = JSON.stringify({ ...request, retry });
+    const [result, setResult] = useState({ key: null, craftsmen: [], meta: null, error: "" });
+
+    useEffect(() => {
+        let active = true;
+        getCraftsmen(JSON.parse(key))
+            .then((data) => active && setResult({ key, craftsmen: data?.craftsmen || [], meta: data?.meta || null, error: "" }))
+            .catch((err) =>
+                active &&
+                setResult({ key, craftsmen: [], meta: null, error: parseApiError(err).message || t("signupCommon:networkError") })
+            );
+        return () => {
+            active = false;
+        };
+    }, [key, t]);
+
+    const loading = result.key !== key;
+    const craftsmen = result.craftsmen;
+    const total = result.meta?.total ?? craftsmen.length;
+
+    // أي تغيير بالفلاتر بيرجّعنا للصفحة الأولى
+    const filter = (setter) => (value) => {
+        setter(value);
+        setPage(1);
+    };
 
     return (
         <SiteLayout>
@@ -355,6 +402,7 @@ export default function Craftsmen() {
                     onSubmit={(e) => {
                         e.preventDefault();
                         setSubmitted(query);
+                        setPage(1);
                     }}
                     className="mx-auto mt-10 flex max-w-[820px] flex-col gap-3 rounded-2xl border border-[#0000000D] bg-white p-4 shadow-[0_6px_24px_rgba(35,74,100,0.08)] md:flex-row md:items-center md:px-5"
                 >
@@ -370,16 +418,20 @@ export default function Craftsmen() {
                         />
                     </div>
 
-                    <FilterSelect value={city} onChange={(e) => setCity(e.target.value)} label={t("filters.location")}>
+                    <FilterSelect
+                        value={governorateId}
+                        onChange={(e) => filter(setGovernorateId)(e.target.value)}
+                        label={t("filters.location")}
+                    >
                         <option value="all">{t("filters.location")}</option>
-                        {CITY_KEYS.map((k) => (
-                            <option key={k} value={k} className="font-bold">
-                                {t(`cities.${k}`)}
+                        {governorates.options.map((o) => (
+                            <option key={o.value} value={o.value} className="font-bold">
+                                {o.label}
                             </option>
                         ))}
                     </FilterSelect>
 
-                    <FilterSelect value={rating} onChange={(e) => setRating(e.target.value)} label={t("filters.rating")}>
+                    <FilterSelect value={rating} onChange={(e) => filter(setRating)(e.target.value)} label={t("filters.rating")}>
                         <option value="all">{t("filters.rating")}</option>
                         {RATING_OPTIONS.map((r) => (
                             <option key={r} value={r} className="font-bold">
@@ -396,14 +448,15 @@ export default function Craftsmen() {
                     </button>
                 </form>
 
+                {/* أزرار الحرف من GET /services */}
                 <div className="mx-auto mt-8 flex max-w-[1000px] flex-wrap items-center justify-center gap-3">
-                    {["all", ...CATEGORY_KEYS].map((key) => {
-                        const active = category === key;
+                    {[{ value: "all", label: t("categories.all") }, ...services.options].map((o) => {
+                        const active = serviceId === o.value;
                         return (
                             <button
-                                key={key}
+                                key={o.value}
                                 type="button"
-                                onClick={() => setCategory(key)}
+                                onClick={() => filter(setServiceId)(o.value)}
                                 aria-pressed={active}
                                 className={`h-12 cursor-pointer rounded-xl border px-5 text-[15px] font-semibold transition-all duration-300 ${
                                     active
@@ -411,7 +464,7 @@ export default function Craftsmen() {
                                         : "border-[#BFD9EC] bg-white text-[#38749E] hover:-translate-y-0.5 hover:border-[#4B9AD2] hover:text-[#4B9AD2]"
                                 }`}
                             >
-                                {t(`categories.${key}`)}
+                                {o.label}
                             </button>
                         );
                     })}
@@ -420,10 +473,10 @@ export default function Craftsmen() {
                 <div className="mt-8 flex flex-wrap items-center justify-between gap-4">
                     <button
                         type="button"
-                        onClick={() => setVerifiedOnly((v) => !v)}
-                        aria-pressed={verifiedOnly}
+                        onClick={() => filter(setTrustedOnly)(!trustedOnly)}
+                        aria-pressed={trustedOnly}
                         className={`h-10 cursor-pointer rounded-lg border px-5 text-[12px] font-medium transition-colors duration-300 ${
-                            verifiedOnly
+                            trustedOnly
                                 ? "border-[#4B9AD2] bg-[#4B9AD2] text-white"
                                 : "border-[#BFD9EC] bg-white text-[#38749E] hover:border-[#4B9AD2]"
                         }`}
@@ -434,15 +487,30 @@ export default function Craftsmen() {
                     <p className="text-[15px] font-bold text-[#4B9AD2]">
                         {t("filters.count")}{" "}
                         <bdi dir="ltr" className="text-[#38749E]">
-                            {results.length}
+                            {loading ? "…" : total}
                         </bdi>
                     </p>
                 </div>
 
-                {results.length ? (
+                {loading ? (
+                    <p role="status" className="mt-16 text-center text-[14px] text-[#89949D]">
+                        {t("loading")}
+                    </p>
+                ) : result.error ? (
+                    <div className="mt-16 text-center">
+                        <p className="text-[14px] text-red-500">{result.error}</p>
+                        <button
+                            type="button"
+                            onClick={() => setRetry((r) => r + 1)}
+                            className="mt-4 h-10 cursor-pointer rounded-lg bg-[#4B9AD2] px-6 text-[13px] font-medium text-white btn-wipe"
+                        >
+                            {t("retry")}
+                        </button>
+                    </div>
+                ) : craftsmen.length ? (
                     <div className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                        {results.map((c) => (
-                            <CraftsmanCard key={c.key} craftsman={c} />
+                        {craftsmen.map((c) => (
+                            <CraftsmanCard key={c.id} craftsman={c} />
                         ))}
                     </div>
                 ) : (
@@ -450,6 +518,10 @@ export default function Craftsmen() {
                         <p className="text-[18px] font-bold text-[#38749E]">{t("empty.title")}</p>
                         <p className="mt-2 text-[13px] text-[#575757]">{t("empty.desc")}</p>
                     </div>
+                )}
+
+                {!loading && !result.error && (
+                    <Pagination page={result.meta?.current_page || page} pages={result.meta?.last_page || 1} onChange={setPage} />
                 )}
             </section>
         </SiteLayout>

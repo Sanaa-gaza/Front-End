@@ -3,13 +3,17 @@ import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import Header from "../../components/layout/Header";
 import Footer from "../../components/layout/Footer";
+import { sendContactMessage } from "../../api/endpoints";
+import { parseApiError } from "../../api/errors";
+import { getToken } from "../../api/session";
 
 // ==================== بيانات التواصل ====================
 
-// الإيميل اللي بتوصله رسائل صفحة "تواصل معنا" — غيّريه للإيميل الحقيقي
-const SUPPORT_EMAIL = "support@example.com";
+// مواضيع الرسالة اللي بيقبلها POST /contact
+const CONTACT_TOPICS = ["general", "support", "complaint", "suggestion", "partnership"];
 
-const CONTACT_TOPICS = ["general", "technical", "payment", "join", "complaint", "other"];
+const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const EMPTY_FORM = { name: "", city: "", email: "", topic: "", message: "" };
 
 // ==================== اتجاه الصفحة حسب اللغة ====================
 
@@ -162,56 +166,67 @@ const inputBase =
     "h-11 w-full rounded-lg border bg-white text-[13px] text-[#141415] outline-none transition-colors placeholder:text-[#89949D] focus:border-[#4B9AD2] focus:ring-1 focus:ring-[#4B9AD2]";
 
 export default function Contact() {
-    const { t } = useTranslation("contact");
-    const [form, setForm] = useState({ name: "", city: "", topic: "", message: "" });
+    const { t } = useTranslation(["contact", "signupCommon"]);
+    // المستخدم المسجّل دخول: السيرفر بياخد إيميله من حسابه، فما بنطلبه
+    const isGuest = !getToken();
+    const [form, setForm] = useState(EMPTY_FORM);
     const [errors, setErrors] = useState({});
+    const [sending, setSending] = useState(false);
+    const [result, setResult] = useState(null); // { type: "success" | "error", text }
 
     const update = (field) => (e) => {
         setForm((f) => ({ ...f, [field]: e.target.value }));
         if (errors[field]) setErrors((er) => ({ ...er, [field]: "" }));
+        setResult(null);
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         const next = {
             name: form.name.trim() ? "" : "name",
             city: form.city.trim() ? "" : "city",
+            email: !isGuest ? "" : !form.email.trim() ? "email" : EMAIL_PATTERN.test(form.email.trim()) ? "" : "emailInvalid",
             topic: form.topic ? "" : "topic",
             message: form.message.trim() ? "" : "message",
         };
         setErrors(next);
         if (Object.values(next).some(Boolean)) return;
 
-        const topic = t(`topics.${form.topic}`);
-        const body = [
-            t("mail.greeting"),
-            "",
-            `${t("mail.name")}: ${form.name.trim()}`,
-            `${t("mail.city")}: ${form.city.trim()}`,
-            `${t("mail.topic")}: ${topic}`,
-            "",
-            `${t("mail.message")}:`,
-            form.message.trim(),
-        ].join("\n");
-
-        // بيفتح نافذة كتابة رسالة جديدة بـ Gmail وكل الحقول معبّاة
-        const params = Object.entries({
-            view: "cm",
-            fs: "1",
-            to: SUPPORT_EMAIL,
-            su: t("mail.subject", { topic }),
-            body,
-        })
-            .map(([k, v]) => `${k}=${encodeURIComponent(v)}`)
-            .join("&");
-        window.open(`https://mail.google.com/mail/?${params}`, "_blank", "noopener,noreferrer");
+        setSending(true);
+        setResult(null);
+        try {
+            const res = await sendContactMessage({
+                full_name: form.name.trim(),
+                city: form.city.trim(),
+                ...(isGuest && { email: form.email.trim() }),
+                subject: form.topic,
+                message: form.message.trim(),
+            });
+            setForm(EMPTY_FORM);
+            setResult({ type: "success", text: res.message || t("form.success") });
+        } catch (err) {
+            const { message, fields } = parseApiError(err);
+            // أخطاء السيرفر بتظهر تحت الحقول نفسها
+            setErrors({
+                name: fields.full_name ? { server: fields.full_name } : "",
+                city: fields.city ? { server: fields.city } : "",
+                email: fields.email ? { server: fields.email } : "",
+                topic: fields.subject ? { server: fields.subject } : "",
+                message: fields.message ? { server: fields.message } : "",
+            });
+            setResult({ type: "error", text: message || t("signupCommon:networkError") });
+        } finally {
+            setSending(false);
+        }
     };
 
     const borderFor = (field) => (errors[field] ? "border-red-400" : "border-[#4B9AD2]");
-    const errorText = (field) =>
-        errors[field] ? (
-            <p className="mt-1 text-[11px] text-red-500">{t(`form.errors.${field}`)}</p>
-        ) : null;
+    const errorText = (field) => {
+        const err = errors[field];
+        if (!err) return null;
+        const text = typeof err === "object" ? err.server : t(`form.errors.${err}`);
+        return <p className="mt-1 text-[11px] text-red-500">{text}</p>;
+    };
 
     return (
         <SiteLayout>
@@ -277,6 +292,27 @@ export default function Contact() {
                                 </div>
                             </div>
 
+                            {isGuest && (
+                                <div className="mt-4">
+                                    <label htmlFor="c-email" className="mb-1.5 block text-[11px] font-bold text-[#2B2B2B]">
+                                        {t("form.email")}
+                                    </label>
+                                    <div className="relative">
+                                        <i className="fa-regular fa-envelope pointer-events-none absolute end-3 top-1/2 -translate-y-1/2 text-[13px] text-[#4B9AD2]"></i>
+                                        <input
+                                            id="c-email"
+                                            type="email"
+                                            dir="ltr"
+                                            value={form.email}
+                                            onChange={update("email")}
+                                            placeholder="name@gmail.com"
+                                            className={`${inputBase} ${borderFor("email")} pe-9 ps-3 text-end`}
+                                        />
+                                    </div>
+                                    {errorText("email")}
+                                </div>
+                            )}
+
                             <div className="mt-4">
                                 <label htmlFor="c-topic" className="mb-1.5 block text-[11px] font-bold text-[#2B2B2B]">
                                     {t("form.topic")}
@@ -318,12 +354,26 @@ export default function Contact() {
                                 {errorText("message")}
                             </div>
 
+                            {result && (
+                                <p
+                                    role={result.type === "error" ? "alert" : "status"}
+                                    className={`mt-5 rounded-lg border px-4 py-3 text-[13px] ${
+                                        result.type === "success"
+                                            ? "border-[#BFEBCD] bg-[#E8F8EE] text-[#2E9E5B]"
+                                            : "border-red-200 bg-red-50 text-red-600"
+                                    }`}
+                                >
+                                    {result.text}
+                                </p>
+                            )}
+
                             <button
                                 type="submit"
-                                className="btn-wipe mt-5 flex h-11 w-full cursor-pointer items-center justify-center gap-2 rounded-lg bg-[#4B9AD2] text-[14px] font-semibold text-white"
+                                disabled={sending}
+                                className="btn-wipe mt-5 flex h-11 w-full cursor-pointer items-center justify-center gap-2 rounded-lg bg-[#4B9AD2] text-[14px] font-semibold text-white disabled:cursor-not-allowed disabled:opacity-60"
                             >
-                                <i className="fa-regular fa-envelope text-[17px]"></i>
-                                {t("form.send")}
+                                <i className="fa-regular fa-paper-plane text-[16px]"></i>
+                                {sending ? t("form.sending") : t("form.send")}
                             </button>
 
                             <p className="mt-3 flex items-start gap-1.5 text-[10.5px] leading-[1.7] text-[#7A828A]">

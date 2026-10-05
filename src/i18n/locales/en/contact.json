@@ -12,29 +12,25 @@
         "topic": "Message subject",
         "topicPlaceholder": "Choose a subject",
         "message": "Message",
-        "send": "Send message via Gmail",
-        "note": "When you press send, Gmail will open with a ready message containing your name, city, subject and message — just press Send.",
+        "send": "Send message",
+        "note": "The Sanaa team will receive your message and reply to your email as soon as possible.",
         "errors": {
             "name": "Please enter your full name",
             "city": "Please enter your city",
             "topic": "Please choose a subject",
-            "message": "Please write your message"
-        }
+            "message": "Please write your message",
+            "email": "Please enter your email",
+            "emailInvalid": "Please enter a valid email"
+        },
+        "sending": "Sending...",
+        "success": "Your message was sent successfully. We will contact you soon.",
+        "email": "Email"
     },
     "topics": {
         "general": "General inquiry",
-        "technical": "Technical issue",
-        "payment": "Payment & guarantee",
-        "join": "Joining as a craftsman or contractor",
-        "complaint": "Complaint or suggestion",
-        "other": "Other"
-    },
-    "mail": {
-        "name": "Name",
-        "city": "City",
-        "topic": "Subject",
-        "message": "Message",
-        "greeting": "Hello Sanaa,",
-        "subject": "Message from the Sanaa website: {{topic}}"
+        "support": "Technical support",
+        "complaint": "Complaint",
+        "suggestion": "Suggestion",
+        "partnership": "Partnership"
     }
 }

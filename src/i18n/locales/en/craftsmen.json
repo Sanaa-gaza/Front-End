@@ -76,5 +76,11 @@
         "title": "Craftsman professional profile",
         "desc": "The professional profile page is under construction and will be available soon.",
         "back": "Back to craftsmen"
+    },
+    "loading": "Loading craftsmen...",
+    "retry": "Try again",
+    "pagination": {
+        "prev": "Previous page",
+        "next": "Next page"
     }
 }

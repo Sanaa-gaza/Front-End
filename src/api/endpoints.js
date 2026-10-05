@@ -46,3 +46,28 @@ export const deleteAccount = (password) => api.delete("/profile", { data: { pass
 
 export const getProfile = () => get("/profile");
 export const updateProfile = (body) => api.put("/profile", body).then((r) => r.data);
+
+// ===== Craftsmen (سبرنت 2) =====
+/**
+ * params: { search, service_id, governorate_id, area_id, min_rating, trusted, page }
+ * بيرجع { craftsmen: [...], meta: { current_page, last_page, total } }
+ */
+export const getCraftsmen = (params = {}) => {
+    // بنشيل الفلاتر الفاضية عشان ما تنبعت كـ ?service_id=
+    const clean = Object.fromEntries(Object.entries(params).filter(([, v]) => v !== "" && v !== null && v !== undefined));
+    return api.get("/craftsmen", { params: clean }).then((r) => r.data.data);
+};
+export const getFeaturedCraftsmen = () => get("/craftsmen/featured").then((r) => r.data);
+
+// ===== Service requests (سبرنت 2) =====
+export const createServiceRequest = (body) => post("/service-requests", body);
+export const getServiceRequests = (status) =>
+    api.get("/service-requests", { params: status ? { status } : {} }).then((r) => r.data);
+export const acceptServiceRequest = (id) => post(`/service-requests/${id}/accept`);
+export const rejectServiceRequest = (id, reason) => post(`/service-requests/${id}/reject`, { reason });
+export const completeServiceRequest = (id) => post(`/service-requests/${id}/complete`);
+export const reviewServiceRequest = (id, rating, comment) => post(`/service-requests/${id}/review`, { rating, comment });
+
+// ===== Contact (سبرنت 2) =====
+/** { full_name, city, email (للزائر بس), subject: general|complaint|suggestion|support|partnership, message } */
+export const sendContactMessage = (body) => post("/contact", body);
