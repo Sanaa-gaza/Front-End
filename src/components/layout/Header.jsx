@@ -98,8 +98,8 @@ export default function Header() {
                             type="button"
                             onClick={() => goTo(item)}
                             className={`nav-link cursor-pointer transition-colors ${isActive(item)
-                                    ? "nav-link-active text-[#4B9AD2] font-semibold"
-                                    : "hover:text-[#4B9AD2]"
+                                ? "nav-link-active text-[#4B9AD2] font-semibold"
+                                : "hover:text-[#4B9AD2]"
                                 }`}
                         >
                             {t(`nav.${item.key}`)}
@@ -113,7 +113,7 @@ export default function Header() {
                         type="button"
                         onClick={toggleLang}
                         aria-label="Language"
-                        className="flex h-9 w-9 items-center justify-center rounded-full border border-[#4B9AD2] text-[11px] font-bold text-[#4B9AD2] cursor-pointer btn-wipe btn-wipe-outline"
+                        className="flex h-9 w-9 items-center justify-center rounded-full border border-[#2563EB] text-[11px] font-bold text-[#2563EB] cursor-pointer btn-wipe btn-wipe-outline"
                     >
                         {i18n.language === "ar" ? "EN" : "AR"}
                     </button>
