@@ -47,7 +47,7 @@ export default function App() {
         <Route path="/get-started" element={<RoleSelection />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/dashboard/institution/*" element={<InstitutionDashboard />} />
-        <Route path="/dashboard/craftsman" element={<CraftsmanDashboard />} />
+        <Route path="/dashboard/craftsman/*" element={<CraftsmanDashboard />} />
         <Route path="/dashboard/contractor" element={<ContractorDashboard />} />
         <Route path="/dashboard/customer" element={<CustomerDashboard />} />
         <Route path="/dashboard/admin" element={<AdminDashboard />} />

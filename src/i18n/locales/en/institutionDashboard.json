@@ -276,49 +276,6 @@
             }
         }
     },
-    "reportsPage": {
-        "stats": {
-            "total": {
-                "title": "Total maintenance/service requests",
-                "chip": "This month",
-                "value": "{{value}} ILS"
-            },
-            "pending": {
-                "title": "Pending requests",
-                "chip": "Out of {{total}}",
-                "value": "{{value}} requests"
-            },
-            "cancelled": {
-                "title": "Cancelled requests",
-                "chip": "This month",
-                "value": "{{value}} requests"
-            },
-            "newOrders": {
-                "title": "New requests",
-                "chip": "+{{count}} new",
-                "value": "{{value}} requests"
-            }
-        },
-        "chart": {
-            "title": "Monthly spending analysis",
-            "subtitle": "Overview of actual spending vs. planned budget for {{year}}",
-            "actual": "Actual spending",
-            "planned": "Planned budget",
-            "unit": "{{value}}K ILS",
-            "months": [
-                "Jan",
-                "Feb",
-                "Mar",
-                "Apr",
-                "May",
-                "Jun",
-                "Jul"
-            ],
-            "showTable": "Show data as a table",
-            "hideTable": "Hide table",
-            "month": "Month"
-        }
-    },
     "providersPage": {
         "search": "Search by name",
         "allTypes": "All types",

@@ -9,7 +9,6 @@ import InstitutionHome from "./InstitutionHome";
 import InstitutionTenders from "./InstitutionTenders";
 import InstitutionProjects from "./InstitutionProjects";
 import InstitutionSettings from "./InstitutionSettings";
-import InstitutionReports from "./InstitutionReports";
 import InstitutionProviders from "./InstitutionProviders";
 import InstitutionOffers from "./InstitutionOffers";
 import InstitutionMessages from "./InstitutionMessages";
@@ -30,6 +29,7 @@ export default function InstitutionDashboard() {
         { key: "projects", icon: ClipboardList, to: `${BASE}/projects` },
         { key: "messages", icon: FileText, to: `${BASE}/messages` },
         { key: "providers", icon: Users, to: `${BASE}/providers` },
+        // صفحة التقارير المالية لسا مش جاهزة — رابطها بيعرض "قيد الإنشاء"
         { key: "reports", icon: CircleDollarSign, to: `${BASE}/reports` },
         { key: "settings", icon: UserRound, to: `${BASE}/settings` },
     ].map((item) => ({ ...item, label: t(`nav.${item.key}`) }));
@@ -44,7 +44,6 @@ export default function InstitutionDashboard() {
                     <Route path="projects" element={<InstitutionProjects />} />
                     <Route path="messages" element={<InstitutionMessages />} />
                     <Route path="providers" element={<InstitutionProviders />} />
-                    <Route path="reports" element={<InstitutionReports />} />
                     <Route path="settings" element={<InstitutionSettings />} />
                     <Route path="*" element={<ComingSoon homePath={BASE} />} />
                 </Routes>

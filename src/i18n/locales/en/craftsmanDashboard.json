@@ -1,0 +1,82 @@
+{
+    "nav": {
+        "home": "Home",
+        "search": "Search",
+        "requests": "Requests",
+        "current": "Current jobs",
+        "wallet": "Wallet",
+        "profile": "My profile"
+    },
+    "stats": {
+        "earnings": {
+            "value": "{{value}} ILS",
+            "label": "Earnings"
+        },
+        "completed": {
+            "value": "{{value}} jobs",
+            "label": "Completed jobs"
+        },
+        "newRequests": {
+            "value": "{{value}} requests",
+            "label": "New requests"
+        },
+        "rating": {
+            "value": "{{value}} rating",
+            "label": "Reviews"
+        }
+    },
+    "jobs": {
+        "location": "Location",
+        "serviceType": "Service type",
+        "search": "Search",
+        "nearby": "Nearby suggestions",
+        "sorted": "Sorted by newest",
+        "deadline": "Applications open until {{date}}",
+        "experience": "{{years}} yrs experience",
+        "apply": "Apply now",
+        "empty": "No matching opportunities",
+        "sample": {
+            "j1": {
+                "service": "Plumber",
+                "org": "Al-Irada Charity",
+                "desc": "A whole building needs a plumber to handle all technical work",
+                "location": "Gaza",
+                "date": "1 November 2026"
+            },
+            "j2": {
+                "service": "Plumber",
+                "org": "Al-Irada Charity",
+                "desc": "An institution needs its internal water network rebuilt",
+                "location": "Nuseirat",
+                "date": "1 November 2026"
+            },
+            "j3": {
+                "service": "Electrician",
+                "org": "Al-Noor Society",
+                "desc": "Full electrical installation for a new training center",
+                "location": "Khan Yunis",
+                "date": "10 November 2026"
+            },
+            "j4": {
+                "service": "Carpenter",
+                "org": "Al-Amal School",
+                "desc": "Making and installing wooden doors and cabinets for classrooms",
+                "location": "Deir Al-Balah",
+                "date": "15 November 2026"
+            }
+        }
+    },
+    "availability": {
+        "title": "Available for work",
+        "on": "You are now available to receive requests",
+        "off": "You are not available to receive requests right now",
+        "notSaved": "The status was not saved; this is not available on the server yet."
+    },
+    "portfolio": {
+        "title": "Attach photos of your work, if any",
+        "desc": "Photos of your previous work help build trust with customers",
+        "drop": "Click or drag a photo",
+        "remove": "Remove photo",
+        "notSaved": "Saving work photos to your account is not available on the server yet."
+    }
+}

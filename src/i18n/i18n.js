@@ -34,6 +34,8 @@ import arDashboard from "./locales/ar/dashboard.json";
 import enDashboard from "./locales/en/dashboard.json";
 import arInstitutionDashboard from "./locales/ar/institutionDashboard.json";
 import enInstitutionDashboard from "./locales/en/institutionDashboard.json";
+import arCraftsmanDashboard from "./locales/ar/craftsmanDashboard.json";
+import enCraftsmanDashboard from "./locales/en/craftsmanDashboard.json";
 
 
 i18n
@@ -58,6 +60,7 @@ i18n
                 craftsmen: arCraftsmen,
                 dashboard: arDashboard,
                 institutionDashboard: arInstitutionDashboard,
+                craftsmanDashboard: arCraftsmanDashboard,
 
             },
             en: {
@@ -77,6 +80,7 @@ i18n
                 craftsmen: enCraftsmen,
                 dashboard: enDashboard,
                 institutionDashboard: enInstitutionDashboard,
+                craftsmanDashboard: enCraftsmanDashboard,
 
             },
         },

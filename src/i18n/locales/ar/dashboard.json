@@ -11,5 +11,7 @@
     "comingSoonTitle": "هذه الصفحة قيد الإنشاء",
     "comingSoonDesc": "نعمل على تجهيزها، وستكون متاحة قريباً.",
     "backHome": "العودة للرئيسية",
-    "language": "تغيير اللغة"
+    "language": "تغيير اللغة",
+    "greeting": "مرحباً بك",
+    "searchLabel": "بحث"
 }

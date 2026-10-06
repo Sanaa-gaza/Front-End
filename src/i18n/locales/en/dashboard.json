@@ -11,5 +11,7 @@
     "comingSoonTitle": "This page is under construction",
     "comingSoonDesc": "We are working on it and it will be available soon.",
     "backHome": "Back to home",
-    "language": "Change language"
+    "language": "Change language",
+    "greeting": "Welcome",
+    "searchLabel": "Search"
 }

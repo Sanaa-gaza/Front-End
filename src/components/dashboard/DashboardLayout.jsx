@@ -5,12 +5,32 @@ import { Bell, ChevronsLeft, ChevronsRight, LogOut, Menu, Plus, Search, X } from
 import useLangDir from "../../hooks/useLangDir";
 import { getMe, logout } from "../../api/endpoints";
 import { clearAuth, getStoredUser } from "../../api/session";
+import { fileUrl } from "../../api/client";
+
+/** صورة المستخدم بالشريط العلوي، ولو ما في صورة (أو ما انفتحت) أول حرف من الاسم */
+function TopbarAvatar({ path, name }) {
+    const [failed, setFailed] = useState(false);
+    const src = fileUrl(path);
+    if (!src || failed) {
+        return (
+            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#E5E7EB] text-sm font-bold text-[#575757]">
+                {name.charAt(0)}
+            </div>
+        );
+    }
+    return <img src={src} alt="" onError={() => setFailed(true)} className="h-9 w-9 shrink-0 rounded-full object-cover" />;
+}
 
 /**
  * الهيكل المشترك لكل لوحات التحكم: قائمة جانبية + شريط علوي + المحتوى.
  * navItems: [{ key, label, icon, to, end }] — كل لوحة بتبعت قائمتها.
+ * خيارات الشريط العلوي (كل لوحة حسب تصميمها):
+ *   searchTo     — لو موجود: أيقونة بحث بتفتح هالرابط بدل خانة البحث
+ *   showAdd      — زر "+" (افتراضياً ظاهر)
+ *   greeting     — "مرحباً بك" فوق الاسم
+ *   avatarPath   — صورة المستخدم (مسار من السيرفر)
  */
-export default function DashboardLayout({ navItems, children }) {
+export default function DashboardLayout({ navItems, children, searchTo, showAdd = true, greeting = false, avatarPath }) {
     const navigate = useNavigate();
     const { pathname } = useLocation();
     const { t, i18n } = useTranslation("dashboard");
@@ -163,21 +183,48 @@ export default function DashboardLayout({ navItems, children }) {
                         >
                             <Menu size={18} />
                         </button>
-                        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#E5E7EB] text-sm font-bold text-[#575757]">
-                            {name.charAt(0)}
-                        </div>
-                        <span className="truncate text-sm font-semibold text-[#22455E]">{name}</span>
+                        <TopbarAvatar path={avatarPath} name={name} />
+                        <span className="min-w-0">
+                            {greeting && <span className="block text-[10px] text-[#89949D]">{t("greeting")}</span>}
+                            <span className="block truncate text-sm font-semibold text-[#22455E]">{name}</span>
+                        </span>
                     </div>
 
                     <div className="flex items-center gap-2">
-                        <label className="relative hidden md:block">
-                            <Search size={16} className="pointer-events-none absolute top-1/2 start-3 -translate-y-1/2 text-[#4B9AD2]" />
-                            <input
-                                type="search"
-                                placeholder={t("search")}
-                                className="h-9 w-[300px] rounded-full border border-[#4B9AD2] bg-white ps-9 pe-4 text-[12px] text-[#414141] placeholder-[#89949D] outline-none focus:ring-1 focus:ring-[#4B9AD2] xl:w-[380px]"
-                            />
-                        </label>
+                        {searchTo ? (
+                            <Link
+                                to={searchTo}
+                                aria-label={t("searchLabel")}
+                                className="flex h-9 w-9 items-center justify-center rounded-full border border-[#4B9AD2] text-[#4B9AD2] btn-wipe btn-wipe-outline"
+                            >
+                                <Search size={17} />
+                            </Link>
+                        ) : (
+                            <label className="relative hidden md:block">
+                                <Search size={16} className="pointer-events-none absolute top-1/2 start-3 -translate-y-1/2 text-[#4B9AD2]" />
+                                <input
+                                    type="search"
+                                    placeholder={t("search")}
+                                    className="h-9 w-[300px] rounded-full border border-[#4B9AD2] bg-white ps-9 pe-4 text-[12px] text-[#414141] placeholder-[#89949D] outline-none focus:ring-1 focus:ring-[#4B9AD2] xl:w-[380px]"
+                                />
+                            </label>
+                        )}
+                        {showAdd && (
+                            <button
+                                type="button"
+                                aria-label={t("addNew")}
+                                className="flex h-9 w-9 items-center justify-center rounded-full border border-[#4B9AD2] text-[#4B9AD2] cursor-pointer btn-wipe btn-wipe-outline"
+                            >
+                                <Plus size={17} />
+                            </button>
+                        )}
+                        <button
+                            type="button"
+                            aria-label={t("notifications")}
+                            className="flex h-9 w-9 items-center justify-center rounded-full border border-[#4B9AD2] text-[#4B9AD2] cursor-pointer btn-wipe btn-wipe-outline"
+                        >
+                            <Bell size={17} />
+                        </button>
                         <button
                             type="button"
                             onClick={() => i18n.changeLanguage(isRtl ? "en" : "ar")}
@@ -186,20 +233,6 @@ export default function DashboardLayout({ navItems, children }) {
                             className="flex h-9 w-9 items-center justify-center rounded-full border border-[#4B9AD2] text-[11px] font-bold text-[#4B9AD2] cursor-pointer btn-wipe btn-wipe-outline"
                         >
                             {isRtl ? "EN" : "AR"}
-                        </button>
-                        <button
-                            type="button"
-                            aria-label={t("addNew")}
-                            className="flex h-9 w-9 items-center justify-center rounded-full border border-[#4B9AD2] text-[#4B9AD2] cursor-pointer btn-wipe btn-wipe-outline"
-                        >
-                            <Plus size={17} />
-                        </button>
-                        <button
-                            type="button"
-                            aria-label={t("notifications")}
-                            className="flex h-9 w-9 items-center justify-center rounded-full border border-[#4B9AD2] text-[#4B9AD2] cursor-pointer btn-wipe btn-wipe-outline"
-                        >
-                            <Bell size={17} />
                         </button>
                     </div>
                 </header>
