@@ -7,6 +7,9 @@ import DashboardLayout from "../../../components/dashboard/DashboardLayout";
 import ComingSoon from "../../../components/dashboard/ComingSoon";
 import { getProfile } from "../../../api/endpoints";
 import CraftsmanHome from "./CraftsmanHome";
+import CraftsmanSearch from "./CraftsmanSearch";
+import CraftsmanRequests from "./CraftsmanRequests";
+import CraftsmanCurrent from "./CraftsmanCurrent";
 
 const BASE = "/dashboard/craftsman";
 
@@ -49,6 +52,9 @@ export default function CraftsmanDashboard() {
             >
                 <Routes>
                     <Route index element={<CraftsmanHome profile={profile} onProfileChange={setProfile} />} />
+                    <Route path="search" element={<CraftsmanSearch />} />
+                    <Route path="requests" element={<CraftsmanRequests />} />
+                    <Route path="current" element={<CraftsmanCurrent />} />
                     <Route path="*" element={<ComingSoon homePath={BASE} />} />
                 </Routes>
             </DashboardLayout>

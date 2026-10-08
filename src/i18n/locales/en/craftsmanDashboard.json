@@ -41,30 +41,55 @@
                 "org": "Al-Irada Charity",
                 "desc": "A whole building needs a plumber to handle all technical work",
                 "location": "Gaza",
-                "date": "1 November 2026"
+                "date": "1 November 2026",
+                "time": "Today 4:30 PM"
             },
             "j2": {
                 "service": "Plumber",
                 "org": "Al-Irada Charity",
                 "desc": "An institution needs its internal water network rebuilt",
                 "location": "Nuseirat",
-                "date": "1 November 2026"
+                "date": "1 November 2026",
+                "time": "Tomorrow 10:00 AM"
             },
             "j3": {
                 "service": "Electrician",
                 "org": "Al-Noor Society",
                 "desc": "Full electrical installation for a new training center",
                 "location": "Khan Yunis",
-                "date": "10 November 2026"
+                "date": "10 November 2026",
+                "time": "Sunday 9:00 AM"
             },
             "j4": {
                 "service": "Carpenter",
                 "org": "Al-Amal School",
                 "desc": "Making and installing wooden doors and cabinets for classrooms",
                 "location": "Deir Al-Balah",
-                "date": "15 November 2026"
+                "date": "15 November 2026",
+                "time": "Monday 11:00 AM"
             }
-        }
+        },
+        "modal": {
+            "location": "Location",
+            "time": "Time",
+            "distance": "Distance",
+            "distanceValue": "{{km}} km",
+            "budget": "Budget",
+            "title": "Submit your offer",
+            "price": "Proposed price",
+            "pricePlaceholder": "In ILS",
+            "duration": "Execution period",
+            "durationPlaceholder": "e.g. 3 days",
+            "notes": "Notes",
+            "notesPlaceholder": "Write your notes...",
+            "send": "Send offer",
+            "close": "Close",
+            "priceRequired": "Enter the proposed price",
+            "priceInvalid": "Enter a valid price greater than zero",
+            "durationRequired": "Enter the execution period",
+            "sent": "Your offer was sent to {{org}}."
+        },
+        "applied": "Applied"
     },
     "availability": {
         "title": "Available for work",
@@ -78,5 +103,266 @@
         "drop": "Click or drag a photo",
         "remove": "Remove photo",
         "notSaved": "Saving work photos to your account is not available on the server yet."
+    },
+    "searchPage": {
+        "search": "Search",
+        "location": "Location",
+        "serviceType": "Service type",
+        "searchButton": "Search",
+        "statuses": {
+            "open": "Open",
+            "inProgress": "In progress"
+        },
+        "value": "Announced value",
+        "valueAmount": "{{amount}} ILS",
+        "delivery": "Delivery time",
+        "place": "Location",
+        "details": "Details",
+        "empty": "No matching results",
+        "sample": {
+            "s1": {
+                "title": "Inspect and fix an underground water leak and replace an Italian float valve",
+                "company": "Golden Paint Co.",
+                "desc": "The customer asked for a full inspection of the line. The main valve was replaced; the outer cover still needs installing, followed by a full sewage line treatment.",
+                "delivery": "Today 6:00 PM",
+                "place": "Gaza - Sheikh Radwan"
+            },
+            "s2": {
+                "title": "Install a solar water heater and new pipes",
+                "company": "Al-Irada Charity",
+                "desc": "Install a solar heater on the roof and run hot water pipes to the bathrooms and kitchen.",
+                "delivery": "Tomorrow 10:00 AM",
+                "place": "Nuseirat"
+            },
+            "s3": {
+                "title": "Main electrical panel maintenance",
+                "company": "Al-Noor Society",
+                "desc": "Inspect the main panel, replace damaged breakers and tidy the wiring inside the panel.",
+                "delivery": "Sunday 2:00 PM",
+                "place": "Khan Yunis"
+            },
+            "s4": {
+                "title": "Paint a residential building facade",
+                "company": "Colors Co.",
+                "desc": "Paint the front facade of a three-storey building after treating the cracks.",
+                "delivery": "Thursday 9:00 AM",
+                "place": "Deir Al-Balah"
+            },
+            "s5": {
+                "title": "Install wooden doors for a school",
+                "company": "Al-Amal School",
+                "desc": "Make and install 12 wooden classroom doors with locks and handles.",
+                "delivery": "Saturday 8:00 AM",
+                "place": "Rafah"
+            }
+        }
+    },
+    "requestsPage": {
+        "tabs": {
+            "all": "All",
+            "new": "New",
+            "reviewed": "Reviewed",
+            "shortlisted": "Shortlisted",
+            "excluded": "Excluded"
+        },
+        "statuses": {
+            "new": "New",
+            "reviewed": "Reviewed",
+            "shortlisted": "Shortlisted",
+            "excluded": "Excluded"
+        },
+        "value": "Announced value",
+        "valueAmount": "{{amount}} ILS",
+        "customer": "Customer",
+        "delivery": "Delivery time",
+        "place": "Location",
+        "follow": "Follow up task",
+        "reject": "Reject",
+        "rejectedBecause": "Rejection reason: {{reason}}",
+        "empty": "No requests in this tab",
+        "sample": {
+            "q1": {
+                "title": "Inspect and fix an underground water leak and replace an Italian float valve",
+                "desc": "The customer asked for a full inspection of the line. The main valve was replaced; the outer cover still needs installing, followed by a full sewage line treatment.",
+                "customer": "Mohammad Ahmad",
+                "delivery": "Today 6:00 PM",
+                "place": "Gaza - Sheikh Radwan"
+            },
+            "q2": {
+                "title": "Run a new water line to the kitchen",
+                "desc": "Run hot and cold water lines to the kitchen, install a new mixer and test the pressure afterwards.",
+                "customer": "Sami Al-Ali",
+                "delivery": "Tomorrow 11:00 AM",
+                "place": "Gaza - Al-Rimal"
+            },
+            "q3": {
+                "title": "Fix a leak in the rooftop water tank",
+                "desc": "The rooftop tank is leaking; locate and fix the leak and replace the float valve.",
+                "customer": "Ahmad Khaled",
+                "delivery": "Sunday 9:00 AM",
+                "place": "Nuseirat"
+            },
+            "q4": {
+                "title": "Install a home water pump",
+                "desc": "Install a pump to raise the water pressure on the second floor and connect it to the ground tank.",
+                "customer": "Yousef Hamdan",
+                "delivery": "Tuesday 4:00 PM",
+                "place": "Deir Al-Balah"
+            }
+        },
+        "followModal": {
+            "title": "Follow up task",
+            "customerLine": "Customer: {{customer}} - {{time}}",
+            "stage": "Task status",
+            "stages": {
+                "onTheWay": "On the way",
+                "started": "Work started",
+                "completed": "Completed"
+            },
+            "notes": "Notes",
+            "notesPlaceholder": "Write notes about the progress...",
+            "attachments": "Attachments",
+            "dropHint": "Drag files here or click to upload (PDF, images)",
+            "removeFile": "Remove {{name}}",
+            "confirm": "Confirm follow-up",
+            "close": "Close",
+            "stageRequired": "Choose the task status",
+            "saved": "Task status updated: {{stage}}",
+            "stageLabel": "Task status: {{stage}}",
+            "update": "Update follow-up"
+        },
+        "rejectModal": {
+            "title": "Reject request",
+            "warning": "Rejecting the request moves it to Excluded, and you will not be able to submit an offer on it.",
+            "reason": "Rejection reason",
+            "reasons": {
+                "price": "The price is not suitable",
+                "far": "The location is far",
+                "unavailable": "Not available at this time",
+                "outOfScope": "Outside my specialty"
+            },
+            "notes": "Notes (optional)",
+            "notesPlaceholder": "Add extra details if any...",
+            "confirm": "Confirm",
+            "close": "Close",
+            "reasonRequired": "Choose a rejection reason",
+            "done": "The request was rejected and moved to Excluded."
+        },
+        "details": "Details",
+        "submitOffer": "Submit offer",
+        "offerLabel": "Your offer: {{price}} ILS - {{duration}}",
+        "detailsModal": {
+            "title": "Request details",
+            "subtitle": "{{status}} - Request #{{number}}",
+            "desc": "Request description",
+            "confirm": "Confirm follow-up",
+            "saved": "The request details were saved."
+        },
+        "offerModal": {
+            "title": "Submit an offer",
+            "summary": "Customer: {{customer}} - Announced value {{value}}",
+            "price": "Offer value",
+            "duration": "Duration",
+            "day": "days",
+            "days": "{{count}} days",
+            "start": "Start date",
+            "starts": {
+                "today": "Today",
+                "tomorrow": "Tomorrow",
+                "week": "Within a week"
+            },
+            "notes": "Notes for the customer",
+            "notesPlaceholder": "Describe your offer or what it includes...",
+            "confirm": "Confirm",
+            "priceRequired": "Enter the offer value",
+            "durationRequired": "Enter the duration",
+            "startRequired": "Choose a start date"
+        }
+    },
+    "currentPage": {
+        "searchPlaceholder": "Search by request title",
+        "tabs": {
+            "all": "All",
+            "open": "Open",
+            "submitted": "Submitted",
+            "inProgress": "In progress",
+            "completed": "Completed",
+            "cancelled": "Cancelled",
+            "draft": "Draft"
+        },
+        "customer": "Customer: {{name}}",
+        "number": "Request #{{number}}",
+        "steps": {
+            "received": "Request received",
+            "started": "Work started",
+            "finishing": "Final finishing",
+            "delivered": "Delivered"
+        },
+        "startDate": "Start date",
+        "delivery": "Expected delivery",
+        "service": "Service type",
+        "place": "Location",
+        "notes": "Notes",
+        "synced": "Automatically coordinated with the customer {{count}} minutes ago",
+        "markComplete": "Mark as complete",
+        "contact": "Contact customer",
+        "completed": "\"{{title}}\" was marked as complete.",
+        "empty": "No jobs in this tab.",
+        "sample": {
+            "w1": {
+                "title": "Fix a plumbing problem",
+                "customer": "Mohammed Ahmed",
+                "place": "Gaza - Al-Rimal",
+                "startDate": "24 September 2026",
+                "delivery": "Today, 6:00 PM",
+                "service": "Home plumbing",
+                "notes": "The customer asked for a full pipe inspection, then replacing the main valve, installing the outer cover, and fixing the leak under the sink."
+            },
+            "w2": {
+                "title": "Main electrical panel maintenance",
+                "customer": "Sami Khalil",
+                "place": "Gaza - Sheikh Radwan",
+                "startDate": "22 September 2026",
+                "delivery": "Tomorrow, 2:00 PM",
+                "service": "Home electrical",
+                "notes": "The customer asked for a full panel inspection, then replacing the main breaker; only the outer cover installation remains."
+            },
+            "w3": {
+                "title": "Paint a bedroom and living room",
+                "customer": "Rana Yousef",
+                "place": "Gaza - Tal al-Hawa",
+                "startDate": "18 September 2026",
+                "delivery": "26 September 2026",
+                "service": "Painting",
+                "notes": "Matte white for the ceiling and light beige for the walls, treating cracks before painting."
+            },
+            "w4": {
+                "title": "Install a kitchen cabinet",
+                "customer": "Ahmed Salem",
+                "place": "Gaza - Al-Nasr",
+                "startDate": "23 September 2026",
+                "delivery": "28 September 2026",
+                "service": "Carpentry",
+                "notes": "The customer has the wood; cutting and installation with aluminum handles is required."
+            },
+            "w5": {
+                "title": "Replace bathroom faucets",
+                "customer": "Laila Hassan",
+                "place": "Gaza - Al-Rimal",
+                "startDate": "10 September 2026",
+                "delivery": "11 September 2026",
+                "service": "Home plumbing",
+                "notes": "Delivered and paid in full."
+            },
+            "w6": {
+                "title": "Install a solar water heater",
+                "customer": "Khaled Omar",
+                "place": "Gaza - Shujaiya",
+                "startDate": "5 September 2026",
+                "delivery": "6 September 2026",
+                "service": "Solar energy",
+                "notes": "The customer cancelled because parts were unavailable."
+            }
+        }
     }
 }

@@ -573,5 +573,76 @@
             "forwardType": "Forwarded to staff",
             "forwarded": "The message was forwarded to staff and added to Sent."
         }
+    },
+    "tenderDetails": {
+        "back": "Back to tenders",
+        "category": "Category: {{category}}",
+        "published": "Published: {{date}}",
+        "chooseWinner": "Choose the winning offer",
+        "close": "Close tender",
+        "closeConfirm": "Do you want to close this tender? It will not receive new offers after closing.",
+        "confirmClose": "Confirm closing",
+        "cancel": "Cancel",
+        "closed": "The tender was closed and will not receive new offers.",
+        "closedBadge": "Closed",
+        "stagesTitle": "Tender stages and workflow status",
+        "stages": {
+            "publish": {
+                "title": "Tender published",
+                "note": ""
+            },
+            "receive": {
+                "title": "Receiving offers",
+                "note": ""
+            },
+            "compare": {
+                "title": "Comparing offers",
+                "note": ""
+            },
+            "select": {
+                "title": "Choosing the craftsman",
+                "note": "Award and contract signing"
+            },
+            "deliver": {
+                "title": "Execution & delivery",
+                "note": "Supervision and final handover"
+            }
+        },
+        "doneOn": "Completed ({{date}})",
+        "startsOn": "Starts {{date}}",
+        "remaining": "{{time}} left",
+        "descTitle": "Project description and scope of work",
+        "infoTitle": "Tender information",
+        "info": {
+            "number": "Tender number",
+            "category": "Category",
+            "location": "Area and location",
+            "published": "Published on",
+            "deadline": "Submission deadline",
+            "remaining": "Time left",
+            "duration": "Expected duration",
+            "contract": "Contract type"
+        },
+        "remainingHours": "{{count}} hours left",
+        "durationDays": "{{count}} working days",
+        "contracts": {
+            "lumpSum": "Lump Sum"
+        },
+        "genericDesc": "{{title}} in {{area}}. The full scope of work will appear once the tender data is available from the server.",
+        "notFound": "Tender not found",
+        "sample": {
+            "r1": {
+                "location": "Nuseirat - Al-Qassam St., Gaza",
+                "published": "12 May 2024",
+                "publishedShort": "12 May",
+                "deadline": "28 May 2024",
+                "deadlineShort": "28 May",
+                "remainingTime": "1 day 6 hours",
+                "desc": [
+                    "The project covers a full rehabilitation and restoration of the exterior facades of a 4-storey commercial and residential building on Al-Qassam Street in Nuseirat. It aims to treat structural and surface cracks, clean the exterior stone with pressure washing and suitable materials, and renew the weather-resistant plaster and paint layers.",
+                    "The work also includes modern water and thermal insulation for balconies and cornices, rewiring the exterior electrical cables, and installing an architectural LED lighting system to highlight the building's appearance according to the attached technical drawings."
+                ]
+            }
+        }
     }
 }

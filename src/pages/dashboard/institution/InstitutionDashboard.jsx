@@ -7,6 +7,7 @@ import DashboardLayout from "../../../components/dashboard/DashboardLayout";
 import ComingSoon from "../../../components/dashboard/ComingSoon";
 import InstitutionHome from "./InstitutionHome";
 import InstitutionTenders from "./InstitutionTenders";
+import InstitutionTenderDetails from "./InstitutionTenderDetails";
 import InstitutionProjects from "./InstitutionProjects";
 import InstitutionSettings from "./InstitutionSettings";
 import InstitutionProviders from "./InstitutionProviders";
@@ -40,6 +41,7 @@ export default function InstitutionDashboard() {
                 <Routes>
                     <Route index element={<InstitutionHome />} />
                     <Route path="tenders" element={<InstitutionTenders />} />
+                    <Route path="tenders/:tenderId" element={<InstitutionTenderDetails />} />
                     <Route path="offers" element={<InstitutionOffers />} />
                     <Route path="projects" element={<InstitutionProjects />} />
                     <Route path="messages" element={<InstitutionMessages />} />

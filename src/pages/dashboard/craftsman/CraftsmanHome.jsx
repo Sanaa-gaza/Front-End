@@ -1,20 +1,19 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { ChevronDown, ChevronLeft, ImagePlus, LayoutGrid, Search, X } from "lucide-react";
+import { Check, ChevronDown, ChevronLeft, ImagePlus, LayoutGrid, Search, X } from "lucide-react";
 import { getProfile, getServiceRequests, updateProfile } from "../../../api/endpoints";
 import { useServices } from "../../../hooks/useReferenceData";
-
-const BASE = "/dashboard/craftsman";
+import ApplyModal from "./ApplyModal";
 
 // ===== بيانات تجريبية =====
 // فرص العمل (طلبات المؤسسات) لسا ما إلها endpoint. لما يجهز، استبدلي JOBS بطلب من src/api/endpoints.js
 // serviceId: رقم الحرفة من GET /services عشان فلتر "نوع الخدمة" يشتغل على القائمة الحقيقية
+// distance: بالكيلومتر، budget: [أقل، أعلى] بالشيكل
 const JOBS = [
-    { id: "j1", serviceId: 1, experience: 3 },
-    { id: "j2", serviceId: 1, experience: 3 },
-    { id: "j3", serviceId: 2, experience: 5 },
-    { id: "j4", serviceId: 4, experience: 2 },
+    { id: "j1", serviceId: 1, experience: 3, distance: 1.2, budget: [400, 600] },
+    { id: "j2", serviceId: 1, experience: 3, distance: 3.5, budget: [800, 1200] },
+    { id: "j3", serviceId: 2, experience: 5, distance: 8, budget: [1500, 2500] },
+    { id: "j4", serviceId: 4, experience: 2, distance: 12.4, budget: [600, 900] },
 ];
 
 const card = "rounded-[20px] border border-[#0000000D] bg-white shadow-[0_4px_24px_rgba(35,74,100,0.08)]";
@@ -178,6 +177,17 @@ export default function CraftsmanHome({ profile, onProfileChange }) {
     const [location, setLocation] = useState("");
     const [serviceId, setServiceId] = useState("all");
     const [filters, setFilters] = useState({ location: "", serviceId: "all" });
+    // الفرصة المفتوحة بنافذة "قدم عرضك"، والفرص اللي انقدّم عليها
+    const [applyJob, setApplyJob] = useState(null);
+    const [applied, setApplied] = useState({});
+    const [flash, setFlash] = useState("");
+
+    // ⚠️ ما في endpoint للتقديم على فرص المؤسسات لسا، فالعرض بينحفظ بالصفحة بس
+    const handleApply = (offer) => {
+        setApplied((a) => ({ ...a, [applyJob.id]: offer }));
+        setFlash(t("jobs.modal.sent", { org: t(`jobs.sample.${applyJob.id}.org`) }));
+        setApplyJob(null);
+    };
 
     // الطلبات اللي وصلت للحرفي (GET /service-requests) عشان أرقام "مكتملة" و"جديدة"
     useEffect(() => {
@@ -196,13 +206,13 @@ export default function CraftsmanHome({ profile, onProfileChange }) {
 
     const stats = [
         // الأرباح لسا ما إلها بيانات بالباك إند
-        { key: "earnings", value: "—", tone: "text-[#2EAF4E]" },
+        { key: "earnings", value: "—", tone: "text-[#13B83A]" },
         { key: "completed", value: count("completed") ?? loadingText, tone: "text-[#4B9AD2]" },
         { key: "newRequests", value: count("pending") ?? loadingText, tone: "text-[#22455E]" },
         {
             key: "rating",
             value: craftsman ? Number(craftsman.avg_rating || 0).toFixed(1) : loadingText,
-            tone: "text-[#F2A007]",
+            tone: "text-[#E6B000]",
         },
     ];
 
@@ -219,13 +229,16 @@ export default function CraftsmanHome({ profile, onProfileChange }) {
     return (
         <div className="mx-auto flex max-w-[1100px] flex-col gap-6">
             {/* الإحصائيات */}
-            <section className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+            <section className="grid grid-cols-2 gap-4 lg:grid-cols-4 lg:gap-6">
                 {stats.map((s) => (
-                    <div key={s.key} className={`${card} px-4 py-6 text-center`}>
-                        <p className={`text-[22px] font-bold leading-none tabular-nums ${s.tone}`}>
+                    <div
+                        key={s.key}
+                        className="flex flex-col items-center justify-center rounded-[24px] border border-[#0000000A] bg-white px-4 py-7 text-center shadow-[0_8px_28px_rgba(35,74,100,0.10)]"
+                    >
+                        <p className={`text-[19px] font-bold leading-none tabular-nums ${s.tone}`}>
                             {t(`stats.${s.key}.value`, { value: s.value })}
                         </p>
-                        <p className="mt-3 text-[12px] font-medium text-[#414141]">{t(`stats.${s.key}.label`)}</p>
+                        <p className="mt-3 text-[12px] font-medium text-[#575757]">{t(`stats.${s.key}.label`)}</p>
                     </div>
                 ))}
             </section>
@@ -276,6 +289,12 @@ export default function CraftsmanHome({ profile, onProfileChange }) {
                         </button>
                     </form>
 
+                    {flash && (
+                        <p role="status" className="mt-4 rounded-lg border border-[#BFEBCD] bg-[#E8F8EE] px-4 py-2.5 text-[12px] text-[#2E9E5B]">
+                            {flash}
+                        </p>
+                    )}
+
                     <div className="mt-4 flex items-center justify-between text-[11px] text-[#89949D]">
                         <span>{t("jobs.nearby")}</span>
                         <span>{t("jobs.sorted")}</span>
@@ -306,13 +325,24 @@ export default function CraftsmanHome({ profile, onProfileChange }) {
                                                 {t("jobs.experience", { years: j.experience })}
                                             </span>
                                         </div>
-                                        <Link
-                                            to={`${BASE}/jobs/${j.id}`}
-                                            className="inline-flex h-8 shrink-0 items-center gap-1 self-start rounded-full bg-[#4B9AD2] px-4 text-[12px] font-medium text-white btn-wipe sm:self-center"
-                                        >
-                                            {t("jobs.apply")}
-                                            <ChevronLeft size={14} className="ltr:rotate-180" />
-                                        </Link>
+                                        {applied[j.id] ? (
+                                            <span className="inline-flex h-8 shrink-0 items-center gap-1 self-start rounded-full bg-[#DDF6E3] px-4 text-[12px] font-medium text-[#2EAF4E] sm:self-center">
+                                                <Check size={14} />
+                                                {t("jobs.applied")}
+                                            </span>
+                                        ) : (
+                                            <button
+                                                type="button"
+                                                onClick={() => {
+                                                    setFlash("");
+                                                    setApplyJob(j);
+                                                }}
+                                                className="inline-flex h-8 shrink-0 cursor-pointer items-center gap-1 self-start rounded-full bg-[#4B9AD2] px-4 text-[12px] font-medium text-white btn-wipe sm:self-center"
+                                            >
+                                                {t("jobs.apply")}
+                                                <ChevronLeft size={14} className="ltr:rotate-180" />
+                                            </button>
+                                        )}
                                     </li>
                                 );
                             })}
@@ -324,6 +354,24 @@ export default function CraftsmanHome({ profile, onProfileChange }) {
 
                 <SideCard profile={profile} onProfileChange={onProfileChange} />
             </div>
+
+            {applyJob && (
+                <ApplyModal
+                    key={applyJob.id}
+                    job={{
+                        id: applyJob.id,
+                        title: t(`jobs.sample.${applyJob.id}.service`),
+                        org: t(`jobs.sample.${applyJob.id}.org`),
+                        desc: t(`jobs.sample.${applyJob.id}.desc`),
+                        location: t(`jobs.sample.${applyJob.id}.location`),
+                        time: t(`jobs.sample.${applyJob.id}.time`),
+                        distance: applyJob.distance,
+                        budget: applyJob.budget,
+                    }}
+                    onClose={() => setApplyJob(null)}
+                    onSend={handleApply}
+                />
+            )}
         </div>
     );
 }
