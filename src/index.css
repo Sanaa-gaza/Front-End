@@ -235,12 +235,58 @@ body {
   }
 }
 
+/* الروبوت بيتحرك (قفزة + هزة) كل 5 ثواني وبيرتاح بينهم */
+@keyframes assistantWiggle {
+  0%, 70%, 100% {
+    transform: translateY(0) rotate(0);
+  }
+  76% {
+    transform: translateY(-10px) rotate(-8deg);
+  }
+  82% {
+    transform: translateY(0) rotate(7deg);
+  }
+  88% {
+    transform: translateY(-4px) rotate(-4deg);
+  }
+  94% {
+    transform: translateY(0) rotate(2deg);
+  }
+}
+
+/* فقاعة الرسالة بتطلع من عند الروبوت */
+@keyframes assistantBubble {
+  0% {
+    opacity: 0;
+    transform: translateY(8px) scale(0.6);
+  }
+  60% {
+    opacity: 1;
+    transform: translateY(-2px) scale(1.06);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
 .assistant-pulse {
   animation: assistantPulse 2s ease-in-out infinite;
 }
 
+.assistant-wiggle {
+  animation: assistantWiggle 5s ease-in-out infinite;
+}
+
+.assistant-bubble {
+  transform-origin: bottom right;
+  animation: assistantBubble 0.45s ease-out both;
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .assistant-pulse {
+  .assistant-pulse,
+  .assistant-wiggle,
+  .assistant-bubble {
     animation: none;
   }
 }
