@@ -13,5 +13,32 @@
     "backHome": "Back to home",
     "language": "Change language",
     "greeting": "Welcome",
-    "searchLabel": "Search"
+    "searchLabel": "Search",
+    "notificationsPanel": {
+        "title": "Notifications",
+        "markAll": "Mark all as read",
+        "close": "Close notifications",
+        "empty": "No notifications here.",
+        "tabs": {
+            "all": "All",
+            "unread": "Unread",
+            "tenders": "Tenders",
+            "messages": "Messages",
+            "system": "System"
+        }
+    },
+    "datePicker": {
+        "week": "In a week",
+        "twoWeeks": "In 2 weeks",
+        "month": "In a month",
+        "prev": "Previous month",
+        "next": "Next month",
+        "clear": "Clear date"
+    },
+    "searchBox": {
+        "all": "All",
+        "empty": "No matching results.",
+        "showAll": "Show all ({{count}})",
+        "clear": "Clear search"
+    }
 }

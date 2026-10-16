@@ -312,7 +312,7 @@ function HeroSection() {
                 </div>
 
                 <img
-                    src="/images/Hero.svg"
+                    src="/images/الهيرو.svg"
                     alt=""
                     className="pointer-events-none relative z-10 mt-10 w-full select-none lg:absolute lg:bottom-0 lg:end-0 lg:mt-0 lg:w-[54%] lg:max-w-[820px]"
                 />
@@ -385,11 +385,10 @@ function ServicesSection() {
             className="group flex h-4 items-center cursor-pointer"
         >
             <span
-                className={`block h-[2px] rounded-full transition-all ${
-                    i === active
+                className={`block h-[2px] rounded-full transition-all ${i === active
                         ? "w-5 sm:w-7 bg-[#4B9AD2]"
                         : "w-3 sm:w-5 bg-[#D5DEE6] group-hover:bg-[#9DB7CB]"
-                }`}
+                    }`}
             ></span>
         </button>
     ));
@@ -419,9 +418,8 @@ function ServicesSection() {
                             key={service.id}
                             onClick={() => !isActive && setActive(i)}
                             aria-hidden={!isActive}
-                            className={`absolute top-4 left-1/2 w-[210px] rounded-2xl bg-white p-2.5 shadow-[0_10px_35px_rgba(43,91,120,0.16)] transition-all duration-500 ease-out sm:w-[270px] sm:p-3 ${
-                                isActive ? "" : "cursor-pointer"
-                            }`}
+                            className={`absolute top-4 left-1/2 w-[210px] rounded-2xl bg-white p-2.5 shadow-[0_10px_35px_rgba(43,91,120,0.16)] transition-all duration-500 ease-out sm:w-[270px] sm:p-3 ${isActive ? "" : "cursor-pointer"
+                                }`}
                             style={{
                                 transform: `translateX(calc(-50% + ${Math.sign(offset) * side * POSITIONS[Math.min(abs, 2)]} * var(--step))) scale(${SCALES[Math.min(abs, 2)]})`,
                                 opacity: visible ? OPACITIES[abs] : 0,
@@ -618,11 +616,10 @@ function CraftsmenSection() {
             className="group flex h-4 items-center cursor-pointer"
         >
             <span
-                className={`block h-[2px] rounded-full transition-all ${
-                    i === active
+                className={`block h-[2px] rounded-full transition-all ${i === active
                         ? "w-5 sm:w-7 bg-[#4B9AD2]"
                         : "w-3 sm:w-5 bg-[#D5DEE6] group-hover:bg-[#9DB7CB]"
-                }`}
+                    }`}
             ></span>
         </button>
     ));

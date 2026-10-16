@@ -1,0 +1,45 @@
+{
+    "cover": "Cover photo",
+    "startChat": "Start chat",
+    "requestService": "Request service",
+    "customerRated": "Rated by customers",
+    "verified": "Verified",
+    "ratingLabel": "Rated {{rating}} out of 5",
+    "hours": "Working hours",
+    "defaultDays": "Saturday - Thursday",
+    "defaultTime": "From 8:00 AM to 6:00 PM",
+    "areas": "Service areas",
+    "nearby": "{{area}} and nearby areas",
+    "defaultBio": "I've worked in {{craft}} for over {{years}} years, providing professional, high-quality services at fair prices.",
+    "about": "About me",
+    "defaultAbout": "I'm {{name}}, a professional {{craft}} with over {{years}} years of experience. I provide high-quality installation, maintenance and repair services, focusing on fast, safe work, punctuality and customer satisfaction first.",
+    "features": {
+        "quality": "High quality",
+        "prices": "Fair prices",
+        "punctual": "On-time delivery"
+    },
+    "photos": "photos",
+    "customerReviews": "Customer reviews",
+    "allReviews": "View all reviews",
+    "sampleReviews": [
+        { "name": "Um Mohammad", "date": "May 5, 2025", "rating": 5, "comment": "Punctual and high-quality work." },
+        { "name": "Saeed Abu Khalil", "date": "May 12, 2025", "rating": 5, "comment": "Professional and fast work, highly recommended." },
+        { "name": "Mahmoud Al-Shaer", "date": "May 20, 2025", "rating": 4, "comment": "Excellent service and fair prices, slightly late." }
+    ],
+    "workAlt": "Work photo {{n}}",
+    "tabs": {
+        "profile": "Profile",
+        "reviews": "Reviews",
+        "portfolio": "Portfolio"
+    },
+    "tabEmpty": {
+        "profile": "Profile details will appear here soon.",
+        "reviews": "No reviews yet.",
+        "portfolio": "No work has been added yet."
+    },
+    "back": "Back",
+    "notFound": "This profile was not found",
+    "openFromList": "Open the professional profile from the craftsmen list to see its details.",
+    "backToCraftsmen": "Back to craftsmen",
+    "backToProviders": "Back to service providers"
+}

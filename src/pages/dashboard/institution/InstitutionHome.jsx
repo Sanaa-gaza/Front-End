@@ -24,7 +24,6 @@ const TENDERS = [
 ];
 
 const ACTIONS = [
-    { key: "completeKyc", urgent: true, to: `${BASE}/settings` },
     { key: "unanswered", to: `${BASE}/tenders` },
     { key: "unrated", to: `${BASE}/projects` },
     { key: "draft", to: `${BASE}/tenders` },
@@ -145,24 +144,21 @@ export default function InstitutionHome() {
                 </section>
 
                 {/* مهام بانتظار إجراء */}
-                <section className={`${card} self-start p-5`}>
-                    <h2 className="text-[16px] font-bold text-[#22455E]">{t("actions.title")}</h2>
-                    <p className="mt-1 text-[11px] text-[#89949D]">
+                <section className={`${card} self-start rounded-[24px] px-6 pb-3 pt-7`}>
+                    <h2 className="text-[18px] font-bold text-[#22455E]">{t("actions.title")}</h2>
+                    <p className="mt-1.5 text-[12px] text-[#38749E]">
                         {t("actions.subtitle", { count: ACTIONS.length })}
                     </p>
-                    <ul className="mt-4 divide-y divide-[#0000000F]">
+                    <ul className="mt-5 divide-y divide-[#0000000F] border-t border-[#00000033]">
                         {ACTIONS.map((a) => (
                             <li key={a.key}>
-                                <Link to={a.to} className="group flex items-start gap-3 py-3.5">
-                                    <span
-                                        className={`mt-1.5 h-2.5 w-2.5 shrink-0 rounded-full ${a.urgent ? "bg-[#D64545]" : "bg-[#4B9AD2]"
-                                            }`}
-                                    />
+                                <Link to={a.to} className="group flex items-center gap-4 py-6">
+                                    <span className="h-3.5 w-3.5 shrink-0 rounded-full bg-[#4B9AD2]" />
                                     <span>
-                                        <span className="block text-[13px] font-semibold text-[#414141] transition-colors group-hover:text-[#4B9AD2]">
+                                        <span className="block text-[15px] font-medium text-[#414141] transition-colors group-hover:text-[#4B9AD2]">
                                             {t(`actions.${a.key}.title`)}
                                         </span>
-                                        <span className="mt-0.5 block text-[11px] text-[#89949D]">
+                                        <span className="mt-2 block text-[11px] text-[#414141]">
                                             {t(`actions.${a.key}.sub`)}
                                         </span>
                                     </span>

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { Calendar, Check, ChevronLeft, Clock, MapPin } from "lucide-react";
+import { Calendar, Check, ChevronLeft, CircleCheck, Clock, MapPin } from "lucide-react";
 import { TENDERS } from "./tendersData";
 
 const BASE = "/dashboard/institution";
@@ -24,47 +24,45 @@ function Stepper({ current, labels }) {
     const { t } = useTranslation("institutionDashboard");
 
     return (
-        <div className="overflow-x-auto">
-            <ol className="relative flex min-w-[640px] items-start justify-between">
-                {/* الخط الواصل بين المراحل */}
-                <span aria-hidden="true" className="absolute inset-x-[10%] top-5 h-[2px] bg-[#E6EBF0]" />
-                {STAGES.map((key, i) => {
-                    const state = i < current ? "done" : i === current ? "current" : "upcoming";
-                    return (
-                        <li key={key} className="relative z-10 flex flex-1 flex-col items-center text-center">
+        <ol className="relative flex items-start justify-between pt-1">
+            {/* الخط الواصل بين المراحل */}
+            <span aria-hidden="true" className="absolute inset-x-[10%] top-[17px] h-[2px] bg-[#E6EBF0] sm:top-[21px]" />
+            {STAGES.map((key, i) => {
+                const state = i < current ? "done" : i === current ? "current" : "upcoming";
+                return (
+                    <li key={key} className="relative z-10 flex flex-1 flex-col items-center text-center">
+                        <span
+                            className={`flex h-8 w-8 items-center justify-center rounded-full text-[12px] font-bold sm:h-10 sm:w-10 sm:text-[13px] ${state === "done"
+                                ? "bg-[#2EAF4E] text-white"
+                                : state === "current"
+                                    ? "bg-[#4B9AD2] text-white ring-4 ring-[#CFE3F3]"
+                                    : "bg-[#EEF0F2] text-[#89949D]"
+                                }`}
+                        >
+                            {state === "done" ? <Check size={18} strokeWidth={3} /> : state === "current" ? <Clock size={18} /> : i + 1}
+                        </span>
+                        <span
+                            className={`mt-3 px-1 text-[11px] font-bold leading-[1.5] sm:text-[13px] ${state === "current" ? "text-[#4B9AD2]" : state === "done" ? "text-[#414141]" : "text-[#89949D]"
+                                }`}
+                        >
+                            {t(`tenderDetails.stages.${key}.title`)}
+                        </span>
+                        {labels[key] && (
                             <span
-                                className={`flex h-10 w-10 items-center justify-center rounded-full text-[13px] font-bold ${state === "done"
-                                    ? "bg-[#2EAF4E] text-white"
+                                className={`mt-1 text-[10px] ${state === "done"
+                                    ? "text-[#2EAF4E]"
                                     : state === "current"
-                                        ? "bg-[#4B9AD2] text-white ring-4 ring-[#CFE3F3]"
-                                        : "bg-[#EEF0F2] text-[#89949D]"
+                                        ? "rounded-full bg-[#DCEBFA] px-2.5 py-0.5 text-[#4B9AD2]"
+                                        : "text-[#89949D]"
                                     }`}
                             >
-                                {state === "done" ? <Check size={18} strokeWidth={3} /> : state === "current" ? <Clock size={18} /> : i + 1}
+                                {labels[key]}
                             </span>
-                            <span
-                                className={`mt-3 text-[13px] font-bold ${state === "current" ? "text-[#4B9AD2]" : state === "done" ? "text-[#414141]" : "text-[#89949D]"
-                                    }`}
-                            >
-                                {t(`tenderDetails.stages.${key}.title`)}
-                            </span>
-                            {labels[key] && (
-                                <span
-                                    className={`mt-1 text-[10px] ${state === "done"
-                                        ? "text-[#2EAF4E]"
-                                        : state === "current"
-                                            ? "rounded-full bg-[#DCEBFA] px-2.5 py-0.5 text-[#4B9AD2]"
-                                            : "text-[#89949D]"
-                                        }`}
-                                >
-                                    {labels[key]}
-                                </span>
-                            )}
-                        </li>
-                    );
-                })}
-            </ol>
-        </div>
+                        )}
+                    </li>
+                );
+            })}
+        </ol>
     );
 }
 
@@ -72,8 +70,12 @@ export default function InstitutionTenderDetails() {
     const { t } = useTranslation("institutionDashboard");
     const { tenderId } = useParams();
     const tender = TENDERS.find((x) => x.id === tenderId);
-    const [confirming, setConfirming] = useState(false);
+    // التأكيد المفتوح: "" | "close" | "award"
+    const [confirming, setConfirming] = useState("");
     const [closed, setClosed] = useState(tender?.status === "cancelled");
+    // ⚠️ اختيار العرض الفائز بالصفحة بس لحد ما يصير في endpoint
+    const [awarded, setAwarded] = useState(tender?.status === "executing" || tender?.status === "completed");
+    const [justAwarded, setJustAwarded] = useState(false);
 
     if (!tender) {
         return (
@@ -103,7 +105,9 @@ export default function InstitutionTenderDetails() {
         ? t(`${sample}.desc`, { returnObjects: true })
         : [t("tenderDetails.genericDesc", { title, area })];
 
-    const stage = STAGE_BY_STATUS[tender.status] ?? 1;
+    // بعد اختيار الفائز: كل المراحل لحد "اختيار الحرفي" بتصير مكتملة والحالية "التنفيذ والتسليم"
+    const baseStage = STAGE_BY_STATUS[tender.status] ?? 1;
+    const stage = awarded ? Math.max(baseStage, 4) : baseStage;
     const receiving = stage === 1 && !closed;
     const stageLabels = {
         publish: stage > 0 && hasSample ? t("tenderDetails.doneOn", { date: t(`${sample}.publishedShort`) }) : "",
@@ -138,6 +142,12 @@ export default function InstitutionTenderDetails() {
                 {t("tenderDetails.back")}
             </Link>
 
+            {/* مراحل المناقصة */}
+            <section className={`${card} p-5 sm:p-6`}>
+                <h2 className="mb-6 text-[12px] font-semibold text-[#89949D]">{t("tenderDetails.stagesTitle")}</h2>
+                <Stepper current={stage} labels={stageLabels} />
+            </section>
+
             {/* رأس المناقصة */}
             <section className={`${card} flex flex-col gap-5 p-5 sm:flex-row sm:items-center sm:justify-between sm:p-6`}>
                 <div className="min-w-0">
@@ -148,7 +158,11 @@ export default function InstitutionTenderDetails() {
                         <span className="rounded-md bg-[#EEF0F2] px-2 py-0.5 font-mono text-[11px] text-[#575757]" dir="ltr">
                             #{number}
                         </span>
-                        {closed && (
+                        {awarded ? (
+                            <span className="rounded-full bg-[#DDF6E3] px-3 py-0.5 text-[11px] font-medium text-[#2EAF4E]">
+                                {t("tenderDetails.awardedBadge")}
+                            </span>
+                        ) : closed && (
                             <span className="rounded-full bg-[#FDE7E7] px-3 py-0.5 text-[11px] font-medium text-[#D64545]">
                                 {t("tenderDetails.closedBadge")}
                             </span>
@@ -168,17 +182,25 @@ export default function InstitutionTenderDetails() {
                 </div>
 
                 <div className="flex shrink-0 flex-wrap gap-3">
-                    <Link
-                        to={`${BASE}/offers`}
-                        className="inline-flex h-9 items-center gap-1.5 rounded-lg bg-[#4B9AD2] px-4 text-[12px] font-medium text-white btn-wipe"
-                    >
-                        <Check size={15} />
-                        {t("tenderDetails.chooseWinner")}
-                    </Link>
-                    {!closed && (
+                    {awarded ? (
+                        <span className="inline-flex h-9 items-center gap-1.5 rounded-lg bg-[#DDF6E3] px-4 text-[12px] font-medium text-[#2EAF4E]">
+                            <CircleCheck size={15} />
+                            {t("tenderDetails.awardedBadge")}
+                        </span>
+                    ) : (
                         <button
                             type="button"
-                            onClick={() => setConfirming(true)}
+                            onClick={() => setConfirming("award")}
+                            className="inline-flex h-9 cursor-pointer items-center gap-1.5 rounded-lg bg-[#4B9AD2] px-4 text-[12px] font-medium text-white btn-wipe"
+                        >
+                            <Check size={15} />
+                            {t("tenderDetails.chooseWinner")}
+                        </button>
+                    )}
+                    {!closed && !awarded && (
+                        <button
+                            type="button"
+                            onClick={() => setConfirming("close")}
                             className="inline-flex h-9 cursor-pointer items-center rounded-lg border border-[#E8A5AB] px-4 text-[12px] font-medium text-[#D64545] transition-colors hover:bg-[#FFF6F6]"
                         >
                             {t("tenderDetails.close")}
@@ -187,24 +209,36 @@ export default function InstitutionTenderDetails() {
                 </div>
             </section>
 
-            {/* تأكيد الإغلاق — ⚠️ بالصفحة بس لحد ما يصير في endpoint */}
+            {/* تأكيد الإغلاق / اختيار الفائز — ⚠️ بالصفحة بس لحد ما يصير في endpoint */}
             {confirming && (
-                <div role="alertdialog" className="flex flex-col gap-3 rounded-xl border border-[#F3C4C4] bg-[#FFF6F6] p-4 sm:flex-row sm:items-center sm:justify-between">
-                    <p className="text-[13px] text-[#A61B29]">{t("tenderDetails.closeConfirm")}</p>
+                <div
+                    role="alertdialog"
+                    className={`flex flex-col gap-3 rounded-xl border p-4 sm:flex-row sm:items-center sm:justify-between ${confirming === "award" ? "border-[#CFE3F3] bg-[#F3F9FE]" : "border-[#F3C4C4] bg-[#FFF6F6]"
+                        }`}
+                >
+                    <p className={`text-[13px] ${confirming === "award" ? "text-[#22455E]" : "text-[#A61B29]"}`}>
+                        {t(confirming === "award" ? "tenderDetails.awardConfirm" : "tenderDetails.closeConfirm")}
+                    </p>
                     <div className="flex shrink-0 gap-2">
                         <button
                             type="button"
                             onClick={() => {
-                                setClosed(true);
-                                setConfirming(false);
+                                if (confirming === "award") {
+                                    setAwarded(true);
+                                    setJustAwarded(true);
+                                } else {
+                                    setClosed(true);
+                                }
+                                setConfirming("");
                             }}
-                            className="h-9 cursor-pointer rounded-lg bg-[#D64545] px-4 text-[12px] font-medium text-white transition-colors hover:bg-[#B83636]"
+                            className={`h-9 cursor-pointer rounded-lg px-4 text-[12px] font-medium text-white transition-colors ${confirming === "award" ? "bg-[#4B9AD2] hover:bg-[#3C88BF]" : "bg-[#D64545] hover:bg-[#B83636]"
+                                }`}
                         >
-                            {t("tenderDetails.confirmClose")}
+                            {t(confirming === "award" ? "tenderDetails.confirmAward" : "tenderDetails.confirmClose")}
                         </button>
                         <button
                             type="button"
-                            onClick={() => setConfirming(false)}
+                            onClick={() => setConfirming("")}
                             className="h-9 cursor-pointer rounded-lg border border-[#0000001A] bg-white px-4 text-[12px] font-medium text-[#575757] hover:bg-[#F5F6F8]"
                         >
                             {t("tenderDetails.cancel")}
@@ -212,17 +246,16 @@ export default function InstitutionTenderDetails() {
                     </div>
                 </div>
             )}
-            {closed && tender.status !== "cancelled" && (
+            {justAwarded && (
+                <p role="status" className="rounded-lg border border-[#BFEBCD] bg-[#E8F8EE] px-4 py-3 text-[13px] text-[#2E9E5B]">
+                    {t("tenderDetails.awarded")}
+                </p>
+            )}
+            {closed && !justAwarded && tender.status !== "cancelled" && (
                 <p role="status" className="rounded-lg border border-[#BFEBCD] bg-[#E8F8EE] px-4 py-3 text-[13px] text-[#2E9E5B]">
                     {t("tenderDetails.closed")}
                 </p>
             )}
-
-            {/* مراحل المناقصة */}
-            <section className={`${card} p-5 sm:p-6`}>
-                <h2 className="mb-6 text-[12px] text-[#89949D]">{t("tenderDetails.stagesTitle")}</h2>
-                <Stepper current={stage} labels={stageLabels} />
-            </section>
 
             <div className="grid items-start gap-6 lg:grid-cols-[1fr_320px]">
                 {/* الوصف */}

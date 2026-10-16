@@ -4,17 +4,9 @@ import { useTranslation } from "react-i18next";
 import { ChevronLeft, Hourglass } from "lucide-react";
 import StatusTabs from "../../../components/dashboard/StatusTabs";
 import SearchField from "../../../components/dashboard/SearchField";
+import { PROJECTS } from "./projectsData";
 
 const BASE = "/dashboard/institution";
-
-// ===== بيانات تجريبية =====
-// الباك إند لسا ما فيه endpoints للمشاريع. لما تجهز، استبدلي PROJECTS بطلب من src/api/endpoints.js
-const PROJECTS = [
-    { id: "p1", status: "executing", progress: 75, value: 11200 },
-    { id: "p2", status: "completed", progress: 100, value: 11200 },
-    { id: "p3", status: "pending", progress: 75, value: 11200 },
-    { id: "p4", status: "executing", progress: 40, value: 8500 },
-];
 
 const TABS = ["all", "executing", "pending", "completed"];
 

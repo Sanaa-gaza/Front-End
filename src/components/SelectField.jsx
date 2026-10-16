@@ -1,4 +1,5 @@
 import React from "react";
+import FieldIcon from "./FieldIcon";
 
 /**
  * حقل select موحّد (مدينة/منطقة/حرفة...) — نفس نمط FormField بس للـ <select>.
@@ -46,11 +47,19 @@ export default function SelectField({
                         </option>
                     ))}
                 </select>
-                {icon && (
-                    <i
+                {icon && typeof icon !== "string" && (
+                    <span
                         aria-hidden="true"
-                        className={`${icon} absolute top-1/2 -translate-y-1/2 end-3 text-[color:var(--accent)] text-[18px] pointer-events-none`}
-                    ></i>
+                        className="absolute top-1/2 -translate-y-1/2 end-3 text-[color:var(--accent)] pointer-events-none flex"
+                    >
+                        {icon}
+                    </span>
+                )}
+                {typeof icon === "string" && (
+                    <FieldIcon
+                        icon={icon}
+                        className="absolute top-1/2 -translate-y-1/2 end-3 text-[color:var(--accent)] pointer-events-none"
+                    />
                 )}
             </div>
             <p id={errorId} role="alert" className={`text-red-500 text-xs mt-1 text-start ${error ? "" : "hidden"}`}>{error}</p>

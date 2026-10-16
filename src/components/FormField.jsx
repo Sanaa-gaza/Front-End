@@ -1,4 +1,5 @@
 import React from "react";
+import FieldIcon from "./FieldIcon";
 
 export default function FormField({
     label,
@@ -45,15 +46,15 @@ export default function FormField({
                             type="button"
                             onClick={onIconClick}
                             aria-label={iconLabel}
-                            className="absolute top-1/2 -translate-y-1/2 end-3 text-[color:var(--accent)] text-[18px]"
+                            className="absolute top-1/2 -translate-y-1/2 end-3 flex text-[color:var(--accent)]"
                         >
-                            <i aria-hidden="true" className={icon}></i>
+                            <FieldIcon icon={icon} />
                         </button>
                     ) : (
-                        <i
-                            aria-hidden="true"
-                            className={`${icon} absolute top-1/2 -translate-y-1/2 end-3 text-[color:var(--accent)] text-[18px]`}
-                        ></i>
+                        <FieldIcon
+                            icon={icon}
+                            className="absolute top-1/2 -translate-y-1/2 end-3 text-[color:var(--accent)] pointer-events-none"
+                        />
                     )
                 )}
             </div>

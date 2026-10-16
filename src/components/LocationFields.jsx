@@ -7,6 +7,13 @@ import { useGovernorates, useAreas } from "../hooks/useReferenceData";
  * المحافظة + المنطقة من الباك إند (governorate_id / area_id).
  * المناطق بتنحمّل حسب المحافظة المختارة، وتغيير المحافظة بيفضّي المنطقة.
  */
+const LocationPinIcon = (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" />
+        <circle cx="12" cy="10" r="3" />
+    </svg>
+);
+
 export default function LocationFields({
     governorateId,
     areaId,
@@ -25,7 +32,7 @@ export default function LocationFields({
             <SelectField
                 label={t("city")}
                 id="city"
-                icon="fa-solid fa-location-dot"
+                icon={LocationPinIcon}
                 placeholder={governorates.loading ? t("loadingOptions") : t("cityPlaceholder")}
                 value={governorateId}
                 onChange={(e) => {
@@ -40,7 +47,7 @@ export default function LocationFields({
             <SelectField
                 label={t("area")}
                 id="area"
-                icon="fa-solid fa-location-dot"
+                icon={LocationPinIcon}
                 placeholder={areas.loading ? t("loadingOptions") : t("areaPlaceholder")}
                 value={areaId}
                 onChange={(e) => onAreaChange(e.target.value)}

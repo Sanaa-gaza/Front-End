@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { Bell, ChevronsLeft, ChevronsRight, LogOut, Menu, Plus, Search, X } from "lucide-react";
+import { ChevronsLeft, ChevronsRight, LogOut, Menu, Plus, Search, X } from "lucide-react";
 import useLangDir from "../../hooks/useLangDir";
 import { getMe, logout } from "../../api/endpoints";
 import { clearAuth, getStoredUser } from "../../api/session";
 import { fileUrl } from "../../api/client";
+import NotificationsPanel from "./NotificationsPanel";
+import TopbarSearch from "./TopbarSearch";
 
 /** صورة المستخدم بالشريط العلوي، ولو ما في صورة (أو ما انفتحت) أول حرف من الاسم */
 function TopbarAvatar({ path, name }) {
@@ -26,11 +28,29 @@ function TopbarAvatar({ path, name }) {
  * navItems: [{ key, label, icon, to, end }] — كل لوحة بتبعت قائمتها.
  * خيارات الشريط العلوي (كل لوحة حسب تصميمها):
  *   searchTo     — لو موجود: أيقونة بحث بتفتح هالرابط بدل خانة البحث
+ *   hideSearch   — إخفاء البحث نهائياً (صفحات تصميمها بدون بحث)
+ *   hideSidebar  — إخفاء القائمة الجانبية (صفحات بعرض كامل زي الملف المهني)
  *   showAdd      — زر "+" (افتراضياً ظاهر)
+ *   addTo        — الصفحة اللي بيفتحها زر "+"
+ *   searchSections/searchItems — نتائج خانة البحث مع فلتر الأقسام (شوفي TopbarSearch)
  *   greeting     — "مرحباً بك" فوق الاسم
  *   avatarPath   — صورة المستخدم (مسار من السيرفر)
  */
-export default function DashboardLayout({ navItems, children, searchTo, showAdd = true, greeting = false, avatarPath }) {
+export default function DashboardLayout({
+    navItems,
+    children,
+    searchTo,
+    hideSearch = false,
+    hideSidebar = false,
+    showAdd = true,
+    addTo,
+    searchSections,
+    searchItems,
+    greeting = false,
+    avatarPath,
+    notifications,
+    onReadNotifications,
+}) {
     const navigate = useNavigate();
     const { pathname } = useLocation();
     const { t, i18n } = useTranslation("dashboard");
@@ -148,6 +168,8 @@ export default function DashboardLayout({ navItems, children, searchTo, showAdd 
 
     return (
         <div className="flex min-h-dvh bg-[#F7FAFD]">
+            {!hideSidebar && (
+            <>
             {/* القائمة الجانبية على الشاشات الكبيرة */}
             <aside
                 className={`sticky top-0 hidden h-dvh shrink-0 overflow-hidden rounded-e-[28px] shadow-[0_0_30px_rgba(35,74,100,0.12)] transition-[width] duration-300 lg:block ${collapsed ? "w-[84px]" : "w-[250px]"
@@ -170,19 +192,23 @@ export default function DashboardLayout({ navItems, children, searchTo, showAdd 
             >
                 {sidebar(true)}
             </aside>
+            </>
+            )}
 
             <div className="flex min-w-0 flex-1 flex-col">
                 {/* الشريط العلوي */}
                 <header className="sticky top-0 z-30 flex h-[68px] items-center justify-between gap-4 border-b border-[#0000000D] bg-white px-4 sm:px-6">
                     <div className="flex min-w-0 items-center gap-3">
+                        {!hideSidebar && (
                         <button
                             type="button"
                             onClick={() => setMobileOpen(true)}
                             aria-label={t("openMenu")}
-                            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-[#4B9AD2] text-[#4B9AD2] cursor-pointer lg:hidden"
+                            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-[#C7E0F1] text-[#4B9AD2] cursor-pointer lg:hidden"
                         >
                             <Menu size={18} />
                         </button>
+                        )}
                         <TopbarAvatar path={avatarPath} name={name} />
                         <span className="min-w-0">
                             {greeting && <span className="block text-[10px] text-[#89949D]">{t("greeting")}</span>}
@@ -191,49 +217,58 @@ export default function DashboardLayout({ navItems, children, searchTo, showAdd 
                     </div>
 
                     <div className="flex items-center gap-2">
-                        {searchTo ? (
+                        {hideSearch ? null : searchTo ? (
                             <Link
                                 to={searchTo}
                                 aria-label={t("searchLabel")}
-                                className="flex h-9 w-9 items-center justify-center rounded-full border border-[#4B9AD2] text-[#4B9AD2] btn-wipe btn-wipe-outline"
+                                className="flex h-9 w-9 items-center justify-center rounded-full border border-[#C7E0F1] text-[#4B9AD2] btn-wipe btn-wipe-outline"
                             >
                                 <Search size={17} />
                             </Link>
                         ) : (
-                            <label className="relative hidden md:block">
-                                <Search size={16} className="pointer-events-none absolute top-1/2 start-3 -translate-y-1/2 text-[#4B9AD2]" />
-                                <input
-                                    type="search"
-                                    placeholder={t("search")}
-                                    className="h-9 w-[300px] rounded-full border border-[#4B9AD2] bg-white ps-9 pe-4 text-[12px] text-[#414141] placeholder-[#89949D] outline-none focus:ring-1 focus:ring-[#4B9AD2] xl:w-[380px]"
-                                />
-                            </label>
+                            searchItems ? (
+                                <TopbarSearch sections={searchSections} items={searchItems} />
+                            ) : (
+                                <label className="relative hidden md:block">
+                                    <Search size={16} className="pointer-events-none absolute top-1/2 start-3 -translate-y-1/2 text-[#4B9AD2]" />
+                                    <input
+                                        type="search"
+                                        placeholder={t("search")}
+                                        className="h-9 w-[300px] rounded-full border border-[#4B9AD2] bg-white ps-9 pe-4 text-[12px] text-[#414141] placeholder-[#89949D] outline-none focus:ring-1 focus:ring-[#4B9AD2] xl:w-[380px]"
+                                    />
+                                </label>
+                            )
                         )}
-                        {showAdd && (
-                            <button
-                                type="button"
-                                aria-label={t("addNew")}
-                                className="flex h-9 w-9 items-center justify-center rounded-full border border-[#4B9AD2] text-[#4B9AD2] cursor-pointer btn-wipe btn-wipe-outline"
-                            >
-                                <Plus size={17} />
-                            </button>
-                        )}
-                        <button
-                            type="button"
-                            aria-label={t("notifications")}
-                            className="flex h-9 w-9 items-center justify-center rounded-full border border-[#4B9AD2] text-[#4B9AD2] cursor-pointer btn-wipe btn-wipe-outline"
-                        >
-                            <Bell size={17} />
-                        </button>
+                        {showAdd &&
+                            (addTo ? (
+                                <Link
+                                    to={addTo}
+                                    aria-label={t("addNew")}
+                                    aria-current={pathname === addTo ? "page" : undefined}
+                                    className={`flex h-9 w-9 items-center justify-center rounded-full border ${pathname === addTo ? "border-[#4B9AD2] bg-[#4B9AD2] text-white" : "border-[#C7E0F1] text-[#4B9AD2] btn-wipe btn-wipe-outline"
+                                        }`}
+                                >
+                                    <Plus size={17} />
+                                </Link>
+                            ) : (
+                                <button
+                                    type="button"
+                                    aria-label={t("addNew")}
+                                    className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-full border border-[#C7E0F1] text-[#4B9AD2] btn-wipe btn-wipe-outline"
+                                >
+                                    <Plus size={17} />
+                                </button>
+                            ))}
                         <button
                             type="button"
                             onClick={() => i18n.changeLanguage(isRtl ? "en" : "ar")}
                             aria-label={t("language")}
                             title={t("language")}
-                            className="flex h-9 w-9 items-center justify-center rounded-full border border-[#4B9AD2] text-[11px] font-bold text-[#4B9AD2] cursor-pointer btn-wipe btn-wipe-outline"
+                            className="flex h-9 w-9 items-center justify-center rounded-full border border-[#C7E0F1] text-[12px] font-medium text-[#4B9AD2] cursor-pointer btn-wipe btn-wipe-outline"
                         >
                             {isRtl ? "EN" : "AR"}
                         </button>
+                        <NotificationsPanel notifications={notifications} onRead={onReadNotifications} />
                     </div>
                 </header>
 

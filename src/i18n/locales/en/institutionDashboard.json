@@ -141,6 +141,14 @@
                 "category": "Finishing",
                 "area": "Jabalia - Camp"
             }
+        },
+        "cancel": "Cancel",
+        "cancelModal": {
+            "title": "Cancel tender",
+            "desc": "Are you sure you want to cancel the tender \"{{title}}\"? It will move to Cancelled and stop receiving new offers.",
+            "confirm": "Yes, cancel tender",
+            "back": "Go back",
+            "done": "The tender \"{{title}}\" was cancelled and moved to Cancelled."
         }
     },
     "projectsPage": {
@@ -181,6 +189,106 @@
                 "title": "Electrical network maintenance",
                 "provider": "Al-Noor Electric",
                 "time": "3 days"
+            }
+        }
+    },
+    "projectDetails": {
+        "back": "Back to projects",
+        "notFound": "This project was not found",
+        "stagesTitle": "Project stages & progress",
+        "currentStage": "Current stage: {{ordinal}} — {{name}}",
+        "allDone": "All project stages are complete",
+        "ordinals": ["1st", "2nd", "3rd", "4th", "5th"],
+        "stages": {
+            "created": "Project created",
+            "accepted": "Offer accepted",
+            "started": "Work started",
+            "executing": "In progress",
+            "delivered": "Project delivery"
+        },
+        "waiting": "Waiting",
+        "deliveredNote": "Supervision & final handover",
+        "owner": "Project owner (client)",
+        "contractor": "Executing party (contractor)",
+        "remaining": "Time remaining",
+        "remainingValue": "{{time}} left",
+        "deadline": "Deadline: {{date}}",
+        "completedTitle": "Project delivered",
+        "docs": {
+            "title": "Execution documentation & field photos",
+            "subtitle": "Archive of photos and reports attached to the project",
+            "phases": {
+                "before": "Before",
+                "during": "In progress",
+                "after": "After"
+            },
+            "uploadedBy": {
+                "craftsman": "Uploaded by craftsman",
+                "contractor": "Uploaded by contractor"
+            },
+            "approved": "Approved",
+            "pendingApproval": "Pending approval",
+            "photos": {
+                "ph1": "First coat on corridor ceilings",
+                "ph2": "Sanding and treating gypsum board joints",
+                "ph3": "First coat on corridor ceilings"
+            },
+            "filesTitle": "Attached technical reports & documents",
+            "download": "Download {{name}}",
+            "unavailable": "File not available yet",
+            "files": {
+                "f1": { "name": "Field inspection & moisture report.pdf", "date": "Nov 02, 2026" },
+                "f2": { "name": "Materials warranty & paint quality certificate.pdf", "date": "Oct 15, 2026" }
+            }
+        },
+        "chat": {
+            "title": "Live chat & instructions log",
+            "subtitle": "An encrypted, documented channel between the institution, contractor and craftsman, supervised by the platform",
+            "online": "Active now",
+            "empty": "No messages yet — start the conversation",
+            "placeholder": "Send....",
+            "send": "Send",
+            "you": "You",
+            "mic": "Record a voice message",
+            "stopRecording": "Stop recording and send",
+            "recording": "Recording",
+            "micDenied": "Microphone access was denied. Allow it from your browser settings.",
+            "micUnsupported": "Your browser doesn't support audio recording.",
+            "attach": "Attach a file",
+            "camera": "Camera",
+            "studio": "Gallery",
+            "video": "Video"
+        },
+        "sample": {
+            "p1": {
+                "location": "Nuseirat - Al-Qassam St., Gaza",
+                "owner": "Golden Paints Co.",
+                "deadline": "December 20, 2026",
+                "created": "Oct 10",
+                "accepted": "Oct 12",
+                "started": "Oct 15"
+            },
+            "p2": {
+                "location": "Deir al-Balah - Main St.",
+                "owner": "Directorate of Education",
+                "deadline": "September 1, 2026",
+                "created": "May 2",
+                "accepted": "May 6",
+                "started": "May 10"
+            },
+            "p3": {
+                "location": "Khan Younis - Al-Amal",
+                "owner": "Al-Shifa Charity",
+                "deadline": "January 15, 2027",
+                "created": "Oct 8"
+            },
+            "p4": {
+                "location": "Gaza - Rimal",
+                "owner": "Gaza Municipality",
+                "deadline": "November 30, 2026",
+                "created": "Oct 1",
+                "accepted": "Oct 3",
+                "started": "Oct 5"
             }
         }
     },
@@ -424,10 +532,9 @@
         "newTender": "New tender",
         "tabs": {
             "all": "All",
-            "new": "New",
-            "reviewed": "Reviewed",
-            "shortlisted": "Shortlisted",
-            "excluded": "Excluded"
+            "executing": "In progress",
+            "awaiting": "Awaiting confirmation",
+            "completed": "Completed"
         },
         "status": {
             "new": "New",
@@ -438,14 +545,12 @@
         "columns": {
             "tender": "Tender",
             "applicants": "Applicants",
-            "bidder": "Bidder",
-            "experience": "Experience",
+            "bidder": "Company",
             "price": "Total price",
             "duration": "Duration",
             "status": "Status",
             "actions": "Actions"
         },
-        "years": "{{count}} years",
         "price": "{{amount}} ILS",
         "view": "View details",
         "empty": "No matching offers",
@@ -465,6 +570,57 @@
             "o4": {
                 "tender": "Medical complex construction",
                 "bidder": "Al-Nukhba Foundation"
+            }
+        }
+    },
+    "offerDetails": {
+        "back": "Back to offers",
+        "notFound": "This offer was not found",
+        "days": "Days",
+        "years": "Years of experience",
+        "reviews": "({{count}} reviews)",
+        "desc": "I provide high-quality restoration and wooden furniture maintenance with attention to detail, with over {{years}} years of experience in carpentry and interior decoration.",
+        "features": {
+            "experience": "Long experience",
+            "quality": "Quality work",
+            "punctual": "On-time delivery",
+            "prices": "Fair prices",
+            "support": "After-service support"
+        },
+        "applicants": "Applicants ({{count}})",
+        "offerValue": "Offer value",
+        "price": "{{amount}} ILS",
+        "yearsExp": "{{count}} years of experience",
+        "verified": "Verified account",
+        "accept": "Accept",
+        "accepted": "Accepted",
+        "acceptedMsg": "{{name}}'s offer has been accepted for this tender.",
+        "undo": "Undo",
+        "profile": "Professional profile",
+        "sample": {
+            "o1": { "craft": "Carpenter & furniture restoration", "location": "Gaza, Nuseirat" },
+            "o2": { "craft": "Electrician & wiring", "location": "Gaza, Rimal" },
+            "o3": { "craft": "Building restoration contractor", "location": "Deir al-Balah" },
+            "o4": { "craft": "General construction contractor", "location": "Khan Younis" }
+        },
+        "applicantsSample": {
+            "a1": {
+                "name": "Mohammad Al-Agha",
+                "specialty": "Plumbing",
+                "location": "Nuseirat",
+                "desc": "I provide high-quality restoration and wooden furniture maintenance with attention to detail and over 12 years of experience in carpentry and interior decoration. My team is ready to start immediately once the offer is accepted, fully committed to the schedule and on-time delivery."
+            },
+            "a2": {
+                "name": "Khaled Nasser",
+                "specialty": "Carpentry",
+                "location": "Gaza",
+                "desc": "Carpenter and interior decorator with long experience restoring offices and meeting halls. I work with a complete team and offer a one-year warranty on all work after delivery."
+            },
+            "a3": {
+                "name": "Yousef Hamdan",
+                "specialty": "Painting & decor",
+                "location": "Deir al-Balah",
+                "desc": "Specialized in painting, decoration and interior finishing. Punctual, using high-quality materials at fair prices."
             }
         }
     },
@@ -572,6 +728,23 @@
             "forwardSubjectDefault": "Fwd: {{title}}",
             "forwardType": "Forwarded to staff",
             "forwarded": "The message was forwarded to staff and added to Sent."
+        },
+        "forwardModal": {
+            "title": "Forward to employee",
+            "employee": "Employee",
+            "employeePlaceholder": "Choose an employee",
+            "employeeRequired": "Choose an employee",
+            "notes": "Notes",
+            "notesPlaceholder": "Write a note",
+            "submit": "Forward to employee",
+            "close": "Close",
+            "forwarded": "The message was forwarded to {{name}} and added to Sent.",
+            "employees": {
+                "e1": "Eng. Samer Al-Haddad — Projects engineer",
+                "e2": "Rana Khalil — Finance",
+                "e3": "Ahmad Yousef — Procurement",
+                "e4": "Laila Mansour — Legal affairs"
+            }
         }
     },
     "tenderDetails": {
@@ -585,6 +758,10 @@
         "cancel": "Cancel",
         "closed": "The tender was closed and will not receive new offers.",
         "closedBadge": "Closed",
+        "awardConfirm": "Award this tender as the winning offer? Receiving offers will stop and the tender moves to execution.",
+        "confirmAward": "Confirm selection",
+        "awarded": "The winning offer has been selected and the tender moved to execution & delivery.",
+        "awardedBadge": "Winner selected",
         "stagesTitle": "Tender stages and workflow status",
         "stages": {
             "publish": {
@@ -644,5 +821,106 @@
                 ]
             }
         }
+    },
+    "notifications": {
+        "sample": {
+            "n1": {
+                "title": "New tender published",
+                "body": "The tender \"Contracting works - City Mosque\" was published by Ramallah Municipality.",
+                "time": "10 minutes ago"
+            },
+            "n2": {
+                "title": "Your initial offer was accepted",
+                "body": "Your initial offer on the tender \"Building materials supply\" was accepted by the announcing party.",
+                "time": "25 minutes ago"
+            },
+            "n3": {
+                "title": "New message",
+                "body": "You have a new message from Al-Amal Contracting about the tender \"Building maintenance\".",
+                "time": "1 hour ago"
+            },
+            "n4": {
+                "title": "Tender status update",
+                "body": "The offer deadline for the tender \"Electrical works\" was extended to 20/07/2026.",
+                "time": "3 hours ago"
+            },
+            "n5": {
+                "title": "Tender closed",
+                "body": "The tender \"Office furnishing\" was closed successfully. Thanks for taking part.",
+                "time": "1 day ago"
+            },
+            "n6": {
+                "title": "New announcement published",
+                "body": "A tender for \"Computer supply\" was announced by the Ministry of Education.",
+                "time": "2 days ago"
+            }
+        }
+    },
+    "createTender": {
+        "title": "Create a new tender",
+        "subtitle": "Fill in the following details to create a new tender",
+        "optional": "(optional)",
+        "basic": "1. Basic tender information",
+        "desc": "Tender description",
+        "descPlaceholder": "Write a short, clear description of the tender ...",
+        "name": "Tender name",
+        "namePlaceholder": "Enter the tender name",
+        "number": "Tender number",
+        "numberPlaceholder": "Enter the tender number",
+        "category": "Category",
+        "categoryPlaceholder": "Tender category",
+        "categories": {
+            "construction": "Contracting & construction",
+            "maintenance": "Maintenance",
+            "electrical": "Electrical works",
+            "plumbing": "Plumbing works",
+            "supply": "Materials supply",
+            "furnishing": "Furnishing",
+            "other": "Other"
+        },
+        "closeDate": "Closing date",
+        "extra": "2. Additional details",
+        "location": "Location / Area",
+        "locationPlaceholder": "Choose the location",
+        "loading": "Loading...",
+        "value": "Tender value",
+        "valuePlaceholder": "Enter the tender value",
+        "submitDate": "Submission deadline",
+        "files": "Terms & attachments",
+        "filesCta": "Click to upload files",
+        "filesHint": "You can upload several files (PDF, Word, Excel)",
+        "removeFile": "Remove {{name}}",
+        "map": "3. Add a location on the map",
+        "locate": "Locate on the map",
+        "mapSearch": "Search for the place or area number...",
+        "mapPreview": "Map location preview",
+        "submit": "Create tender",
+        "cancel": "Cancel",
+        "required": "This field is required",
+        "invalidValue": "Enter a valid value greater than zero",
+        "submitAfterClose": "The submission deadline must be before the closing date",
+        "successTitle": "Tender created",
+        "successDesc": "The tender \"{{name}}\" was created successfully.",
+        "goTenders": "Manage tenders",
+        "another": "Create another tender",
+        "closeDatePlaceholder": "Choose the closing date",
+        "submitDatePlaceholder": "Choose the submission deadline",
+        "locating": "Finding your location...",
+        "mapHint": "Type a place and press \"Locate on the map\", or press it directly to use your current location.",
+        "mapSelected": "The location was set on the map.",
+        "openMap": "Open in Google Maps",
+        "mapErrors": {
+            "denied": "Location access was not allowed. Allow it in your browser or type the place name.",
+            "failed": "Couldn't find your location. Try again or type the place name.",
+            "empty": "Type the place name first."
+        }
+    },
+    "searchSections": {
+        "pages": "Pages",
+        "tenders": "Tenders",
+        "offers": "Offers",
+        "projects": "Projects",
+        "messages": "Messages",
+        "providers": "Providers"
     }
 }

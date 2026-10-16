@@ -266,9 +266,10 @@ function CraftsmanCard({ craftsman: c }) {
                 </div>
             )}
 
-            {/* صفحة الملف المهني لسا مؤجلة من الباك إند (سبرنت لاحق) — حالياً بتعرض "قيد الإنشاء" */}
+            {/* ما في endpoint لحرفي واحد لسا، فبنبعت بياناته مع الرابط لصفحة الملف المهني */}
             <Link
                 to={`/craftsmen/${c.id}`}
+                state={{ craftsman: c, location }}
                 className="mt-5 flex h-12 w-full items-center justify-center rounded-xl bg-[#4B9AD2] text-[16px] font-medium text-white btn-wipe"
             >
                 {t("card.professionalProfile")}

@@ -3,27 +3,10 @@ import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { ArrowLeft, ArrowRight, Check, ChevronDown, LayoutGrid, MapPin, Search, Star, Wrench } from "lucide-react";
 import { useServices } from "../../../hooks/useReferenceData";
+import { PROVIDERS } from "./providersData";
 
 const BASE = "/dashboard/institution";
 const PAGE_SIZE = 6;
-
-// ===== بيانات تجريبية =====
-// الباك إند لسا ما فيه endpoint لقائمة مزودي الخدمة. لما يجهز، استبدلي PROVIDERS بطلب من src/api/endpoints.js
-// serviceId: رقم الحرفة من GET /api/services (عشان فلتر "نوع الخدمة" يشتغل على القائمة الحقيقية)
-const PROVIDERS = [
-    { id: "p1", type: "team", serviceId: 1, rating: 4.9, reviews: 100, years: 8, verified: true, available: true },
-    { id: "p2", type: "craftsman", serviceId: 2, rating: 4.7, reviews: 86, years: 6, verified: true, available: true },
-    { id: "p3", type: "contractor", serviceId: 8, rating: 4.5, reviews: 54, years: 15, verified: true, available: false },
-    { id: "p4", type: "craftsman", serviceId: 4, rating: 4.8, reviews: 120, years: 10, verified: true, available: true },
-    { id: "p5", type: "team", serviceId: 5, rating: 4.2, reviews: 38, years: 5, verified: false, available: true },
-    { id: "p6", type: "craftsman", serviceId: 10, rating: 4.6, reviews: 72, years: 9, verified: true, available: true },
-    { id: "p7", type: "contractor", serviceId: 8, rating: 3.9, reviews: 21, years: 12, verified: true, available: true },
-    { id: "p8", type: "craftsman", serviceId: 7, rating: 4.4, reviews: 47, years: 7, verified: false, available: false },
-    { id: "p9", type: "team", serviceId: 2, rating: 4.8, reviews: 93, years: 6, verified: true, available: true },
-    { id: "p10", type: "craftsman", serviceId: 6, rating: 3.6, reviews: 15, years: 4, verified: false, available: true },
-    { id: "p11", type: "contractor", serviceId: 5, rating: 4.3, reviews: 40, years: 11, verified: true, available: true },
-    { id: "p12", type: "craftsman", serviceId: 1, rating: 4.9, reviews: 132, years: 13, verified: true, available: true },
-];
 
 const TYPES = ["craftsman", "team", "contractor"];
 const RATING_OPTIONS = [1, 2, 3, 4, 5];
@@ -56,28 +39,26 @@ function ProviderCard({ provider: p }) {
     const tags = t(`${s}.tags`, { returnObjects: true });
 
     return (
-        <article className="relative flex flex-col overflow-hidden rounded-[20px] border border-[#0000000F] bg-white p-4 shadow-[0_6px_20px_rgba(43,91,120,0.08)] transition-shadow hover:shadow-[0_12px_28px_rgba(75,154,210,0.18)]">
-            <span aria-hidden="true" className="absolute inset-x-0 top-0 h-1 bg-linear-to-r from-[#4B9AD2]/40 via-[#4B9AD2]/80 to-[#4B9AD2]/40" />
-
-            <div className="flex items-center gap-3">
+        <article className="flex flex-col rounded-[20px] border border-[#0000000F] border-t-[3px] border-t-[#8EC0E4] bg-white px-4 pb-5 pt-4 shadow-[0_6px_20px_rgba(43,91,120,0.08)] transition-shadow hover:shadow-[0_12px_28px_rgba(75,154,210,0.18)]">
+            <div className="flex items-start gap-3">
                 <div className="relative shrink-0">
-                    <div className="flex h-16 w-16 items-center justify-center rounded-full bg-[#EAF3FB] text-[18px] font-bold text-[#414141]">
+                    <div className="flex h-[84px] w-[84px] items-center justify-center rounded-full bg-[#EEF5FC] text-[18px] font-bold text-[#575757]">
                         {name.charAt(0)}
                     </div>
                     {p.verified && (
                         <span
                             title={t("providersPage.verified")}
-                            className="absolute -bottom-0.5 end-0 flex h-6 w-6 items-center justify-center rounded-full border-2 border-white bg-[#4B9AD2] text-white"
+                            className="absolute bottom-0.5 end-0.5 flex h-[22px] w-[22px] items-center justify-center rounded-full border-2 border-white bg-[#4B9AD2] text-white"
                         >
                             <Check size={12} strokeWidth={3} />
                         </span>
                     )}
                 </div>
 
-                <div className="min-w-0 flex-1">
+                <div className="min-w-0 flex-1 pt-3">
                     <h3 className="truncate text-[15px] font-bold text-[#414141]">{name}</h3>
-                    <p className="mt-0.5 text-[12px] text-[#4B9AD2]">{t(`${s}.specialty`)}</p>
-                    <p className="mt-1 flex items-center gap-1 text-[10px] text-[#89949D]">
+                    <p className="mt-1.5 text-[12px] text-[#4B9AD2]">{t(`${s}.specialty`)}</p>
+                    <p className="mt-2 flex items-center gap-1 text-[10px] text-[#89949D]">
                         <Star size={12} className="fill-[#F6C90E] text-[#F6C90E]" />
                         <bdi dir="ltr" className="font-bold text-[#414141]">{p.rating}</bdi>
                         {t("providersPage.reviews", { count: p.reviews })}
@@ -85,14 +66,13 @@ function ProviderCard({ provider: p }) {
                 </div>
 
                 {p.available && (
-                    <span className="flex shrink-0 items-center gap-1 self-start whitespace-nowrap rounded-full border border-[#BFEBCD] bg-[#E8F8EE] px-2 py-0.5 text-[9px] font-medium text-[#2EAF4E]">
-                        <span className="h-1.5 w-1.5 rounded-full bg-[#2EAF4E]" />
+                    <span className="shrink-0 whitespace-nowrap rounded-full border border-[#BFEBCD] bg-[#EEFAF2] px-3 py-1 text-[10px] text-[#2EAF4E]">
                         {t("providersPage.available")}
                     </span>
                 )}
             </div>
 
-            <div className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-1 text-[12px] text-[#414141]">
+            <div className="mt-3 flex flex-wrap items-center gap-x-5 gap-y-1 text-[12px] text-[#414141]">
                 <span className="flex items-center gap-1.5">
                     <Wrench size={13} className="text-[#4B9AD2]" />
                     {t("providersPage.years", { count: p.years })}
@@ -103,9 +83,9 @@ function ProviderCard({ provider: p }) {
                 </span>
             </div>
 
-            <ul className="mt-3 flex flex-wrap gap-2">
+            <ul className="mb-auto mt-4 flex flex-wrap gap-x-5 gap-y-2">
                 {(Array.isArray(tags) ? tags : []).map((tag) => (
-                    <li key={tag} className="rounded-full bg-[#EAF3FB] px-3 py-1 text-[10px] text-[#38749E]">
+                    <li key={tag} className="rounded-full bg-[#EAF3FB] px-4 py-1.5 text-[11px] text-[#4B9AD2]">
                         {tag}
                     </li>
                 ))}
@@ -113,7 +93,7 @@ function ProviderCard({ provider: p }) {
 
             <Link
                 to={`${BASE}/providers/${p.id}`}
-                className="mt-4 flex h-10 w-full items-center justify-center rounded-xl bg-[#4B9AD2] text-[14px] font-medium text-white btn-wipe"
+                className="mt-4 flex h-[42px] w-full items-center justify-center rounded-xl bg-[#4B9AD2] text-[16px] text-white btn-wipe"
             >
                 {t("providersPage.profile")}
             </Link>

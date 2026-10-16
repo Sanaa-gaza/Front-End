@@ -11,7 +11,7 @@ export default function PhoneField({ id = "phone", value, onChange, error, count
                 {t("phone")}
             </label>
             <div
-                className={`flex ${isRtl ? "flex-row-reverse" : "flex-row"} rounded-lg border bg-[#F5F6F8] overflow-hidden focus-within:ring-1 focus-within:ring-[#4ba0d8] focus-within:border-[#4ba0d8] ${error ? "border-red-400" : "border-[#4B9AD2]"
+                className={`flex ${isRtl ? "flex-row-reverse" : "flex-row"} rounded-lg border bg-[#F5F6F8] focus-within:ring-1 focus-within:ring-[#4ba0d8] focus-within:border-[#4ba0d8] ${error ? "border-red-400" : "border-[#4B9AD2]"
                     }`}
             >
                 <select
@@ -19,7 +19,8 @@ export default function PhoneField({ id = "phone", value, onChange, error, count
                     onChange={(e) => onCountryCodeChange && onCountryCodeChange(e.target.value)}
                     dir="ltr"
                     aria-label={t("countryCode")}
-                    className="bg-[#d4eafa] text-[#000000BF] text-sm pl-2 pr-1.5 flex items-center justify-center font-bold border-0 rounded-lg focus:outline-none cursor-pointer appearance-none"
+                    // مربع المقدمة بإطار ودوران كامل، ومركّب فوق إطار الحقل على الطرف الأيسر
+                    className={`relative -my-px -ml-px shrink-0 rounded-lg border bg-[#EEF4FB] text-[#333333] text-[13px] font-bold px-5 text-center focus:outline-none cursor-pointer appearance-none ${error ? "border-red-400" : "border-[#4B9AD2]"}`}
                 >
                     <option value="+970">+970</option>
                     <option value="+972">+972</option>

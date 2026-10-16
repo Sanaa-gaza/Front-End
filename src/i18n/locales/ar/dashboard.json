@@ -13,5 +13,32 @@
     "backHome": "العودة للرئيسية",
     "language": "تغيير اللغة",
     "greeting": "مرحباً بك",
-    "searchLabel": "بحث"
+    "searchLabel": "بحث",
+    "notificationsPanel": {
+        "title": "الإشعارات",
+        "markAll": "تحديد الكل كمقروء",
+        "close": "إغلاق الإشعارات",
+        "empty": "لا توجد إشعارات هنا.",
+        "tabs": {
+            "all": "الكل",
+            "unread": "غير مقروءة",
+            "tenders": "المناقصات",
+            "messages": "الرسائل",
+            "system": "النظام"
+        }
+    },
+    "datePicker": {
+        "week": "بعد أسبوع",
+        "twoWeeks": "بعد أسبوعين",
+        "month": "بعد شهر",
+        "prev": "الشهر السابق",
+        "next": "الشهر التالي",
+        "clear": "مسح التاريخ"
+    },
+    "searchBox": {
+        "all": "الكل",
+        "empty": "لا توجد نتائج مطابقة.",
+        "showAll": "عرض الكل ({{count}})",
+        "clear": "مسح البحث"
+    }
 }
