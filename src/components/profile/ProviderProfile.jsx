@@ -5,6 +5,7 @@ import {
     Award,
     CalendarDays,
     Camera,
+    ChevronLeft,
     Clock,
     ImageIcon,
     ImageUp,
@@ -126,8 +127,9 @@ function SideCard({ icon: Icon, title, children }) {
  *            features: ["quality" | "prices" | "punctual"], portfolio: [روابط صور], portfolioTotal,
  *            reviews: [{ name, date, rating, comment }] }
  * chatTo / requestTo: روابط زرّي "بدء محادثة" و"طلب خدمة"
+ * backTo / backLabel: رابط رجوع أعلى الصفحة (اختياري)
  */
-export default function ProviderProfile({ profile, chatTo, requestTo }) {
+export default function ProviderProfile({ profile, chatTo, requestTo, backTo, backLabel }) {
     const { t } = useTranslation("providerProfile");
     const [tab, setTab] = useState("profile");
     const features = profile.features?.length ? profile.features : DEFAULT_FEATURES;
@@ -138,6 +140,16 @@ export default function ProviderProfile({ profile, chatTo, requestTo }) {
 
     return (
         <div className="mx-auto flex max-w-[1100px] flex-col">
+            {backTo && (
+                <Link
+                    to={backTo}
+                    className="mb-4 inline-flex w-fit items-center gap-1 text-[12px] font-medium text-[#4B9AD2] hover:underline"
+                >
+                    <ChevronLeft size={14} className="rtl:rotate-180" />
+                    {backLabel}
+                </Link>
+            )}
+
             {/* الغلاف */}
             <div className="relative h-[140px] overflow-hidden rounded-[20px] bg-[#EFEFEF]">
                 {profile.cover ? (

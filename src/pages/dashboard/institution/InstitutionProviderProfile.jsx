@@ -47,5 +47,14 @@ export default function InstitutionProviderProfile() {
         areas: tp("nearby", { area: location }),
     };
 
-    return <ProviderProfile profile={profile} chatTo={`${BASE}/messages`} requestTo={`${BASE}/tenders/new`} />;
+    return (
+        <ProviderProfile
+            profile={profile}
+            chatTo={`${BASE}/messages`}
+            requestTo={`${BASE}/tenders/new`}
+            // الصفحة بدون قائمة جانبية، فرابط الرجوع هو طريق الخروج منها
+            backTo={`${BASE}/providers`}
+            backLabel={tp("backToProviders")}
+        />
+    );
 }

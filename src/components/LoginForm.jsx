@@ -76,18 +76,21 @@ export default function LoginForm({
 
     return (
         <div className="min-h-dvh flex flex-col bg-gradient-to-b from-[#dbeaf5] to-white ">
-            <header className="flex items-center justify-between px-6 py-4 bg-white shadow-md shadow-[#0000001A]">
-                <button type="button" onClick={() => navigate("/")} className="cursor-pointer">
-                    <img src="/images/logo w 1.svg" alt="صنعة" className="w-[110px]" />
-                </button>
-                <div className="flex items-center gap-2">
-                    <button
-                        type="button"
-                        onClick={toggleLang}
-                        className="w-9 h-9 rounded-full border border-[#2563EB] text-xs text-[#2563EB] flex items-center justify-center font-bold cursor-pointer"
-                    >
-                        {i18n.language === "ar" ? "EN" : "AR"}
+            <header className="bg-white py-4 shadow-md shadow-[#0000001A]">
+                {/* محتوى الهيدر بعرض 90% بعيداً عن الحواف */}
+                <div className="mx-auto flex w-[90%] items-center justify-between">
+                    <button type="button" onClick={() => navigate("/")} className="cursor-pointer">
+                        <img src="/images/logo w 1.svg" alt="صنعة" className="w-[110px]" />
                     </button>
+                    <div className="flex items-center gap-2">
+                        <button
+                            type="button"
+                            onClick={toggleLang}
+                            className="w-9 h-9 rounded-full border border-[#2563EB] text-xs text-[#2563EB] flex items-center justify-center font-bold cursor-pointer"
+                        >
+                            {i18n.language === "ar" ? "EN" : "AR"}
+                        </button>
+                    </div>
                 </div>
             </header>
 

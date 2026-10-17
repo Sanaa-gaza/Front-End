@@ -421,7 +421,7 @@ function savePrefs(prefs) {
 }
 
 /** مفتاح تشغيل/إيقاف */
-function Toggle({ checked, onChange, label }) {
+export function Toggle({ checked, onChange, label }) {
     return (
         <button
             type="button"

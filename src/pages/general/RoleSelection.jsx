@@ -28,18 +28,21 @@ export default function RoleSelection() {
 
     return (
         <div className="min-h-dvh bg-gradient-to-b from-white to-[#dbeaf5]" style={{ perspective: "1200px" }}>
-            <header className="flex items-center justify-between px-6 py-4 bg-white shadow-md shadow-[#0000001A]">
-                <button type="button" onClick={() => goTo("/")} className="cursor-pointer">
-                    <img src="/images/logo w 1.svg" alt="صنعة" className="w-[110px]" />
-                </button>
-                <div className="flex items-center gap-2">
-                    <button
-                        type="button"
-                        onClick={toggleLang}
-                        className="w-9 h-9 rounded-full border border-[#2563EB] text-xs text-[#2563EB] flex items-center justify-center font-bold cursor-pointer"
-                    >
-                        {i18n.language === "ar" ? "EN" : "AR"}
+            <header className="bg-white py-4 shadow-md shadow-[#0000001A]">
+                {/* محتوى الهيدر بعرض 90% بعيداً عن الحواف */}
+                <div className="mx-auto flex w-[90%] items-center justify-between">
+                    <button type="button" onClick={() => goTo("/")} className="cursor-pointer">
+                        <img src="/images/logo w 1.svg" alt="صنعة" className="w-[110px]" />
                     </button>
+                    <div className="flex items-center gap-2">
+                        <button
+                            type="button"
+                            onClick={toggleLang}
+                            className="w-9 h-9 rounded-full border border-[#2563EB] text-xs text-[#2563EB] flex items-center justify-center font-bold cursor-pointer"
+                        >
+                            {i18n.language === "ar" ? "EN" : "AR"}
+                        </button>
+                    </div>
                 </div>
             </header>
 
@@ -105,8 +108,9 @@ export default function RoleSelection() {
 
 function RoleCard({ icon, iconAlt, title, description, buttonLabel, onClick }) {
     return (
-        <div className="bg-white border border-[#0000001A] rounded-2xl shadow-sm
-     text-center py-8 px-4 flex flex-col items-center transition-all hover:translate-y-[-5px] hover:shadow-md hover:shadow-blue-500">
+        // نفس ظل بطاقات صفحة الحرفيين (عادي + عند المرور)
+        <div className="bg-white border border-[#0000000F] rounded-2xl shadow-[0_6px_20px_rgba(43,91,120,0.08)]
+     text-center py-8 px-4 flex flex-col items-center transition-all duration-300 ease-out hover:-translate-y-1.5 hover:shadow-[0_16px_32px_rgba(75,154,210,0.22)]">
             <div className="bg-[#DEE8FC] rounded-full flex items-center justify-center w-14 h-14 mb-4">
                 <img src={icon} alt={iconAlt} className="w-6 h-6" />
             </div>

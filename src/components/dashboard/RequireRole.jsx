@@ -6,8 +6,8 @@ import { getToken, getStoredUser, homePathForRole } from "../../api/session";
  * حماية لوحات التحكم: بدون توكن → صفحة الدخول،
  * ولو نوع الحساب مختلف → بنرجعه على لوحته هو.
  */
-export default function RequireRole({ role, children }) {
-    if (!getToken()) return <Navigate to="/login" replace />;
+export default function RequireRole({ role, children, loginPath = "/login" }) {
+    if (!getToken()) return <Navigate to={loginPath} replace />;
 
     const user = getStoredUser();
     if (user?.role && user.role !== role) {

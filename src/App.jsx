@@ -19,6 +19,7 @@ import AdminDashboard from "./pages/dashboard/admin/AdminDashboard";
 import ClientLogin from "./pages/login/ClientLogin";
 import CraftsmanLogin from "./pages/login/CraftsmanLogin";
 import InstitutionLogin from "./pages/login/InstitutionLogin";
+import AdminLogin from "./pages/login/AdminLogin";
 import ContractorLogin from "./pages/login/ContractorLogin";
 
 import ForgotPassword from "./pages/password/ForgotPassword";
@@ -50,7 +51,7 @@ export default function App() {
         <Route path="/dashboard/craftsman/*" element={<CraftsmanDashboard />} />
         <Route path="/dashboard/contractor" element={<ContractorDashboard />} />
         <Route path="/dashboard/customer" element={<CustomerDashboard />} />
-        <Route path="/dashboard/admin" element={<AdminDashboard />} />
+        <Route path="/dashboard/admin/*" element={<AdminDashboard />} />
         <Route path="/login" element={<ClientLogin />} />
         <Route path="/craftsman-login" element={<CraftsmanLogin />} />
         <Route path="/forget-password" element={<ForgotPassword />} />
@@ -61,6 +62,7 @@ export default function App() {
         <Route path="/signup" element={<ClientSignup />} />
         <Route path="*" element={<NotFound />} />
         <Route path="/institution-login" element={<InstitutionLogin />} />
+        <Route path="/admin-login" element={<AdminLogin />} />
         <Route path="/contractor-login" element={<ContractorLogin />} />
         <Route path="/institution-signup" element={<InstitutionSignupStep1 />} />
         <Route path="/institution-signup/step-2" element={<InstitutionSignupStep2 />} />

@@ -1,0 +1,1042 @@
+{
+    "nav": {
+        "home": "Home",
+        "users": "Users",
+        "requests": "Incoming requests",
+        "verification": "Verification requests",
+        "support": "Contact & inquiries",
+        "chats": "Chats",
+        "notifications": "Notifications",
+        "settings": "Settings"
+    },
+    "search": "Quick search users and urgent requests",
+    "stats": {
+        "projects": "Active projects",
+        "verification": "Pending verifications",
+        "chats": "Active chats",
+        "craftsmen": "Total craftsmen",
+        "institutions": "Total institutions",
+        "contractors": "Total contractors",
+        "customers": "Total customers"
+    },
+    "growth": {
+        "title": "User growth",
+        "subtitle": "Cumulative - {{year}}",
+        "series": {
+            "completed": "Completed requests & actions",
+            "reviewing": "Under review",
+            "unseen": "Not yet seen"
+        },
+        "months": [
+            "Jan",
+            "Feb",
+            "Mar",
+            "Apr",
+            "May",
+            "Jun",
+            "Jul",
+            "Aug",
+            "Sep",
+            "Oct",
+            "Nov",
+            "Dec"
+        ],
+        "tableCaption": "User growth by month",
+        "month": "Month"
+    },
+    "actions": {
+        "title": "Needs your action",
+        "subtitle": "{{count}} critical tasks pending approval",
+        "items": {
+            "requests": "New service requests not reviewed",
+            "verification": "Users awaiting verification"
+        },
+        "time": "1 hour ago"
+    },
+    "latest": {
+        "title": "Latest incoming requests",
+        "all": "All requests",
+        "new": "New",
+        "sample": {
+            "q1": {
+                "title": "Execution time extension request",
+                "party": "Golden Paints Co.",
+                "time": "5 hours ago"
+            },
+            "q2": {
+                "title": "Due payment request",
+                "party": "Al-Nukhba Contracting",
+                "time": "8 hours ago"
+            },
+            "q3": {
+                "title": "Plumbing service request",
+                "party": "Um Mohammad",
+                "time": "Yesterday"
+            },
+            "q4": {
+                "title": "Account verification request",
+                "party": "Al-Noor Technical Team",
+                "time": "Yesterday"
+            }
+        }
+    },
+    "usersPage": {
+        "search": "Search by name",
+        "status": "Status",
+        "allStatuses": "All statuses",
+        "tabs": {
+            "craftsmen": "Craftsmen",
+            "customers": "Customers",
+            "contractors": "Contractors",
+            "institutions": "Institutions"
+        },
+        "newBadge": "{{count}} new",
+        "columns": {
+            "name": {
+                "craftsmen": "Craftsman",
+                "customers": "Name",
+                "contractors": "Company name",
+                "institutions": "Institution"
+            },
+            "field": "Field",
+            "area": "Area",
+            "experience": "Experience",
+            "rating": "Rating",
+            "completed": "Completed jobs",
+            "verification": "Verification",
+            "state": "Status",
+            "actions": "Actions",
+            "requests": "Requests",
+            "projects": "Projects",
+            "joined": "Registered",
+            "phone": "Phone",
+            "lastActive": "Last active",
+            "verificationShort": "Verified",
+            "specialty": "Specialty",
+            "workers": "Workers",
+            "activeProjects": "Active projects",
+            "licenses": "License",
+            "sector": "Sector",
+            "tenders": "Tenders"
+        },
+        "years": "{{count}} years",
+        "years_few": "{{count}} years",
+        "oneYear": "1 year",
+        "verification": {
+            "verified": "Verified",
+            "pending": "Under review",
+            "unverified": "Unverified"
+        },
+        "statuses": {
+            "available": "Available",
+            "busy": "Busy",
+            "active": "Active",
+            "suspended": "Suspended"
+        },
+        "menu": {
+            "open": "Options for {{name}}",
+            "details": "View details",
+            "review": "Review verification",
+            "message": "Message",
+            "requestInfo": "Request information",
+            "suspend": "Suspend account",
+            "activate": "Activate account"
+        },
+        "confirmSuspend": "Suspend {{name}}'s account? They won't be able to use the platform until you reactivate it.",
+        "confirm": "Confirm suspension",
+        "cancel": "Cancel",
+        "suspended": "{{name}}'s account has been suspended.",
+        "activated": "{{name}}'s account has been activated.",
+        "infoRequested": "An information request was sent to {{name}}.",
+        "empty": "No matching users",
+        "sample": {
+            "c1": {
+                "name": "Mohammad Al-Agha",
+                "field": "Electrician",
+                "area": "Nuseirat - Al-Qassam St."
+            },
+            "c2": {
+                "name": "Khaled Nasser",
+                "field": "Restoration",
+                "area": "Gaza - Al-Jalaa"
+            },
+            "c3": {
+                "name": "Yousef Hamdan",
+                "field": "Electromechanical",
+                "area": "Gaza - Rimal"
+            },
+            "c4": {
+                "name": "Ahmad Moumen",
+                "field": "Plumbing",
+                "area": "Deir al-Balah"
+            },
+            "c5": {
+                "name": "Sami Odeh",
+                "field": "Carpentry",
+                "area": "Khan Younis"
+            },
+            "u1": {
+                "name": "Um Mohammad",
+                "area": "Nuseirat"
+            },
+            "u2": {
+                "name": "Saeed Abu Khalil",
+                "area": "Gaza - Shujaiya"
+            },
+            "u3": {
+                "name": "Mahmoud Al-Shaer",
+                "area": "Rafah"
+            },
+            "u4": {
+                "name": "Reem Al-Attar",
+                "area": "Deir al-Balah"
+            },
+            "k1": {
+                "name": "Al-Nukhba Contracting",
+                "field": "Finishing",
+                "area": "Khan Younis"
+            },
+            "k2": {
+                "name": "Modern Building Co.",
+                "field": "Construction",
+                "area": "Gaza - Tal al-Hawa"
+            },
+            "k3": {
+                "name": "Al-Ofoq Contracting",
+                "field": "Painting",
+                "area": "Deir al-Balah"
+            },
+            "i1": {
+                "name": "Directorate of Education",
+                "field": "Government",
+                "area": "Gaza"
+            },
+            "i2": {
+                "name": "Al-Shifa Charity",
+                "field": "Non-profit",
+                "area": "Khan Younis"
+            },
+            "i3": {
+                "name": "Gaza Municipality",
+                "field": "Government",
+                "area": "Gaza - Rimal"
+            }
+        },
+        "hoursAgo": "{{count}} hours ago",
+        "daysAgo": "{{count}} days ago",
+        "details": {
+            "breadcrumb": "Users",
+            "notFound": "This user was not found",
+            "memberSince": "Member since {{date}}",
+            "suspend": "Suspend account",
+            "activate": "Activate account",
+            "message": "Message",
+            "providerTypes": {
+                "craftsmen": "Individual",
+                "customers": "Customer",
+                "contractors": "Contracting company",
+                "institutions": "Institution"
+            },
+            "stats": {
+                "rating": "Rating",
+                "ratingNote": "From {{count}} reviews",
+                "completed": "Completed jobs",
+                "completedNote": "Last job 3 days ago",
+                "experience": "Years of experience",
+                "experienceNote": "Per registration data",
+                "assigned": "Assigned requests",
+                "assignedNote": "{{count}} in progress",
+                "requests": "Requests",
+                "activeRequests": "Active requests",
+                "completedRequests": "Completed requests",
+                "reviewsGiven": "Reviews written",
+                "workers": "Workers",
+                "activeProjects": "Active projects",
+                "tenders": "Tenders",
+                "completedProjects": "Completed projects",
+                "offers": "Offers received"
+            },
+            "latestTitle": "Latest assigned requests",
+            "viewAll": "View all",
+            "requestStatus": {
+                "executing": "In progress",
+                "closed": "Closed"
+            },
+            "requests": {
+                "r1": {
+                    "title": "Electrical wiring for a new apartment",
+                    "place": "Beit Lahia",
+                    "time": "2 days ago",
+                    "ref": "R-89231",
+                    "status": "executing"
+                },
+                "r2": {
+                    "title": "Main electrical panel maintenance",
+                    "place": "Jabalia",
+                    "time": "5 days ago",
+                    "ref": "R-89102",
+                    "status": "closed"
+                },
+                "r3": {
+                    "title": "Outdoor lighting installation",
+                    "place": "Sheikh Radwan",
+                    "time": "1 week ago",
+                    "ref": "R-88954",
+                    "status": "closed"
+                }
+            },
+            "historyTitle": "Status history",
+            "history": {
+                "verified": "Verification approved — {{by}}",
+                "documents": "Documents uploaded",
+                "created": "Account created",
+                "suspended": "Account suspended — {{by}}",
+                "activated": "Account reactivated — {{by}}"
+            },
+            "verifier": "Yousef Abu Shamala",
+            "accountTitle": "Account details",
+            "account": {
+                "phone": "Phone",
+                "email": "Email",
+                "providerType": "Provider type",
+                "specialty": "Specialty",
+                "area": "Area",
+                "verifiedAt": "Verified on",
+                "lastActive": "Last active"
+            },
+            "lastActiveDefault": "2 hours ago",
+            "today": "Today",
+            "confirmSuspend": "Suspend {{name}}'s account? They won't be able to use the platform until you reactivate it.",
+            "confirm": "Confirm suspension",
+            "cancel": "Cancel",
+            "suspendedMsg": "{{name}}'s account has been suspended.",
+            "activatedMsg": "{{name}}'s account has been activated."
+        },
+        "suspendModal": {
+            "title": "Suspend {{name}}'s account?",
+            "desc": "They won't be able to log in or receive new requests until you reactivate the account.",
+            "close": "Close",
+            "reason": "Suspension reason",
+            "reasonPlaceholder": "Choose a reason",
+            "reasonRequired": "Choose a reason",
+            "reasons": {
+                "complaints": "Repeated customer complaints",
+                "terms": "Terms of use violation",
+                "documents": "Invalid or expired documents",
+                "suspicious": "Suspicious activity",
+                "userRequest": "At the user's request",
+                "other": "Other reason"
+            },
+            "details": "Reason details",
+            "detailsPlaceholder": "Describe the reason for suspension",
+            "detailsRequired": "Describe the reason",
+            "notify": "Notify the user of the suspension reason",
+            "warning": "They will be logged out of all devices immediately and hidden from customers.",
+            "submit": "Suspend account",
+            "cancel": "Cancel"
+        },
+        "loadError": {
+            "title": "Couldn't load the {{list}} list",
+            "lists": {
+                "craftsmen": "craftsmen",
+                "customers": "customers",
+                "contractors": "contractors",
+                "institutions": "institutions"
+            },
+            "desc": "There was a problem connecting to the server. Check your internet connection and try again.",
+            "retry": "Try again",
+            "retrying": "Trying..."
+        },
+        "noResults": {
+            "title": "No results",
+            "who": {
+                "craftsmen": "craftsman",
+                "customers": "customer",
+                "contractors": "contractor",
+                "institutions": "institution"
+            },
+            "withQuery": "We couldn't find a {{who}} matching “{{query}}” with the current filters. Try another word",
+            "filtersOnly": "We couldn't find a {{who}} matching the current filters. Try changing the filters"
+        },
+        "clearSearch": "Clear search"
+    },
+    "requestsPage": {
+        "search": "Search by request title",
+        "clearSearch": "Clear search",
+        "category": "Category",
+        "categories": {
+            "plumbing": "Plumbing",
+            "painting": "Painting",
+            "electrical": "Electrical",
+            "carpentry": "Carpentry"
+        },
+        "tabs": {
+            "all": "All",
+            "new": "New",
+            "reviewing": "Under review",
+            "assigned": "Assigned",
+            "closed": "Closed",
+            "rejected": "Rejected"
+        },
+        "statuses": {
+            "new": "New",
+            "reviewing": "Under review",
+            "assigned": "Assigned",
+            "closed": "Closed",
+            "rejected": "Rejected"
+        },
+        "columns": {
+            "request": "Request",
+            "client": "Client",
+            "area": "Area",
+            "lastActive": "Last activity",
+            "owner": "Owner",
+            "category": "Category",
+            "status": "Status",
+            "actions": "Actions"
+        },
+        "unassigned": "Unassigned",
+        "hoursAgo": "{{count}} hours ago",
+        "daysAgo": "{{count}} days ago",
+        "menu": {
+            "open": "Options for {{name}}",
+            "details": "View details",
+            "assign": "Assign to owner",
+            "review": "Mark under review",
+            "close": "Close request",
+            "reject": "Reject request"
+        },
+        "assignModal": {
+            "title": "Assign request",
+            "owner": "Owner",
+            "placeholder": "Choose an owner",
+            "required": "Choose an owner",
+            "submit": "Assign",
+            "cancel": "Cancel"
+        },
+        "staff": {
+            "s1": "Farah Salem",
+            "s2": "Ibrahim Badr",
+            "s3": "Anas Al-Shanti",
+            "s4": "Rana Shurrab"
+        },
+        "confirmReject": "Reject “{{name}}”? The client will be notified.",
+        "confirmRejectBtn": "Confirm rejection",
+        "cancel": "Cancel",
+        "flash": {
+            "assigned": "“{{name}}” was assigned to {{owner}}.",
+            "reviewing": "“{{name}}” is now under review.",
+            "closed": "“{{name}}” was closed.",
+            "rejected": "“{{name}}” was rejected."
+        },
+        "noResults": {
+            "title": "No results",
+            "withQuery": "We couldn't find a request matching “{{query}}” with the current filters. Try another word",
+            "filtersOnly": "No requests match the current filters."
+        },
+        "sample": {
+            "q1": {
+                "title": "Fix kitchen water leak",
+                "client": "Um Mohammad",
+                "area": "Nuseirat - Al-Qassam St.",
+                "desc": "There's been a water leak under the kitchen sink for two days and the wooden cabinet is getting damaged. I need the connections checked and the damaged ones replaced."
+            },
+            "q2": {
+                "title": "Paint a full apartment",
+                "client": "Saeed Abu Khalil",
+                "area": "Gaza - Al-Jalaa",
+                "desc": "I'd like a 3-bedroom apartment painted in light colors, with some small wall cracks treated before painting."
+            },
+            "q3": {
+                "title": "Install new mixer and sink",
+                "client": "Mahmoud Al-Shaer",
+                "area": "Gaza - Rimal",
+                "desc": "I need a new kitchen mixer and sink installed in place of the old one; I have the materials."
+            },
+            "q4": {
+                "title": "Replace bathroom pipes",
+                "client": "Reem Al-Attar",
+                "area": "Gaza - Rimal",
+                "desc": "The bathroom pipes are old and water pressure is weak. I need them fully replaced and the drainage checked."
+            },
+            "q5": {
+                "title": "Water heater maintenance",
+                "client": "Khaled Nasser",
+                "area": "Gaza - Rimal",
+                "desc": "The rooftop solar heater has been leaking from under the tank for a week and the water doesn't heat as before. The tank is old (about 10 years) and I need it replaced with a new 200-liter tank, with the pipes to the bathroom and kitchen checked."
+            },
+            "q6": {
+                "title": "Water pressure check",
+                "client": "Sami Odeh",
+                "area": "Gaza - Rimal",
+                "desc": "Water pressure on the second floor is very weak. I need the network inspected to find the cause."
+            },
+            "q7": {
+                "title": "Extend water line to the roof",
+                "client": "Ahmad Moumen",
+                "area": "Gaza - Rimal",
+                "desc": "I need a water line extended from the tank to the roof to install an extra tank."
+            }
+        },
+        "details": {
+            "breadcrumb": "Incoming requests",
+            "notFound": "This request was not found",
+            "receivedAgo": "Received {{time}}",
+            "assignProvider": "Assign to provider",
+            "take": "Take request",
+            "taken": "Request taken",
+            "reject": "Reject",
+            "descTitle": "Request description",
+            "photos": "Attached photos ({{count}})",
+            "noPhotos": "No attached photos",
+            "photoAlt": "Attached photo {{n}}",
+            "clientTitle": "Client",
+            "clientSince": "Client since {{date}}",
+            "phone": "Phone",
+            "address": "Address",
+            "previous": "Previous requests",
+            "previousCount": "{{count}} requests",
+            "assignTitle": "Owner & assignment",
+            "owner": "Team owner",
+            "provider": "Service provider",
+            "you": "You",
+            "providerModal": {
+                "title": "Assign request to a provider",
+                "label": "Service provider",
+                "placeholder": "Choose a provider",
+                "required": "Choose a provider",
+                "submit": "Assign",
+                "cancel": "Cancel"
+            },
+            "flash": {
+                "provider": "The request was assigned to {{name}}.",
+                "taken": "You are now the owner of this request.",
+                "rejected": "The request was rejected."
+            },
+            "confirmReject": "Reject this request? The client will be notified.",
+            "confirmRejectBtn": "Confirm rejection",
+            "cancel": "Cancel"
+        }
+    },
+    "verificationPage": {
+        "title": "Verification requests",
+        "subtitle": "Review documents from craftsmen, contractors and institutions and approve their accounts.",
+        "search": "Search by name or commercial registration number...",
+        "clearSearch": "Clear search",
+        "typeFilter": "Account type: {{value}}",
+        "areaFilter": "Area: {{value}}",
+        "all": "All",
+        "types": {
+            "craftsman": "Craftsman",
+            "institution": "Institution",
+            "contractor": "Contractor"
+        },
+        "tabs": {
+            "pending": "Pending review",
+            "info": "Awaiting information",
+            "verified": "Verified",
+            "rejected": "Rejected"
+        },
+        "statuses": {
+            "pending": "Pending review",
+            "resubmitted": "Resubmitted",
+            "info": "Awaiting information",
+            "verified": "Verified",
+            "rejected": "Rejected"
+        },
+        "columns": {
+            "account": "Account",
+            "type": "Type",
+            "field": "Specialty / Sector",
+            "area": "Area",
+            "documents": "Documents",
+            "submitted": "Submitted",
+            "status": "Status",
+            "actions": "Actions"
+        },
+        "documents": "{{count}} documents",
+        "review": "Review",
+        "reviewLabel": "Review {{name}}'s request",
+        "noResults": {
+            "title": "No results",
+            "withQuery": "We couldn't find a verification request matching “{{query}}” with the current filters. Try another word",
+            "filtersOnly": "No verification requests match the current filters."
+        },
+        "sample": {
+            "v1": {
+                "name": "Abdelrahman Shaheen",
+                "field": "Tiling",
+                "area": "Nuseirat"
+            },
+            "v2": {
+                "name": "Zawaida Municipality",
+                "field": "Government",
+                "area": "Zawaida"
+            },
+            "v3": {
+                "name": "Modern Building Co.",
+                "field": "General contracting",
+                "area": "Gaza - Rimal"
+            },
+            "v4": {
+                "name": "Mohammad Khaled Ayyad",
+                "field": "Plumbing",
+                "area": "Khan Younis"
+            },
+            "v5": {
+                "name": "Sama Ibrahim Al-Najjar",
+                "field": "Painting",
+                "area": "Rafah"
+            },
+            "v6": {
+                "name": "Al-Amal Charity",
+                "field": "Non-profit",
+                "area": "Deir al-Balah"
+            },
+            "v7": {
+                "name": "Yaser Hamdan",
+                "field": "Electrical",
+                "area": "Jabalia"
+            },
+            "v8": {
+                "name": "United Reconstruction Co.",
+                "field": "General contracting",
+                "area": "Gaza - Tal al-Hawa"
+            },
+            "v9": {
+                "name": "Mohammad Al-Agha",
+                "field": "Electrical",
+                "area": "Nuseirat"
+            },
+            "v10": {
+                "name": "Directorate of Education",
+                "field": "Government",
+                "area": "Gaza"
+            },
+            "v11": {
+                "name": "Khaled Nasser",
+                "field": "Restoration",
+                "area": "Gaza - Al-Jalaa"
+            },
+            "v12": {
+                "name": "Sami Odeh",
+                "field": "Carpentry",
+                "area": "Khan Younis"
+            },
+            "v13": {
+                "name": "Al-Ofoq Contracting",
+                "field": "Finishing",
+                "area": "Deir al-Balah"
+            },
+            "v14": {
+                "name": "Nour Al-Huda Salameh",
+                "field": "Tailoring & upholstery",
+                "area": "Rafah"
+            }
+        },
+        "reviewPage": {
+            "notFound": "Verification request not found",
+            "providerKinds": {
+                "craftsman": "Individual craftsman",
+                "institution": "Institution",
+                "contractor": "Contracting company"
+            },
+            "submittedAgo": "Submitted {{count}} hours ago",
+            "submittedDaysAgo": "Submitted {{count}} days ago",
+            "approve": "Approve verification",
+            "requestInfo": "Request information",
+            "reject": "Reject",
+            "checklistHint": "Complete the checklist to approve",
+            "documentsTitle": "Uploaded documents",
+            "preview": "Preview",
+            "download": "Download",
+            "previewOf": "Preview: {{name}}",
+            "openFull": "Click the document to open it full size",
+            "unavailable": "File not available yet",
+            "documents": {
+                "craftsman": {
+                    "id": "ID card photo",
+                    "photo": "Personal photo",
+                    "license": "Practice certificate"
+                },
+                "institution": {
+                    "id": "Institution registration certificate",
+                    "photo": "Authorization letter",
+                    "license": "Authorized person's ID"
+                },
+                "contractor": {
+                    "id": "Commercial registration",
+                    "photo": "Contracting license",
+                    "license": "Owner's ID"
+                }
+            },
+            "checklistTitle": "Checklist before deciding",
+            "checklist": {
+                "name": "Name on the ID matches the account name",
+                "photo": "Personal photo is clear",
+                "valid": "Documents are valid and not expired"
+            },
+            "registrationTitle": "Registration details",
+            "registration": {
+                "fullName": "Full name",
+                "phone": "Phone",
+                "email": "Email",
+                "providerType": "Provider type",
+                "specialty": "Specialty",
+                "area": "Area",
+                "registeredAt": "Registered on"
+            },
+            "providerTypes": {
+                "craftsman": "Individual",
+                "institution": "Institution",
+                "contractor": "Company"
+            },
+            "historyTitle": "Account history",
+            "history": {
+                "documents": "Documents uploaded ({{count}} files)",
+                "phone": "Phone number confirmed",
+                "created": "Account created",
+                "approved": "Verification approved",
+                "info": "Additional information requested",
+                "rejected": "Verification rejected"
+            },
+            "now": "Now",
+            "infoModal": {
+                "title": "Request additional information",
+                "label": "What do you need from the user?",
+                "placeholder": "e.g. Please upload a clearer photo of both sides of your ID",
+                "required": "Describe what you need from the user",
+                "submit": "Send request",
+                "cancel": "Cancel",
+                "desc": "The request will be sent {{recipient}} and the status will change to “Awaiting information” until they upload what's needed.",
+                "recipients": {
+                    "craftsman": "to the craftsman",
+                    "institution": "to the institution",
+                    "contractor": "to the contractor"
+                },
+                "documentsLabel": "Documents to re-upload"
+            },
+            "rejectModal": {
+                "title": "Reject account verification",
+                "desc": "The reason will be sent to the user and the account status will change to “Rejected”.",
+                "reason": "Rejection reason",
+                "reasonPlaceholder": "Choose a reason",
+                "reasonRequired": "Choose a reason",
+                "reasons": {
+                    "mismatch": "Documents don't match the account details",
+                    "unclear": "Documents are unclear",
+                    "expired": "Documents have expired",
+                    "incomplete": "Documents are incomplete",
+                    "duplicate": "Duplicate account",
+                    "other": "Other reason"
+                },
+                "details": "Reason details",
+                "detailsPlaceholder": "Explain the reason so the user can see it",
+                "detailsMin": "Write the reason (at least {{count}} characters)",
+                "appealNote": "The user can appeal the decision from “Contact & complaints”.",
+                "submit": "Confirm rejection",
+                "cancel": "Cancel"
+            },
+            "flash": {
+                "approved": "{{name}}'s verification was approved.",
+                "info": "An information request was sent to {{name}}.",
+                "rejected": "{{name}}'s verification request was rejected."
+            },
+            "approveModal": {
+                "title": "Approve {{name}}'s verification?",
+                "desc": "The account will become “Verified”, appear to customers in search results, and receive an approval notification.",
+                "account": "Account",
+                "documents": "Documents",
+                "checklistDone": "Checklist complete",
+                "checklistPartial": "Checklist {{done}} of {{total}}",
+                "notePlaceholder": "Internal note for the team (optional)...",
+                "submit": "Confirm approval",
+                "cancel": "Cancel"
+            },
+            "conflict": {
+                "title": "This account was reviewed by another admin",
+                "desc": {
+                    "verified": "“{{name}}” approved the verification a minute ago. We refreshed the data and your decision was not saved.",
+                    "rejected": "“{{name}}” rejected the verification a minute ago. We refreshed the data and your decision was not saved.",
+                    "info": "“{{name}}” requested more information a minute ago. We refreshed the data and your decision was not saved."
+                },
+                "refresh": "Refresh page",
+                "minuteAgo": "A minute ago"
+            }
+        }
+    },
+    "supportPage": {
+        "search": "Search by subject or ticket number",
+        "clearSearch": "Clear search",
+        "type": "Category",
+        "types": {
+            "complaint": "Complaint",
+            "inquiry": "Inquiry",
+            "suggestion": "Suggestion",
+            "appeal": "Appeal"
+        },
+        "tabs": {
+            "all": "All",
+            "new": "New",
+            "following": "Following up",
+            "replied": "Replied",
+            "closed": "Closed"
+        },
+        "statuses": {
+            "new": "New",
+            "following": "Following up",
+            "replied": "Replied",
+            "closed": "Closed"
+        },
+        "priorities": {
+            "high": "High",
+            "medium": "Medium",
+            "low": "Low"
+        },
+        "columns": {
+            "subject": "Subject",
+            "sender": "Sender",
+            "type": "Type",
+            "lastActive": "Last activity",
+            "date": "Date",
+            "priority": "Priority",
+            "status": "Status",
+            "actions": "Actions"
+        },
+        "hoursAgo": "{{count}} hours ago",
+        "daysAgo": "{{count}} days ago",
+        "menu": {
+            "open": "Options for {{name}}",
+            "details": "View details",
+            "reply": "Reply",
+            "follow": "Mark as following up",
+            "close": "Close ticket"
+        },
+        "flash": {
+            "following": "“{{name}}” is now being followed up.",
+            "closed": "“{{name}}” was closed.",
+            "replied": "The reply was sent to {{name}}."
+        },
+        "noResults": {
+            "title": "No results",
+            "withQuery": "We couldn't find a message matching “{{query}}” with the current filters. Try another word",
+            "filtersOnly": "No messages match the current filters."
+        },
+        "sample": {
+            "t1": {
+                "subject": "Craftsman was late for the appointment",
+                "sender": "Um Mohammad"
+            },
+            "t2": {
+                "subject": "How do I change my phone number?",
+                "sender": "Saeed Abu Khalil"
+            },
+            "t3": {
+                "subject": "Paid amount not shown on the invoice",
+                "sender": "Mahmoud Al-Shaer"
+            },
+            "t4": {
+                "subject": "How to upload the practice certificate",
+                "sender": "Mohammad Khaled Ayyad"
+            },
+            "t5": {
+                "subject": "Add an upholstery service to the platform",
+                "sender": "Reem Al-Attar"
+            },
+            "t6": {
+                "subject": "Appeal against verification rejection",
+                "sender": "Sami Odeh"
+            },
+            "t7": {
+                "subject": "How long does verification review take?",
+                "sender": "Al-Amal Charity"
+            }
+        },
+        "replyModal": {
+            "type": "Type",
+            "subject": "Subject",
+            "subjectDefault": "Re: {{title}}",
+            "subjectPlaceholder": "Subject",
+            "subjectRequired": "Subject is required",
+            "body": "Reply",
+            "bodyPlaceholder": "Write the official reply",
+            "bodyRequired": "Write the reply",
+            "send": "Send reply",
+            "close": "Close"
+        }
+    },
+    "chatsPage": {
+        "search": "Search by craftsman or institution name",
+        "clearSearch": "Clear search",
+        "filter": "Account type",
+        "types": {
+            "all": "All",
+            "craftsman": "Craftsman",
+            "team": "Team",
+            "contractor": "Contractor",
+            "institution": "Institution",
+            "customer": "Customer"
+        },
+        "hoursAgo": "{{count}} hours ago",
+        "daysAgo": "{{count}} days ago",
+        "selectHint": "Select a conversation to view its details",
+        "empty": "No matching conversations",
+        "back": "Back to conversations",
+        "placeholder": "Send a message",
+        "send": "Send",
+        "you": "You",
+        "sample": {
+            "h1": {
+                "name": "Al-Noor Technical Team",
+                "messages": [
+                    "Hello. I contacted a customer about a plumbing request and they didn't answer.",
+                    "Could you help me reach them or cancel the request?"
+                ]
+            },
+            "h2": {
+                "name": "Al-Nukhba Contracting",
+                "messages": [
+                    "Hello, we sent the annual renewal documents. When will they be reviewed?"
+                ]
+            },
+            "h3": {
+                "name": "Mohammad Al-Agha",
+                "messages": [
+                    "Hi, I need to change my specialty from electrician to electromechanical."
+                ]
+            },
+            "h4": {
+                "name": "Zawaida Municipality",
+                "messages": [
+                    "Please activate our account after we uploaded the required registration certificate."
+                ]
+            },
+            "h5": {
+                "name": "Um Mohammad",
+                "messages": [
+                    "The craftsman was two hours late. How do I file a complaint?"
+                ]
+            },
+            "h6": {
+                "name": "Modern Building Co.",
+                "messages": [
+                    "We sent the price offer for the tender. Did you receive it?"
+                ]
+            }
+        }
+    },
+    "notificationsPage": {
+        "category": "Category",
+        "categories": {
+            "requests": "Requests",
+            "verification": "Verification",
+            "support": "Contact",
+            "chats": "Chats"
+        },
+        "tabs": {
+            "all": "All",
+            "unread": "Unread"
+        },
+        "title": "Notifications",
+        "markAll": "Mark all as read",
+        "unreadLabel": "Unread",
+        "hoursAgo": "{{count}} hours ago",
+        "daysAgo": "{{count}} days ago",
+        "empty": "No notifications",
+        "emptyUnread": "No unread notifications",
+        "sample": {
+            "n1": {
+                "title": "New service request",
+                "party": "Customer",
+                "body": "Solar heater maintenance and tank replacement"
+            },
+            "n2": {
+                "title": "New verification request",
+                "party": "Craftsman",
+                "body": "Abdelrahman Shaheen — uploaded 3 documents"
+            },
+            "n3": {
+                "title": "New contact message",
+                "party": "Customer",
+                "body": "Craftsman was late for the appointment"
+            },
+            "n4": {
+                "title": "New chat message",
+                "party": "Team",
+                "body": "Al-Noor Technical Team: could you help me reach the customer?"
+            },
+            "n5": {
+                "title": "Verification request resubmitted",
+                "party": "Contractor",
+                "body": "Modern Building Co. — 5 documents"
+            },
+            "n6": {
+                "title": "New service request",
+                "party": "Customer",
+                "body": "Paint a full apartment"
+            }
+        }
+    },
+    "settingsPage": {
+        "title": "Settings",
+        "subtitle": "Your profile, account settings and notification preferences.",
+        "tabs": {
+            "profile": "Profile",
+            "security": "Account & security",
+            "notifications": "Notification preferences"
+        },
+        "profile": {
+            "title": "Profile",
+            "name": "Full name",
+            "email": "Email",
+            "phone": "Phone",
+            "role": "Role",
+            "roleValue": "System admin",
+            "nameRequired": "Name is required",
+            "save": "Save changes",
+            "saving": "Saving...",
+            "saved": "Changes saved successfully",
+            "revert": "Undo"
+        },
+        "prefs": {
+            "requests": {
+                "title": "New service requests",
+                "desc": "When a customer submits a new request"
+            },
+            "support": {
+                "title": "Messages & complaints",
+                "desc": "High-priority complaints and new messages"
+            },
+            "verification": {
+                "title": "Verification requests",
+                "desc": "When a craftsman or institution uploads verification documents"
+            },
+            "tenders": {
+                "title": "Tender offers",
+                "desc": ""
+            },
+            "email": {
+                "title": "Email notifications",
+                "desc": "Weekly summary"
+            }
+        },
+        "security": {
+            "current": "Current password",
+            "new": "New password",
+            "confirm": "Confirm new password",
+            "rulesTitle": "Password requirements",
+            "rules": {
+                "length": "At least 8 characters",
+                "number": "At least one number",
+                "special": "At least one special character (!@#$)",
+                "different": "Different from the current password"
+            },
+            "met": "met",
+            "notMet": "not met",
+            "submit": "Update password",
+            "submitting": "Updating...",
+            "success": "Password updated successfully",
+            "unavailable": "Changing the password isn't available from the server yet"
+        }
+    }
+}

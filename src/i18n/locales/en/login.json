@@ -1,6 +1,8 @@
 {
     "title": "Login",
     "subtitle": "Welcome back",
+    "adminSubtitle": "Enter your admin account details to continue.",
+    "notAdmin": "This is not an admin account. Use the login page for your account type.",
     "email": "Email",
     "emailPlaceholder": "example@gmail.com",
     "password": "Password",

@@ -30,6 +30,8 @@ function TopbarAvatar({ path, name }) {
  *   searchTo     — لو موجود: أيقونة بحث بتفتح هالرابط بدل خانة البحث
  *   hideSearch   — إخفاء البحث نهائياً (صفحات تصميمها بدون بحث)
  *   hideSidebar  — إخفاء القائمة الجانبية (صفحات بعرض كامل زي الملف المهني)
+ *   searchPlaceholder — نص خانة البحث البسيطة
+ *   loginPath    — صفحة الدخول بعد الخروج أو انتهاء الجلسة (الأدمن له صفحة خاصة)
  *   showAdd      — زر "+" (افتراضياً ظاهر)
  *   addTo        — الصفحة اللي بيفتحها زر "+"
  *   searchSections/searchItems — نتائج خانة البحث مع فلتر الأقسام (شوفي TopbarSearch)
@@ -42,6 +44,8 @@ export default function DashboardLayout({
     searchTo,
     hideSearch = false,
     hideSidebar = false,
+    searchPlaceholder,
+    loginPath = "/login",
     showAdd = true,
     addTo,
     searchSections,
@@ -74,9 +78,9 @@ export default function DashboardLayout({
             .then((res) => setUser(res.data))
             .catch(() => {
                 clearAuth();
-                navigate("/login", { replace: true });
+                navigate(loginPath, { replace: true });
             });
-    }, [navigate]);
+    }, [navigate, loginPath]);
 
     const handleLogout = async () => {
         setLoggingOut(true);
@@ -86,7 +90,7 @@ export default function DashboardLayout({
             // حتى لو فشل الطلب، بنطلعه محليًا
         }
         clearAuth();
-        navigate("/login");
+        navigate(loginPath);
     };
 
     const name = user?.full_name || user?.institution_name || "";
@@ -233,7 +237,7 @@ export default function DashboardLayout({
                                     <Search size={16} className="pointer-events-none absolute top-1/2 start-3 -translate-y-1/2 text-[#4B9AD2]" />
                                     <input
                                         type="search"
-                                        placeholder={t("search")}
+                                        placeholder={searchPlaceholder || t("search")}
                                         className="h-9 w-[300px] rounded-full border border-[#4B9AD2] bg-white ps-9 pe-4 text-[12px] text-[#414141] placeholder-[#89949D] outline-none focus:ring-1 focus:ring-[#4B9AD2] xl:w-[380px]"
                                     />
                                 </label>
