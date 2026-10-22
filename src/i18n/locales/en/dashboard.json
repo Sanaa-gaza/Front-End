@@ -24,8 +24,11 @@
             "unread": "Unread",
             "tenders": "Tenders",
             "messages": "Messages",
-            "system": "System"
-        }
+            "system": "System",
+            "requests": "Requests",
+            "finance": "Finance"
+        },
+        "markAllShort": "Mark all as read"
     },
     "datePicker": {
         "week": "In a week",

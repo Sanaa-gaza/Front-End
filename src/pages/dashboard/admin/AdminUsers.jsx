@@ -1,9 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { Ban, ChevronDown, CircleCheck, Ellipsis, Eye, Info, LayoutGrid, MessageSquare, RotateCw, Search, ShieldCheck, Star, WifiOff, X } from "lucide-react";
-import { STATUS_STYLES, USERS, USER_TABS as TABS, VERIFICATION_STYLES } from "./usersData";
-import SuspendModal from "./SuspendModal";
+import { Ban, ChevronDown, CircleAlert, CircleCheck, Ellipsis, Eye, Info, LayoutGrid, MessageSquare, RotateCw, Search, ShieldCheck, Star, WifiOff, X } from "lucide-react";
 
 const BASE = "/dashboard/admin";
 
@@ -152,6 +150,226 @@ function NoResults({ tab, query }) {
         </div>
     );
 }
+
+// ==================== بيانات المستخدمين ====================
+
+// ===== بيانات تجريبية =====
+// الباك إند لسا ما فيه endpoints لإدارة المستخدمين. لما تجهز، استبدلي USERS بطلب من src/api/endpoints.js
+// النصوص (الاسم، المجال، المنطقة) بملف الترجمة: usersPage.sample.<id>
+export const USERS = {
+    craftsmen: [
+        { id: "c1", years: 12, rating: 4.9, completed: 21, verification: "verified", status: "available" },
+        { id: "c2", years: 5, rating: 4.9, completed: 1, verification: "verified", status: "available" },
+        { id: "c3", years: 1, rating: 4.9, completed: 33, verification: "verified", status: "available" },
+        { id: "c4", years: 10, rating: 4.7, completed: 18, verification: "pending", status: "busy" },
+        { id: "c5", years: 7, rating: 4.2, completed: 6, verification: "unverified", status: "available" },
+    ],
+    customers: [
+        { id: "u1", phone: "0595289936", requests: 21, joined: "2026-10-05", lastActiveHours: 5, verification: "verified", status: "active" },
+        { id: "u2", phone: "0598741203", requests: 1, joined: "2026-11-03", lastActiveHours: 5, verification: "verified", status: "active" },
+        { id: "u3", phone: "0592360418", requests: 33, joined: "2026-12-09", lastActiveHours: 5, verification: "verified", status: "active" },
+        { id: "u4", phone: "0567712094", requests: 2, joined: "2026-10-01", lastActiveHours: 26, verification: "pending", status: "active" },
+    ],
+    contractors: [
+        { id: "k1", workers: 21, activeProjects: 3, licenses: 0, verification: "verified", status: "available" },
+        { id: "k2", workers: 1, activeProjects: 5, licenses: 0, verification: "verified", status: "available" },
+        { id: "k3", workers: 33, activeProjects: 9, licenses: 0, verification: "verified", status: "available" },
+    ],
+    institutions: [
+        { id: "i1", tenders: 21, activeProjects: 3, verification: "verified", status: "active" },
+        { id: "i2", tenders: 1, activeProjects: 5, verification: "verified", status: "active" },
+        { id: "i3", tenders: 33, activeProjects: 9, verification: "verified", status: "active" },
+    ],
+};
+
+export const USER_TABS = ["craftsmen", "customers", "contractors", "institutions"];
+
+export const VERIFICATION_STYLES = {
+    verified: "bg-[#DDF6E3] text-[#2EAF4E]",
+    pending: "bg-[#FDEBD3] text-[#D9822B]",
+    unverified: "bg-[#EEF0F2] text-[#6B7280]",
+};
+
+export const STATUS_STYLES = {
+    available: "bg-[#DDF6E3] text-[#2EAF4E]",
+    active: "bg-[#DDF6E3] text-[#2EAF4E]",
+    busy: "bg-[#DCEBFA] text-[#4B9AD2]",
+    suspended: "bg-[#FDE2E2] text-[#D64545]",
+};
+
+/** المستخدم + نوع حسابه (التبويب اللي هو فيه) من رقمه */
+export function findUser(id) {
+    for (const type of USER_TABS) {
+        const index = USERS[type].findIndex((u) => u.id === id);
+        if (index !== -1) return { user: USERS[type][index], type, index };
+    }
+    return null;
+}
+
+// ==================== نافذة إيقاف الحساب ====================
+
+const SUSPEND_DETAILS_MAX = 500;
+const SUSPEND_REASONS = ["complaints", "terms", "documents", "suspicious", "userRequest", "other"];
+
+/**
+ * نافذة "إيقاف حساب": سبب الإيقاف + تفاصيله + إشعار المستخدم.
+ * onConfirm({ reason, details, notify }) — reason: مفتاح السبب
+ */
+export function SuspendModal({ name, onConfirm, onClose }) {
+    const { t } = useTranslation("adminDashboard");
+    const m = "usersPage.suspendModal";
+    const [reason, setReason] = useState("");
+    const [details, setDetails] = useState("");
+    const [notify, setNotify] = useState(true);
+    const [errors, setErrors] = useState({});
+    const selectRef = useRef(null);
+    const closeRef = useRef(onClose);
+    useEffect(() => {
+        closeRef.current = onClose;
+    }, [onClose]);
+
+    // مرة وحدة عند الفتح: Escape بيسكر النافذة، والصفحة اللي وراها ما بتتمرر
+    useEffect(() => {
+        const onKey = (e) => e.key === "Escape" && closeRef.current();
+        window.addEventListener("keydown", onKey);
+        document.body.style.overflow = "hidden";
+        selectRef.current?.focus();
+        return () => {
+            window.removeEventListener("keydown", onKey);
+            document.body.style.overflow = "";
+        };
+    }, []);
+
+    const submit = (e) => {
+        e.preventDefault();
+        const next = {
+            reason: reason ? "" : t(`${m}.reasonRequired`),
+            details: details.trim() ? "" : t(`${m}.detailsRequired`),
+        };
+        setErrors(next);
+        if (next.reason || next.details) return;
+        onConfirm({ reason, details: details.trim(), notify });
+    };
+
+    const box = "w-full rounded-xl border bg-white text-[13px] text-[#414141] outline-none transition-colors focus:border-[#4B9AD2] focus:ring-1 focus:ring-[#4B9AD2]";
+
+    return (
+        <div
+            className="fixed inset-0 z-[60] flex items-center justify-center bg-[#141415]/40 p-4 backdrop-blur-[2px]"
+            onMouseDown={(e) => e.target === e.currentTarget && onClose()}
+        >
+            <form
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="suspend-title"
+                onSubmit={submit}
+                noValidate
+                className="flex max-h-[92vh] w-full max-w-[430px] flex-col overflow-y-auto rounded-[20px] bg-white p-6 shadow-[0_24px_60px_rgba(20,20,21,0.25)]"
+            >
+                <div className="flex items-start gap-3">
+                    <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#FDE4E4] text-[#D64545]">
+                        <Ban size={22} />
+                    </span>
+                    <div className="min-w-0 flex-1">
+                        <h2 id="suspend-title" className="text-[17px] font-bold text-[#141415]">{t(`${m}.title`, { name })}</h2>
+                        <p className="mt-1.5 text-[11px] leading-[1.9] text-[#575757]">{t(`${m}.desc`)}</p>
+                    </div>
+                    <button
+                        type="button"
+                        onClick={onClose}
+                        aria-label={t(`${m}.close`)}
+                        className="flex h-7 w-7 shrink-0 cursor-pointer items-center justify-center rounded-full text-[#575757] hover:bg-[#F2F4F6]"
+                    >
+                        <X size={17} />
+                    </button>
+                </div>
+
+                <label htmlFor="suspend-reason" className="mb-2 mt-6 block text-[12px] text-[#414141]">
+                    {t(`${m}.reason`)} <span className="text-[#D64545]">*</span>
+                </label>
+                <div className="relative">
+                    <select
+                        id="suspend-reason"
+                        ref={selectRef}
+                        value={reason}
+                        onChange={(e) => {
+                            setReason(e.target.value);
+                            setErrors((er) => ({ ...er, reason: "" }));
+                        }}
+                        aria-invalid={!!errors.reason}
+                        className={`${box} h-11 cursor-pointer appearance-none pe-10 ps-4 ${reason ? "" : "text-[#89949D]"} ${errors.reason ? "border-red-400" : "border-[#8EC0E4]"}`}
+                    >
+                        <option value="" disabled>{t(`${m}.reasonPlaceholder`)}</option>
+                        {SUSPEND_REASONS.map((key) => (
+                            <option key={key} value={key} className="text-[#414141]">
+                                {t(`${m}.reasons.${key}`)}
+                            </option>
+                        ))}
+                    </select>
+                    <ChevronDown size={17} className="pointer-events-none absolute end-4 top-1/2 -translate-y-1/2 text-[#4B9AD2]" />
+                </div>
+                {errors.reason && <p className="mt-1 text-[11px] text-red-500">{errors.reason}</p>}
+
+                <label htmlFor="suspend-details" className="mb-2 mt-5 block text-[12px] text-[#414141]">
+                    {t(`${m}.details`)} <span className="text-[#D64545]">*</span>
+                </label>
+                <div className={`${box} px-4 pb-1.5 pt-3 focus-within:border-[#4B9AD2] focus-within:ring-1 focus-within:ring-[#4B9AD2] ${errors.details ? "border-red-400" : "border-[#8EC0E4]"}`}>
+                    <textarea
+                        id="suspend-details"
+                        rows={2}
+                        maxLength={SUSPEND_DETAILS_MAX}
+                        value={details}
+                        onChange={(e) => {
+                            setDetails(e.target.value);
+                            setErrors((er) => ({ ...er, details: "" }));
+                        }}
+                        aria-invalid={!!errors.details}
+                        placeholder={t(`${m}.detailsPlaceholder`)}
+                        className="w-full resize-none bg-transparent leading-[1.8] outline-none placeholder:text-[#89949D]"
+                    />
+                    <p className="text-end text-[9px] text-[#89949D] tabular-nums" dir="ltr">
+                        {details.length} / {SUSPEND_DETAILS_MAX}
+                    </p>
+                </div>
+                {errors.details && <p className="mt-1 text-[11px] text-red-500">{errors.details}</p>}
+
+                <label className="mt-5 flex cursor-pointer items-center gap-2 text-[12px] text-[#414141]">
+                    <input
+                        type="checkbox"
+                        checked={notify}
+                        onChange={(e) => setNotify(e.target.checked)}
+                        className="h-4 w-4 cursor-pointer accent-[#4B9AD2]"
+                    />
+                    {t(`${m}.notify`)}
+                </label>
+
+                <p className="mt-5 flex items-center gap-2 rounded-lg bg-[#FDECEC] px-4 py-3 text-[11px] text-[#D64545]">
+                    <CircleAlert size={15} className="shrink-0" />
+                    {t(`${m}.warning`)}
+                </p>
+
+                <div className="mt-5 flex gap-3">
+                    <button
+                        type="submit"
+                        className="h-11 flex-1 cursor-pointer rounded-xl bg-[#C62828] text-[13px] font-semibold text-white transition-colors hover:bg-[#A82020]"
+                    >
+                        {t(`${m}.submit`)}
+                    </button>
+                    <button
+                        type="button"
+                        onClick={onClose}
+                        className="h-11 flex-1 cursor-pointer rounded-xl bg-[#F2F4F6] text-[13px] font-semibold text-[#414141] transition-colors hover:bg-[#E6E9EC]"
+                    >
+                        {t(`${m}.cancel`)}
+                    </button>
+                </div>
+            </form>
+        </div>
+    );
+}
+
+// اسم مختصر للتبويبات داخل الصفحة
+const TABS = USER_TABS;
 
 /** إدارة المستخدمين: تبويب لكل نوع حساب + بحث وفلتر حالة + جدول بقائمة إجراءات لكل مستخدم */
 export default function AdminUsers() {

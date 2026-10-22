@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import {
     Bell,
+    Briefcase,
     CalendarDays,
     ChevronLeft,
     ChevronRight,
@@ -11,6 +12,7 @@ import {
     LockKeyhole,
     Megaphone,
     MessageCircle,
+    Timer,
     X,
 } from "lucide-react";
 
@@ -22,16 +24,22 @@ const TYPES = {
     update: { icon: CalendarDays, style: "bg-[#F1E6FB] text-[#9B51E0]" },
     closed: { icon: LockKeyhole, style: "bg-[#FDE2E2] text-[#D64545]" },
     announcement: { icon: Megaphone, style: "bg-[#E4EFFA] text-[#4B9AD2]" },
+    // أنواع لوحة الحرفي
+    deadline: { icon: Timer, style: "bg-[#FFF3D1] text-[#C99400]" },
+    request: { icon: Briefcase, style: "bg-[#E4EFFA] text-[#4B9AD2]" },
+    payment: { icon: LockKeyhole, style: "bg-[#DDF6E3] text-[#2EAF4E]" },
 };
 
-const TABS = ["all", "unread", "tenders", "messages", "system"];
+const DEFAULT_TABS = ["all", "unread", "tenders", "messages", "system"];
 
 /**
  * زر الجرس + قائمة الإشعارات اللي بتنزل تحته.
  * notifications: [{ id, type, category: "tenders"|"messages"|"system", title, body, time, read, to }]
  * onRead(ids): لما تنقرأ إشعارات (ضغطة على إشعار أو "تحديد الكل كمقروء")
+ * tabs: تبويبات القائمة (افتراضياً تبويبات المؤسسة) — variant: "default" | "compact" (قائمة أضيق بشكل لوحة الحرفي)
  */
-export default function NotificationsPanel({ notifications = [], onRead }) {
+export default function NotificationsPanel({ notifications = [], onRead, tabs = DEFAULT_TABS, variant = "default" }) {
+    const compact = variant === "compact";
     const { t, i18n } = useTranslation("dashboard");
     const navigate = useNavigate();
     const [open, setOpen] = useState(false);
@@ -87,24 +95,26 @@ export default function NotificationsPanel({ notifications = [], onRead }) {
                 <div
                     role="dialog"
                     aria-label={t("notificationsPanel.title")}
-                    className="fixed inset-x-3 top-[76px] z-50 flex max-h-[calc(100vh-96px)] flex-col overflow-hidden rounded-[20px] border border-[#0000000D] bg-white shadow-[0_18px_50px_rgba(35,74,100,0.18)] sm:absolute sm:inset-x-auto sm:end-0 sm:top-full sm:mt-3 sm:w-[540px]"
+                    className={`fixed inset-x-3 top-[76px] z-50 flex max-h-[calc(100vh-96px)] flex-col overflow-hidden rounded-[20px] border border-[#0000000D] bg-white shadow-[0_18px_50px_rgba(35,74,100,0.18)] sm:absolute sm:inset-x-auto sm:end-0 sm:top-full sm:mt-3 ${compact ? "sm:w-[360px]" : "sm:w-[540px]"}`}
                 >
-                    <div className="flex items-center justify-between gap-3 border-b border-[#0000000D] px-5 py-4">
-                        <h2 className="flex items-center gap-2.5 text-[17px] font-medium text-[#414141]">
+                    <div className={`flex items-center justify-between gap-3 px-5 py-4 ${compact ? "" : "border-b border-[#0000000D]"}`}>
+                        <h2 className={`flex items-center gap-2.5 ${compact ? "text-[15px] font-bold text-[#141415]" : "text-[17px] font-medium text-[#414141]"}`}>
                             {t("notificationsPanel.title")}
-                            <span className="flex h-8 w-8 items-center justify-center rounded-full bg-[#EAF3FB] text-[#4B9AD2]">
-                                <Bell size={15} />
-                            </span>
+                            {!compact && (
+                                <span className="flex h-8 w-8 items-center justify-center rounded-full bg-[#EAF3FB] text-[#4B9AD2]">
+                                    <Bell size={15} />
+                                </span>
+                            )}
                         </h2>
-                        <div className="flex items-center gap-5">
+                        <div className={`flex items-center ${compact ? "gap-2" : "gap-5"}`}>
                             <button
                                 type="button"
                                 onClick={() => onRead?.(unread.map((n) => n.id))}
                                 disabled={!unread.length}
-                                className="flex cursor-pointer items-center gap-1.5 text-[12px] text-[#4B9AD2] hover:underline disabled:cursor-default disabled:text-[#B4BEC6] disabled:no-underline"
+                                className={`flex cursor-pointer items-center gap-1.5 text-[#4B9AD2] hover:underline disabled:cursor-default disabled:text-[#B4BEC6] disabled:no-underline ${compact ? "text-[11px] font-semibold" : "text-[12px]"}`}
                             >
-                                <CircleCheck size={15} />
-                                {t("notificationsPanel.markAll")}
+                                {!compact && <CircleCheck size={15} />}
+                                {t(compact ? "notificationsPanel.markAllShort" : "notificationsPanel.markAll")}
                             </button>
                             <button
                                 type="button"
@@ -117,8 +127,8 @@ export default function NotificationsPanel({ notifications = [], onRead }) {
                         </div>
                     </div>
 
-                    <div className="flex flex-wrap gap-2 border-b border-[#0000000D] px-5 py-3.5" role="tablist">
-                        {TABS.map((key) => {
+                    <div className={`flex flex-wrap gap-2 px-5 ${compact ? "pb-3" : "border-b border-[#0000000D] py-3.5"}`} role="tablist">
+                        {tabs.map((key) => {
                             const active = tab === key;
                             const count = countFor(key);
                             return (
@@ -128,13 +138,15 @@ export default function NotificationsPanel({ notifications = [], onRead }) {
                                     role="tab"
                                     aria-selected={active}
                                     onClick={() => setTab(key)}
-                                    className={`flex h-9 flex-auto cursor-pointer items-center justify-center gap-1.5 whitespace-nowrap rounded-full border px-3 text-[12px] transition-colors ${active
+                                    className={`flex cursor-pointer items-center justify-center gap-1.5 whitespace-nowrap rounded-full border px-3 transition-colors ${compact ? "h-8 text-[11px]" : "h-9 flex-auto text-[12px]"} ${active
                                         ? "border-[#4B9AD2] bg-[#4B9AD2] text-white shadow-[0_4px_12px_rgba(75,154,210,0.25)]"
-                                        : "border-[#E3E9EE] bg-[#F5F8FA] text-[#575757] hover:border-[#8EC0E4]"
+                                        : compact
+                                            ? "border-[#CFE3F3] bg-[#EEF5FC] text-[#38749E] hover:border-[#8EC0E4]"
+                                            : "border-[#E3E9EE] bg-[#F5F8FA] text-[#575757] hover:border-[#8EC0E4]"
                                         }`}
                                 >
                                     {t(`notificationsPanel.tabs.${key}`)}
-                                    {count > 0 && (
+                                    {count > 0 && !compact && (
                                         <span
                                             className={`flex h-5 min-w-5 items-center justify-center rounded-full px-1 text-[10px] tabular-nums ${active ? "bg-white/25 text-white" : "bg-[#E3E9EE] text-[#575757]"
                                                 }`}
@@ -147,11 +159,32 @@ export default function NotificationsPanel({ notifications = [], onRead }) {
                         })}
                     </div>
 
-                    <div className="overflow-y-auto px-5 py-4">
+                    <div className={`overflow-y-auto px-5 ${compact ? "pb-5 pt-1" : "py-4"}`}>
                         {visible.length ? (
                             <ul className="flex flex-col gap-3">
                                 {visible.map((n) => {
                                     const { icon: Icon, style } = TYPES[n.type] || TYPES.announcement;
+                                    if (compact) {
+                                        return (
+                                            <li key={n.id}>
+                                                <button
+                                                    type="button"
+                                                    onClick={() => openItem(n)}
+                                                    className={`flex w-full cursor-pointer items-start gap-3 rounded-2xl border px-4 py-3.5 text-start transition-colors hover:border-[#8EC0E4] ${n.read ? "border-[#0000000F] bg-white" : "border-[#CFE3F3] bg-[#EEF5FC]"
+                                                        }`}
+                                                >
+                                                    <span className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full ${style}`}>
+                                                        <Icon size={17} />
+                                                    </span>
+                                                    <span className="min-w-0 flex-1">
+                                                        <span className="block text-[13px] font-bold text-[#141415]">{n.title}</span>
+                                                        <span className="mt-1 block text-[10px] leading-[1.8] text-[#575757]">{n.body}</span>
+                                                        <span className="mt-1.5 block text-end text-[9px] text-[#89949D]">{n.time}</span>
+                                                    </span>
+                                                </button>
+                                            </li>
+                                        );
+                                    }
                                     return (
                                         <li key={n.id}>
                                             <button

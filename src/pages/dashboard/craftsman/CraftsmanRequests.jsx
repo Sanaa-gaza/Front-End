@@ -1,29 +1,23 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { CircleCheck, ImagePlus, Wrench, X } from "lucide-react";
-import StatusTabs from "../../../components/dashboard/StatusTabs";
+import { CalendarDays, ChevronLeft, CircleCheck, Clock, ImagePlus, LockKeyhole, MapPin, X } from "lucide-react";
 
 // ===== بيانات تجريبية =====
 // الطلبات الحقيقية موجودة بالسيرفر (GET /service-requests + accept/reject/complete بـ src/api/endpoints.js)،
 // بس ما فيها "القيمة المعلن عنها" ولا "الموقع الجغرافي". لما يضيفهم الباك إند، استبدلي REQUESTS بالطلب الحقيقي.
+// status: pending (بانتظار الرد) | accepted | rejected | offered (عرض بسعر آخر — بيظهر بتبويب "عروضي")
+// urgent: مهلة الرد قربت تخلص (الشريط أصفر)
 const REQUESTS = [
-    { id: "q1", number: "M2026-001", status: "new", value: 250, distance: 1.2, budget: [200, 300] },
-    { id: "q2", number: "M2026-002", status: "new", value: 180, distance: 2.4, budget: [150, 220] },
-    { id: "q3", number: "M2026-003", status: "new", value: 300, distance: 4.1, budget: [250, 350] },
-    { id: "q4", number: "M2026-004", status: "reviewed", value: 450, distance: 9.5, budget: [400, 500] },
+    { id: "q1", number: "M2026-001", status: "pending", urgent: true, value: 70, distance: 2 },
+    { id: "q2", number: "M2026-002", status: "pending", urgent: false, value: 70, distance: 2 },
+    { id: "q3", number: "M2026-003", status: "accepted", value: 300, distance: 4.1 },
+    { id: "q4", number: "M2026-004", status: "rejected", value: 450, distance: 9.5, reason: "far" },
+    { id: "q5", number: "M2026-005", status: "offered", value: 180, distance: 3.2, offer: { price: 220, duration: "يومين" } },
 ];
 
-const TABS = ["all", "new", "reviewed", "shortlisted", "excluded"];
-const TASK_STAGES = ["onTheWay", "started", "completed"];
 const REJECT_REASONS = ["price", "far", "unavailable", "outOfScope"];
 const START_OPTIONS = ["today", "tomorrow", "week"];
-
-const STATUS_STYLES = {
-    new: "bg-[#DDF6E3] text-[#2EAF4E]",
-    reviewed: "bg-[#E4EFFA] text-[#4B9AD2]",
-    shortlisted: "bg-[#FFF3D6] text-[#B7791F]",
-    excluded: "bg-[#FDE2E2] text-[#D64545]",
-};
 
 const card = "rounded-[20px] border border-[#0000000D] bg-white shadow-[0_4px_24px_rgba(35,74,100,0.08)]";
 const input =
@@ -181,68 +175,6 @@ function RequestModal({ id, title, request, subtitle, confirmLabel, onClose, onS
                 </div>
             </form>
         </div>
-    );
-}
-
-/** نافذة "متابعة المهمة": حالة المهمة + ملاحظات + مرفقات */
-function FollowModal({ request, onClose, onConfirm }) {
-    const { t } = useTranslation("craftsmanDashboard");
-    const [stage, setStage] = useState(request.stage || "");
-    const [notes, setNotes] = useState(request.notes || "");
-    const [files, setFiles] = useState([]);
-    const [error, setError] = useState("");
-
-    const submit = () => {
-        if (!stage) {
-            setError(t("requestsPage.followModal.stageRequired"));
-            return;
-        }
-        onConfirm({ stage, notes: notes.trim(), files: files.map((f) => f.name) });
-    };
-
-    return (
-        <RequestModal
-            id="follow-title"
-            title={t("requestsPage.followModal.title")}
-            request={request}
-            confirmLabel={t("requestsPage.followModal.confirm")}
-            onClose={onClose}
-            onSubmit={submit}
-        >
-            <fieldset className="mt-5">
-                <legend className="mb-3 text-[13px] font-semibold text-[#414141]">{t("requestsPage.followModal.stage")}</legend>
-                <div className="grid grid-cols-3 gap-3">
-                    {TASK_STAGES.map((key) => (
-                        <ChoiceButton
-                            key={key}
-                            active={stage === key}
-                            onClick={() => {
-                                setStage(key);
-                                setError("");
-                            }}
-                        >
-                            {t(`requestsPage.followModal.stages.${key}`)}
-                        </ChoiceButton>
-                    ))}
-                </div>
-                {error && <p className="mt-2 text-[11px] text-red-500">{error}</p>}
-            </fieldset>
-
-            <label htmlFor="follow-notes" className="mb-1.5 mt-5 block text-[12px] text-[#575757]">
-                {t("requestsPage.followModal.notes")}
-            </label>
-            <textarea
-                id="follow-notes"
-                rows={4}
-                value={notes}
-                onChange={(e) => setNotes(e.target.value)}
-                placeholder={t("requestsPage.followModal.notesPlaceholder")}
-                className={textarea}
-            />
-
-            <p className="mb-1.5 mt-5 text-[12px] text-[#575757]">{t("requestsPage.followModal.attachments")}</p>
-            <FileDrop id="follow-files" files={files} onChange={setFiles} />
-        </RequestModal>
     );
 }
 
@@ -435,304 +367,445 @@ function OfferModal({ request, onClose, onConfirm }) {
     );
 }
 
-/** نافذة "تفاصيل الطلب": الوصف + المعلومات + المرفقات */
-function DetailsModal({ request, onClose, onConfirm }) {
+/** نافذة "تفاصيل الطلب": الوصف + المعلومات، ومنها القبول أو تقديم عرض بسعر آخر */
+function DetailsModal({ request, onClose, onAccept, onOffer }) {
     const { t } = useTranslation("craftsmanDashboard");
-    const s = `requestsPage.sample.${request.id}`;
-    const [files, setFiles] = useState([]);
-    // الملفات اللي انرفعت قبل (من المتابعة أو التفاصيل)
-    const savedFiles = request.files || [];
+    const rp = "requestsPage";
+    const s = `${rp}.sample.${request.id}`;
+    const pending = request.status === "pending";
+    const closeRef = useRef(onClose);
+    useEffect(() => {
+        closeRef.current = onClose;
+    }, [onClose]);
+
+    useEffect(() => {
+        const onKey = (e) => e.key === "Escape" && closeRef.current();
+        window.addEventListener("keydown", onKey);
+        document.body.style.overflow = "hidden";
+        return () => {
+            window.removeEventListener("keydown", onKey);
+            document.body.style.overflow = "";
+        };
+    }, []);
 
     const rows = [
         { key: "customer", value: t(`${s}.customer`) },
-        { key: "value", value: t("requestsPage.valueAmount", { amount: request.value.toLocaleString("en-US") }) },
-        { key: "delivery", value: t(`${s}.delivery`) },
-        { key: "place", value: t(`${s}.place`) },
+        { key: "value", value: t(`${rp}.valueAmount`, { amount: request.value.toLocaleString("en-US") }) },
+        { key: "slot", value: t(`${s}.delivery`) },
+        { key: "location", value: t(`${s}.place`) },
     ];
 
     return (
-        <RequestModal
-            id="details-title"
-            title={t("requestsPage.detailsModal.title")}
-            request={request}
-            subtitle={t("requestsPage.detailsModal.subtitle", {
-                status: t(`requestsPage.statuses.${request.status}`),
-                number: request.number,
-            })}
-            confirmLabel={t("requestsPage.detailsModal.confirm")}
-            onClose={onClose}
-            onSubmit={() => onConfirm({ files: [...savedFiles, ...files.map((f) => f.name)] })}
+        <div
+            className="fixed inset-0 z-[60] flex items-center justify-center bg-[#141415]/40 p-4 backdrop-blur-[2px]"
+            onMouseDown={(e) => e.target === e.currentTarget && onClose()}
         >
-            <p className="mb-2 mt-5 text-[12px] text-[#575757]">{t("requestsPage.detailsModal.desc")}</p>
-            <p className="rounded-xl border border-[#BFD9EC] px-4 py-3 text-[12px] leading-[1.9] text-[#414141]">{t(`${s}.desc`)}</p>
-
-            <dl className="mt-4 divide-y divide-[#0000001A] border-b border-[#0000001A]">
-                {rows.map((row) => (
-                    <div key={row.key} className="flex items-center justify-between gap-3 py-3 text-[12px]">
-                        <dt className="text-[#575757]">{t(`requestsPage.${row.key}`)}</dt>
-                        <dd className="font-medium text-[#414141]">{row.value}</dd>
+            <div
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="details-title"
+                className="flex max-h-[92vh] w-full max-w-[480px] flex-col overflow-hidden rounded-[22px] bg-white shadow-[0_24px_60px_rgba(20,20,21,0.25)]"
+            >
+                <div className="flex items-start justify-between gap-3 border-b border-[#0000000F] px-6 py-4">
+                    <div className="min-w-0">
+                        <h2 id="details-title" className="text-[16px] font-bold text-[#141415]">{t(`${s}.title`)}</h2>
+                        <p className="mt-1 text-[10px] text-[#89949D]" dir="ltr">#{request.number}</p>
                     </div>
-                ))}
-            </dl>
+                    <button
+                        type="button"
+                        onClick={onClose}
+                        aria-label={t(`${rp}.page.close`)}
+                        className="flex h-7 w-7 shrink-0 cursor-pointer items-center justify-center rounded-full text-[#575757] hover:bg-[#F2F4F6]"
+                    >
+                        <X size={17} />
+                    </button>
+                </div>
 
-            <p className="mb-1.5 mt-5 text-[12px] text-[#575757]">{t("requestsPage.followModal.attachments")}</p>
-            {savedFiles.length > 0 && (
-                <ul className="mb-3 flex flex-wrap gap-2">
-                    {savedFiles.map((name, i) => (
-                        <li key={`${name}-${i}`} className="rounded-full bg-[#EAF3FB] px-3 py-1 text-[11px] text-[#38749E]" dir="ltr">
-                            {name}
-                        </li>
-                    ))}
-                </ul>
-            )}
-            <FileDrop id="details-files" files={files} onChange={setFiles} />
-        </RequestModal>
+                <div className="overflow-y-auto px-6 py-5">
+                    <p className="text-[12px] font-bold text-[#141415]">{t(`${rp}.detailsModal.desc`)}</p>
+                    <p className="mt-2 rounded-xl bg-[#F5F8FB] px-4 py-3 text-[12px] leading-[1.9] text-[#414141]">{t(`${s}.desc`)}</p>
+                    <dl className="mt-4 divide-y divide-[#0000000F] rounded-xl border border-[#0000000F] px-4">
+                        {rows.map((row) => (
+                            <div key={row.key} className="flex items-center justify-between gap-3 py-3 text-[12px]">
+                                <dt className="text-[#575757]">{t(`${rp}.page.${row.key}`)}</dt>
+                                <dd className="text-end font-semibold text-[#141415]">{row.value}</dd>
+                            </div>
+                        ))}
+                    </dl>
+                    {request.offer && (
+                        <p className="mt-4 rounded-xl bg-[#FFF8DD] px-4 py-3 text-[12px] text-[#8A6D00]">
+                            {t(`${rp}.offerLabel`, { price: request.offer.price.toLocaleString("en-US"), duration: request.offer.duration })}
+                        </p>
+                    )}
+                </div>
+
+                {pending && (
+                    <div className="flex gap-3 border-t border-[#0000000F] px-6 py-4">
+                        <button
+                            type="button"
+                            onClick={() => onOffer(request)}
+                            className="h-11 flex-1 cursor-pointer rounded-xl border border-[#4B9AD2] bg-white text-[13px] font-semibold text-[#4B9AD2] btn-wipe btn-wipe-outline"
+                        >
+                            {t(`${rp}.page.otherPrice`)}
+                        </button>
+                        <button
+                            type="button"
+                            onClick={() => onAccept(request)}
+                            className="h-11 flex-1 cursor-pointer rounded-xl bg-linear-to-l from-[#1591DCCC] to-[#1383C6] text-[13px] font-semibold text-white shadow-[0_4px_10px_rgba(19,131,198,0.3)] btn-wipe ltr:bg-linear-to-r"
+                        >
+                            {t(`${rp}.page.accept`)}
+                        </button>
+                    </div>
+                )}
+            </div>
+        </div>
     );
 }
 
-/** بطاقة طلب واحد مع "متابعة المهمة" و"رفض" */
-function RequestCard({ request, onFollow, onReject, onOffer, onDetails }) {
+/** بطاقة طلب: العنوان + العميل + الموقع والموعد + مهلة الرد + الأزرار حسب الحالة */
+function RequestCard({ request, onDetails, onReject }) {
     const { t } = useTranslation("craftsmanDashboard");
-    const s = `requestsPage.sample.${request.id}`;
-
-    const infos = [
-        { key: "value", value: t("requestsPage.valueAmount", { amount: request.value.toLocaleString("en-US") }) },
-        { key: "customer", value: t(`${s}.customer`) },
-        { key: "delivery", value: t(`${s}.delivery`) },
-        { key: "place", value: t(`${s}.place`) },
-    ];
-
-    // سبب الرفض + الملاحظات (إن وجدت)
+    const rp = "requestsPage";
+    const s = `${rp}.sample.${request.id}`;
+    const customer = t(`${s}.customer`);
     const rejectText =
-        request.reason &&
-        [t(`requestsPage.rejectModal.reasons.${request.reason}`), request.rejectNotes].filter(Boolean).join(" — ");
+        request.reason && [t(`${rp}.rejectModal.reasons.${request.reason}`), request.rejectNotes].filter(Boolean).join(" — ");
 
     return (
-        <li className={`${card} p-5 sm:p-6`}>
-            <div className="flex items-start justify-between gap-3">
-                <div className="flex min-w-0 items-center gap-3">
-                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-[#8EC0E4] text-[#4B9AD2]">
-                        <Wrench size={17} />
-                    </span>
-                    <h2 className="text-[16px] font-bold leading-[1.6] text-[#22455E]">{t(`${s}.title`)}</h2>
+        <li className="rounded-[18px] border border-[#0000000D] border-t-2 border-t-[#9CC9EA] bg-white px-4 py-4 shadow-[0_4px_18px_rgba(35,74,100,0.07)] sm:px-5">
+            <h2 className="text-[16px] font-bold text-[#141415]">{t(`${s}.title`)}</h2>
+
+            <div className="mt-3 flex items-center gap-2.5">
+                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border-2 border-[#EAF3FB] bg-white text-[12px] font-bold text-[#4B9AD2]">
+                    {customer.trim().charAt(0)}
+                </span>
+                <div>
+                    <p className="text-[11px] font-bold text-[#141415]">{customer}</p>
+                    <p className="text-[9px] text-[#89949D]">
+                        {t(`${rp}.page.customerType`)} . {t(`${rp}.page.distance`, { km: request.distance })}
+                    </p>
                 </div>
-                <span className={`shrink-0 whitespace-nowrap rounded-full px-2.5 py-0.5 text-[10px] font-medium ${STATUS_STYLES[request.status]}`}>
-                    {t(`requestsPage.statuses.${request.status}`)}
+            </div>
+
+            <div className="mt-3 flex flex-wrap items-center gap-x-10 gap-y-2 text-[11px] text-[#414141]">
+                <span className="flex items-center gap-1.5">
+                    <MapPin size={13} className="text-[#575757]" />
+                    <span className="font-bold">{t(`${rp}.page.location`)} :</span> {t(`${s}.place`)}
+                </span>
+                <span className="flex items-center gap-1.5">
+                    <CalendarDays size={13} className="text-[#575757]" />
+                    <span className="font-bold">{t(`${rp}.page.slot`)} :</span> {t(`${s}.delivery`)}
                 </span>
             </div>
 
-            <p className="mt-4 text-[13px] leading-[1.9] text-[#575757]">{t(`${s}.desc`)}</p>
-
-            <dl className="mt-5 grid grid-cols-2 gap-3 md:grid-cols-4">
-                {infos.map((info) => (
-                    <div key={info.key} className="rounded-xl border border-[#DCEAF8] bg-[#F4F8FC] px-3 py-3 text-center">
-                        <dt className="text-[11px] text-[#89949D]">{t(`requestsPage.${info.key}`)}</dt>
-                        <dd className="mt-1.5 text-[12px] font-semibold text-[#414141]">{info.value}</dd>
-                    </div>
-                ))}
-            </dl>
-
-            {request.stage && (
-                <p className="mt-4 inline-flex items-center gap-1.5 rounded-full bg-[#DCEBFA] px-3 py-1 text-[11px] font-medium text-[#4B9AD2]">
+            {/* مهلة الرد (للطلبات بانتظار الرد) */}
+            {request.status === "pending" && (
+                <p
+                    className={`mt-3 flex items-center gap-2 rounded-full px-3 py-2 text-[10px] font-semibold ${request.urgent ? "bg-[#FFFAE6] text-[#FFCC00]" : "bg-[#F2F3F5] text-[#575757]"
+                        }`}
+                >
+                    <Clock size={13} />
+                    {t(`${s}.deadline`)}
+                </p>
+            )}
+            {request.status === "accepted" && (
+                <p className="mt-3 flex items-center gap-2 rounded-full bg-[#E3F6EA] px-3 py-2 text-[10px] font-semibold text-[#1F8A4C]">
                     <CircleCheck size={13} />
-                    {t("requestsPage.followModal.stageLabel", { stage: t(`requestsPage.followModal.stages.${request.stage}`) })}
+                    {t(`${rp}.page.acceptedNote`)}
+                </p>
+            )}
+            {request.status === "rejected" && (
+                <p className="mt-3 flex items-center gap-2 rounded-full bg-[#FDECEC] px-3 py-2 text-[10px] font-semibold text-[#D64545]">
+                    <X size={13} />
+                    {rejectText ? t(`${rp}.rejectedBecause`, { reason: rejectText }) : t(`${rp}.page.rejectedNote`)}
+                </p>
+            )}
+            {request.status === "offered" && request.offer && (
+                <p className="mt-3 flex items-center gap-2 rounded-full bg-[#FFF5D6] px-3 py-2 text-[10px] font-semibold text-[#C99400]">
+                    <Clock size={13} />
+                    {t(`${rp}.offerLabel`, { price: request.offer.price.toLocaleString("en-US"), duration: request.offer.duration })} · {t(`${rp}.page.awaitingCustomer`)}
                 </p>
             )}
 
-            {request.offer && (
-                <p className="ms-2 mt-4 inline-flex items-center rounded-full bg-[#FFF3D6] px-3 py-1 text-[11px] font-medium text-[#B7791F]">
-                    {t("requestsPage.offerLabel", { price: request.offer.price.toLocaleString("en-US"), duration: request.offer.duration })}
-                </p>
-            )}
-
-            {request.status === "excluded" && rejectText && (
-                <p className="mt-4 text-[12px] text-[#D64545]">{t("requestsPage.rejectedBecause", { reason: rejectText })}</p>
-            )}
-
-            {request.status === "new" && (
-                <div className="mt-5 flex flex-wrap justify-end gap-3">
-                    <button
-                        type="button"
-                        onClick={() => onFollow(request)}
-                        className="inline-flex h-11 min-w-[200px] cursor-pointer items-center justify-center gap-2 rounded-xl bg-[#4B9AD2] px-6 text-[14px] font-semibold text-white btn-wipe"
-                    >
-                        {t("requestsPage.follow")}
-                        <CircleCheck size={16} />
-                    </button>
+            <div className="mt-3 flex flex-row-reverse flex-wrap gap-3 border-t border-[#0000000A] pt-3">
+                <button
+                    type="button"
+                    onClick={() => onDetails(request)}
+                    className="h-9 w-full cursor-pointer rounded-lg bg-linear-to-l from-[#1591DCCC] to-[#1383C6] text-[11px] font-semibold text-white shadow-[0_3px_8px_rgba(19,131,198,0.25)] btn-wipe sm:w-[130px] ltr:bg-linear-to-r"
+                >
+                    {t(`${rp}.page.details`)}
+                </button>
+                {request.status === "pending" && (
                     <button
                         type="button"
                         onClick={() => onReject(request)}
-                        className="inline-flex h-11 cursor-pointer items-center justify-center rounded-xl bg-[#FDE2E2] px-6 text-[14px] font-semibold text-[#D64545] transition-colors hover:bg-[#FBD0D0]"
+                        className="inline-flex h-9 w-full cursor-pointer items-center justify-center gap-1.5 rounded-lg border border-[#F2B8BE] bg-white text-[11px] font-semibold text-[#D64545] transition-colors hover:bg-[#FFF6F6] sm:w-[88px]"
                     >
-                        {t("requestsPage.reject")}
+                        <X size={13} />
+                        {t(`${rp}.reject`)}
                     </button>
-                </div>
-            )}
-
-            {/* تمت المراجعة: تفاصيل المتابعة، تقديم العرض، أو الرفض */}
-            {request.status === "reviewed" && (
-                <div className="mt-5 flex flex-wrap justify-end gap-3">
-                    <button
-                        type="button"
-                        onClick={() => onDetails(request)}
-                        className="inline-flex h-11 min-w-[150px] cursor-pointer items-center justify-center rounded-xl border border-[#4B9AD2] px-6 text-[14px] font-semibold text-[#4B9AD2] btn-wipe btn-wipe-outline"
-                    >
-                        {t("requestsPage.details")}
-                    </button>
-                    <button
-                        type="button"
-                        onClick={() => onOffer(request)}
-                        className="inline-flex h-11 min-w-[150px] cursor-pointer items-center justify-center rounded-xl bg-[#4B9AD2] px-6 text-[14px] font-semibold text-white btn-wipe"
-                    >
-                        {t("requestsPage.submitOffer")}
-                    </button>
-                    <button
-                        type="button"
-                        onClick={() => onReject(request)}
-                        className="inline-flex h-11 cursor-pointer items-center justify-center rounded-xl bg-[#FDE2E2] px-6 text-[14px] font-semibold text-[#D64545] transition-colors hover:bg-[#FBD0D0]"
-                    >
-                        {t("requestsPage.reject")}
-                    </button>
-                </div>
-            )}
-
-            {/* قائمة مختصرة: بعد تقديم العرض بيضل زر التفاصيل بس */}
-            {request.status === "shortlisted" && (
-                <div className="mt-5 flex justify-end">
-                    <button
-                        type="button"
-                        onClick={() => onDetails(request)}
-                        className="inline-flex h-11 min-w-[150px] cursor-pointer items-center justify-center rounded-xl border border-[#4B9AD2] px-6 text-[14px] font-semibold text-[#4B9AD2] btn-wipe btn-wipe-outline"
-                    >
-                        {t("requestsPage.details")}
-                    </button>
-                </div>
-            )}
+                )}
+            </div>
         </li>
     );
 }
 
+// ==================== تبويب "عروضي" ====================
+
+// ⚠️ عروض الحرفي على مناقصات المؤسسات — ما إلها endpoint لسا (النصوص بملف الترجمة: requestsPage.offers.sample.<id>)
+// status: pending (مرسل - قيد المراجعة) | closed (أغلق التقديم بانتظار النتيجة) | accepted (تم اختيار عرضك) | rejected
+const MY_OFFERS = [
+    { id: "o1", ref: "t-2023-028", status: "pending", price: 200 },
+    { id: "o2", ref: "t-2023-028", status: "closed", price: 200 },
+    { id: "o3", ref: "t-2023-028", status: "accepted", price: 200 },
+];
+const OFFER_FILTERS = ["all", "accepted", "rejected"];
+
+// ألوان كل حالة (الشارة والشريط اللي تحت)
+const OFFER_STYLES = {
+    pending: { box: "bg-[#FFF6DC] text-[#A86A4E]", icon: CalendarDays },
+    closed: { box: "bg-[#F4F4F4] text-[#919191]", icon: LockKeyhole },
+    accepted: { box: "bg-[#E6F9EC] text-[#1FC752]", icon: CircleCheck },
+    rejected: { box: "bg-[#FDECEC] text-[#D64545]", icon: X },
+};
+
+/** تبويب "عروضي": عروضي على المناقصات + العروض بسعر آخر على الطلبات */
+function OffersView({ counterOffers }) {
+    const { t } = useTranslation("craftsmanDashboard");
+    const navigate = useNavigate();
+    const of = "requestsPage.offers";
+    const [filter, setFilter] = useState("all");
+
+    // العروض بسعر آخر على طلبات العملاء بتنضاف بحالة "قيد المراجعة"
+    const offers = [
+        ...MY_OFFERS.map((o) => ({
+            ...o,
+            org: t(`${of}.sample.${o.id}.org`),
+            title: t(`${of}.sample.${o.id}.title`),
+            duration: t(`${of}.sample.${o.id}.duration`),
+            note: t(`${of}.notes.${o.status}`, t(`${of}.sample.${o.id}.noteArgs`, { returnObjects: true }) || {}),
+        })),
+        ...counterOffers.map((r) => ({
+            id: r.id,
+            ref: r.number,
+            status: "pending",
+            price: r.offer.price,
+            org: t(`requestsPage.sample.${r.id}.customer`),
+            title: t(`requestsPage.sample.${r.id}.title`),
+            duration: r.offer.duration,
+            note: t(`${of}.notes.awaitingCustomer`),
+        })),
+    ];
+    const visible = offers.filter((o) => filter === "all" || o.status === filter);
+
+    return (
+        <div className="flex flex-col gap-4">
+            <div role="tablist" className="flex flex-wrap gap-3">
+                {OFFER_FILTERS.map((key) => {
+                    const active = filter === key;
+                    return (
+                        <button
+                            key={key}
+                            type="button"
+                            role="tab"
+                            aria-selected={active}
+                            onClick={() => setFilter(key)}
+                            className={`h-10 cursor-pointer rounded-full px-5 text-[11px] font-semibold transition-colors ${active
+                                ? "min-w-[60px] bg-[#4B9AD2] text-white shadow-[0_4px_12px_rgba(75,154,210,0.3)]"
+                                : "border border-[#E3E7EB] bg-white text-[#4B9AD2] hover:border-[#BFDCF1]"
+                                }`}
+                        >
+                            {t(`${of}.filters.${key}`)}
+                        </button>
+                    );
+                })}
+            </div>
+
+            {visible.length ? (
+                <ul className="flex flex-col gap-3">
+                    {visible.map((o) => {
+                        const { box, icon: Icon } = OFFER_STYLES[o.status];
+                        const accepted = o.status === "accepted";
+                        return (
+                            <li key={o.id} className="rounded-[18px] border border-[#0000000D] border-t-2 border-t-[#9CC9EA] bg-white px-4 py-4 shadow-[0_4px_18px_rgba(35,74,100,0.07)] sm:px-5">
+                                <div className="flex items-start justify-between gap-3">
+                                    <div className="flex min-w-0 items-center gap-2.5">
+                                        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border-2 border-[#EAF3FB] bg-white text-[12px] font-bold text-[#4B9AD2]">
+                                            {o.org.trim().charAt(0)}
+                                        </span>
+                                        <div className="min-w-0">
+                                            <p className="truncate text-[12px] font-bold text-[#141415]">{o.org}</p>
+                                            <p className="mt-0.5 text-[10px] text-[#575757]" dir="ltr">{o.ref}</p>
+                                        </div>
+                                    </div>
+                                    <span className={`shrink-0 rounded-full px-2.5 py-1 text-[9px] font-medium ${box}`}>{t(`${of}.statuses.${o.status}`)}</span>
+                                </div>
+
+                                <h2 className="mt-3 text-[15px] font-bold text-[#141415]">{o.title}</h2>
+                                <p className="mt-2.5 flex flex-wrap gap-x-10 gap-y-1 text-[11px] text-[#414141]">
+                                    <span>
+                                        <span className="font-bold">{t(`${of}.duration`)} :</span> {o.duration}
+                                    </span>
+                                    <span>
+                                        <span className="font-bold">{t(`${of}.myOffer`)} :</span>{" "}
+                                        <span className="tabular-nums">{t(`${of}.price`, { amount: o.price.toLocaleString("en-US") })}</span>
+                                    </span>
+                                </p>
+
+                                {accepted ? (
+                                    <button
+                                        type="button"
+                                        onClick={() => navigate("/dashboard/craftsman/current")}
+                                        className={`mt-3 flex w-full cursor-pointer items-center justify-between gap-2 rounded-xl px-3 py-2.5 text-[11px] font-semibold transition-opacity hover:opacity-90 ${box}`}
+                                    >
+                                        <span className="flex items-center gap-2">
+                                            <Icon size={14} />
+                                            {o.note}
+                                        </span>
+                                        <ChevronLeft size={15} className="ltr:rotate-180" />
+                                    </button>
+                                ) : (
+                                    <p className={`mt-3 flex items-center gap-2 rounded-xl px-3 py-2.5 text-[11px] font-semibold ${box}`}>
+                                        <Icon size={14} />
+                                        {o.note}
+                                    </p>
+                                )}
+                            </li>
+                        );
+                    })}
+                </ul>
+            ) : (
+                <p className={`${card} px-5 py-12 text-center text-[13px] text-[#89949D]`}>{t(`${of}.empty`)}</p>
+            )}
+        </div>
+    );
+}
+
+/** طلبات الحرفي: الواردة (بانتظار الرد / مقبولة / مرفوضة) + عروضي */
 export default function CraftsmanRequests() {
     const { t } = useTranslation("craftsmanDashboard");
-    const [tab, setTab] = useState("all");
-    // ⚠️ التغييرات (متابعة/رفض) بالصفحة بس لحد ما نربطها بالسيرفر
+    const rp = "requestsPage";
+    const [view, setView] = useState("incoming");
+    const [filter, setFilter] = useState("pending");
+    // ⚠️ القبول/الرفض/العروض بالصفحة بس لحد ما نربطها بالسيرفر
     const [requests, setRequests] = useState(REQUESTS);
-    // النافذة المفتوحة: { request, type: "follow" | "reject" | "offer" | "details" }
+    // النافذة المفتوحة: { request, type: "details" | "reject" | "offer" }
     const [dialog, setDialog] = useState(null);
     const [flash, setFlash] = useState("");
 
     const updateRequest = (id, changes) => setRequests((list) => list.map((r) => (r.id === id ? { ...r, ...changes } : r)));
-
     const open = (type) => (request) => {
         setFlash("");
         setDialog({ request, type });
     };
 
-    // تأكيد المتابعة: الطلب الجديد بيصير "تمت المراجعة"، والباقي بيحافظ على حالته
-    const confirmFollow = ({ stage, notes, files }) => {
-        const status = dialog.request.status === "new" ? "reviewed" : dialog.request.status;
-        updateRequest(dialog.request.id, { status, stage, notes, files });
-        setFlash(t("requestsPage.followModal.saved", { stage: t(`requestsPage.followModal.stages.${stage}`) }));
+    const accept = (request) => {
+        updateRequest(request.id, { status: "accepted" });
+        setFlash(t(`${rp}.page.acceptedFlash`, { customer: t(`${rp}.sample.${request.id}.customer`) }));
         setDialog(null);
     };
 
-    // تأكيد الرفض: الطلب بينتقل لـ "مستبعد" مع السبب
     const confirmReject = ({ reason, notes }) => {
-        updateRequest(dialog.request.id, { status: "excluded", reason, rejectNotes: notes });
-        setFlash(t("requestsPage.rejectModal.done"));
+        updateRequest(dialog.request.id, { status: "rejected", reason, rejectNotes: notes });
+        setFlash(t(`${rp}.rejectModal.done`));
         setDialog(null);
     };
 
-    // تقديم العرض: الطلب بينتقل لـ "قائمة مختصرة" ومعه العرض
+    // عرض بسعر آخر: الطلب بينتقل لتبويب "عروضي"
     const confirmOffer = (offer) => {
-        const s = `requestsPage.sample.${dialog.request.id}`;
-        updateRequest(dialog.request.id, { status: "shortlisted", offer });
-        setFlash(t("jobs.modal.sent", { org: t(`${s}.customer`) }));
+        updateRequest(dialog.request.id, { status: "offered", offer });
+        setFlash(t("jobs.modal.sent", { org: t(`${rp}.sample.${dialog.request.id}.customer`) }));
         setDialog(null);
     };
 
-    // تأكيد التفاصيل: بنحفظ المرفقات مع الطلب
-    const confirmDetails = ({ files }) => {
-        updateRequest(dialog.request.id, { files });
-        setFlash(t("requestsPage.detailsModal.saved"));
-        setDialog(null);
-    };
-
-    const counts = useMemo(() => {
-        const c = { all: requests.length };
-        requests.forEach((r) => {
-            c[r.status] = (c[r.status] || 0) + 1;
-        });
-        return c;
-    }, [requests]);
-
-    const visible = tab === "all" ? requests : requests.filter((r) => r.status === tab);
+    const pendingCount = requests.filter((r) => r.status === "pending").length;
+    const visible = requests.filter((r) => r.status === filter);
 
     return (
-        <div className="mx-auto flex max-w-[1000px] flex-col gap-6">
-            <StatusTabs
-                tabs={TABS.map((key) => ({ key, label: t(`requestsPage.tabs.${key}`), count: counts[key] || 0 }))}
-                value={tab}
-                onChange={(key) => {
-                    setTab(key);
-                    setFlash("");
-                }}
-            />
+        <div className="mx-auto flex max-w-[1000px] flex-col gap-5">
+            <h1 className="text-[24px] font-bold text-[#22303C]">{t(`${rp}.page.title`)}</h1>
 
-            {flash && (
-                <p role="status" className="rounded-lg border border-[#BFEBCD] bg-[#E8F8EE] px-4 py-3 text-[13px] text-[#2E9E5B]">
-                    {flash}
-                </p>
+            {/* الواردة / عروضي */}
+            <div role="tablist" className="mt-6 flex gap-16 ps-3 sm:gap-20">
+                {["incoming", "offers"].map((key) => {
+                    const active = view === key;
+                    return (
+                        <button
+                            key={key}
+                            type="button"
+                            role="tab"
+                            aria-selected={active}
+                            onClick={() => {
+                                setView(key);
+                                setFlash("");
+                            }}
+                            className={`relative cursor-pointer px-1 pb-3 text-[19px] font-bold text-[#4B9AD2] transition-opacity ${active ? "" : "opacity-90 hover:opacity-100"}`}
+                        >
+                            {t(`${rp}.page.views.${key}`)}
+                            {active && <span aria-hidden="true" className="absolute inset-x-[-10px] bottom-0 h-[1.5px] rounded-full bg-[#4B9AD2]" />}
+                        </button>
+                    );
+                })}
+            </div>
+
+            {/* فلتر الواردة */}
+            {view === "incoming" && (
+                <div role="tablist" className="mt-2 flex flex-wrap gap-3">
+                    {["pending", "accepted", "rejected"].map((key) => {
+                        const active = filter === key;
+                        return (
+                            <button
+                                key={key}
+                                type="button"
+                                role="tab"
+                                aria-selected={active}
+                                onClick={() => {
+                                    setFilter(key);
+                                    setFlash("");
+                                }}
+                                className={`flex h-10 cursor-pointer items-center gap-1.5 rounded-full px-4 text-[11px] font-semibold transition-colors ${active
+                                    ? "bg-[#4B9AD2] text-white shadow-[0_4px_12px_rgba(75,154,210,0.3)]"
+                                    : "border border-[#E3E7EB] bg-white text-[#4B9AD2] hover:border-[#BFDCF1]"
+                                    }`}
+                            >
+                                {t(`${rp}.page.filters.${key}`)}
+                                {key === "pending" && pendingCount > 0 && <span className="tabular-nums">{pendingCount}</span>}
+                            </button>
+                        );
+                    })}
+                </div>
             )}
 
-            {visible.length ? (
-                <ul className="flex flex-col gap-5">
+            {flash && <p role="status" className="rounded-lg border border-[#BFEBCD] bg-[#E8F8EE] px-4 py-3 text-[13px] text-[#2E9E5B]">{flash}</p>}
+
+            {view === "offers" ? (
+                <OffersView counterOffers={requests.filter((r) => r.status === "offered")} />
+            ) : visible.length ? (
+                <ul className="flex flex-col gap-4">
                     {visible.map((r) => (
-                        <RequestCard
-                            key={r.id}
-                            request={r}
-                            onFollow={open("follow")}
-                            onReject={open("reject")}
-                            onOffer={open("offer")}
-                            onDetails={open("details")}
-                        />
+                        <RequestCard key={r.id} request={r} onDetails={open("details")} onReject={open("reject")} />
                     ))}
                 </ul>
             ) : (
-                <p className={`${card} px-5 py-12 text-center text-[13px] text-[#89949D]`}>{t("requestsPage.empty")}</p>
+                <p className={`${card} px-5 py-12 text-center text-[13px] text-[#89949D]`}>
+                    {t(`${rp}.page.empty.${filter}`)}
+                </p>
             )}
 
-            {dialog?.type === "follow" && (
-                <FollowModal
-                    key={`follow-${dialog.request.id}`}
-                    request={dialog.request}
-                    onClose={() => setDialog(null)}
-                    onConfirm={confirmFollow}
-                />
-            )}
-            {dialog?.type === "offer" && (
-                <OfferModal
-                    key={`offer-${dialog.request.id}`}
-                    request={dialog.request}
-                    onClose={() => setDialog(null)}
-                    onConfirm={confirmOffer}
-                />
-            )}
             {dialog?.type === "details" && (
                 <DetailsModal
                     key={`details-${dialog.request.id}`}
                     request={dialog.request}
                     onClose={() => setDialog(null)}
-                    onConfirm={confirmDetails}
+                    onAccept={accept}
+                    onOffer={(request) => setDialog({ request, type: "offer" })}
                 />
             )}
+            {dialog?.type === "offer" && (
+                <OfferModal key={`offer-${dialog.request.id}`} request={dialog.request} onClose={() => setDialog(null)} onConfirm={confirmOffer} />
+            )}
             {dialog?.type === "reject" && (
-                <RejectModal
-                    key={`reject-${dialog.request.id}`}
-                    request={dialog.request}
-                    onClose={() => setDialog(null)}
-                    onConfirm={confirmReject}
-                />
+                <RejectModal key={`reject-${dialog.request.id}`} request={dialog.request} onClose={() => setDialog(null)} onConfirm={confirmReject} />
             )}
         </div>
     );

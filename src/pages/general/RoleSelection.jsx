@@ -38,7 +38,7 @@ export default function RoleSelection() {
                         <button
                             type="button"
                             onClick={toggleLang}
-                            className="w-9 h-9 rounded-full border border-[#2563EB] text-xs text-[#2563EB] flex items-center justify-center font-bold cursor-pointer"
+                            className="w-9 h-9 rounded-full border border-[#4B9AD2] text-xs text-[#4B9AD2] flex items-center justify-center font-bold cursor-pointer"
                         >
                             {i18n.language === "ar" ? "EN" : "AR"}
                         </button>

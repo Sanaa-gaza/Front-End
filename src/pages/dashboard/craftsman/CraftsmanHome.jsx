@@ -1,27 +1,45 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
+import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { Check, ChevronDown, ChevronLeft, ImagePlus, LayoutGrid, Search, X } from "lucide-react";
-import { getProfile, getServiceRequests, updateProfile } from "../../../api/endpoints";
+import {
+    Bookmark,
+    Briefcase,
+    Check,
+    ChevronDown,
+    ChevronLeft,
+    ImagePlus,
+    LayoutGrid,
+    Search,
+    Star,
+    X,
+} from "lucide-react";
+import { getServiceRequests } from "../../../api/endpoints";
 import { useServices } from "../../../hooks/useReferenceData";
 import ApplyModal from "./ApplyModal";
+
+const BASE = "/dashboard/craftsman";
 
 // ===== بيانات تجريبية =====
 // فرص العمل (طلبات المؤسسات) لسا ما إلها endpoint. لما يجهز، استبدلي JOBS بطلب من src/api/endpoints.js
 // serviceId: رقم الحرفة من GET /services عشان فلتر "نوع الخدمة" يشتغل على القائمة الحقيقية
 // distance: بالكيلومتر، budget: [أقل، أعلى] بالشيكل
 const JOBS = [
-    { id: "j1", serviceId: 1, experience: 3, distance: 1.2, budget: [400, 600] },
-    { id: "j2", serviceId: 1, experience: 3, distance: 3.5, budget: [800, 1200] },
-    { id: "j3", serviceId: 2, experience: 5, distance: 8, budget: [1500, 2500] },
-    { id: "j4", serviceId: 4, experience: 2, distance: 12.4, budget: [600, 900] },
+    { id: "j1", serviceId: 1, experience: 3, distance: 1.2, budget: [80, 120] },
+    { id: "j2", serviceId: 1, experience: 3, distance: 3.5, budget: [80, 120] },
+    { id: "j3", serviceId: 2, experience: 5, distance: 8, budget: [80, 120] },
+    { id: "j4", serviceId: 4, experience: 2, distance: 12.4, budget: [150, 220] },
 ];
+
+// ⚠️ أرقام ما إلها بيانات بالباك إند لسا (الأرباح، مهلة الرد، آخر نشاط)
+const SAMPLE = { earningsToday: 11, earningsMonth: 2340, nearestDeadlineHours: 18 };
 
 const card = "rounded-[20px] border border-[#0000000D] bg-white shadow-[0_4px_24px_rgba(35,74,100,0.08)]";
 const field =
     "h-11 w-full rounded-xl border border-[#8EC0E4] bg-white text-[12px] text-[#414141] outline-none transition-colors focus:border-[#4B9AD2] focus:ring-1 focus:ring-[#4B9AD2]";
 
-/** مفتاح تشغيل/إيقاف */
-function Toggle({ checked, onChange, label, disabled }) {
+/** مفتاح تشغيل/إيقاف أخضر (حالة "متاح") — size: "sm" للشريط العلوي، "md" لبطاقة الصفحة الرئيسية */
+export function AvailabilityToggle({ checked, onChange, label, disabled, size = "md" }) {
+    const sm = size === "sm";
     return (
         <button
             type="button"
@@ -31,46 +49,22 @@ function Toggle({ checked, onChange, label, disabled }) {
             disabled={disabled}
             onClick={() => onChange(!checked)}
             dir="ltr"
-            className={`relative h-8 w-[58px] shrink-0 cursor-pointer rounded-full transition-colors duration-300 disabled:cursor-wait disabled:opacity-70 ${checked ? "bg-[#4B9AD2]" : "bg-[#E4EFFA]"
-                }`}
+            className={`relative shrink-0 cursor-pointer rounded-full transition-colors duration-300 disabled:cursor-wait disabled:opacity-70 ${sm ? "h-5 w-9" : "h-8 w-[58px]"
+                } ${checked ? "bg-[#22B34B]" : "bg-[#D5DCE2]"}`}
         >
             <span
-                className={`absolute top-1/2 left-1 h-6 w-6 -translate-y-1/2 rounded-full shadow-sm transition-all duration-300 ${checked ? "translate-x-[26px] bg-white" : "bg-[#4B9AD2]"
-                    }`}
+                className={`absolute left-1 top-1/2 -translate-y-1/2 rounded-full bg-white shadow-sm transition-all duration-300 ${sm ? "h-3.5 w-3.5" : "h-6 w-6"
+                    } ${checked ? (sm ? "translate-x-[15px]" : "translate-x-[26px]") : ""}`}
             />
         </button>
     );
 }
 
 /** بطاقة "متاح للعمل" + صور الأعمال */
-function SideCard({ profile, onProfileChange }) {
+function SideCard({ availability }) {
     const { t } = useTranslation("craftsmanDashboard");
-    // القيمة الحقيقية من السيرفر، والـ override بس وقت الحفظ
-    const [override, setOverride] = useState(null);
-    const [saving, setSaving] = useState(false);
-    const [note, setNote] = useState("");
     const [photos, setPhotos] = useState([]);
     const [dragging, setDragging] = useState(false);
-
-    const available = override ?? Boolean(profile?.craftsman?.is_available);
-
-    const toggle = async (value) => {
-        setOverride(value);
-        setSaving(true);
-        setNote("");
-        try {
-            await updateProfile({ is_available: value });
-            // السيرفر ممكن يتجاهل الحقل بصمت، فبنتأكد من القيمة المحفوظة فعلاً
-            const fresh = (await getProfile()).data;
-            onProfileChange(fresh);
-            if (Boolean(fresh?.craftsman?.is_available) !== value) setNote(t("availability.notSaved"));
-        } catch {
-            setNote(t("availability.notSaved"));
-        } finally {
-            setOverride(null);
-            setSaving(false);
-        }
-    };
 
     const addPhotos = (files) => {
         const images = Array.from(files || []).filter((f) => f.type.startsWith("image/"));
@@ -94,26 +88,26 @@ function SideCard({ profile, onProfileChange }) {
 
     return (
         <section className={`${card} self-start p-5`}>
-            <div className="flex items-center justify-between gap-4">
+            <div className="flex items-center justify-between gap-4 pt-2">
                 <div>
-                    <h2 className="text-[15px] font-bold text-[#414141]">{t("availability.title")}</h2>
-                    <p className="mt-1 text-[11px] text-[#89949D]">
-                        {available ? t("availability.on") : t("availability.off")}
+                    <h2 className="text-[14px] font-bold text-[#141415]">{t("availability.title")}</h2>
+                    <p className="mt-1.5 text-[10px] text-[#575757]">
+                        {availability.available ? t("availability.on") : t("availability.off")}
                     </p>
                 </div>
-                <Toggle
-                    checked={available}
-                    onChange={toggle}
-                    disabled={!profile || saving}
+                <AvailabilityToggle
+                    checked={availability.available}
+                    onChange={availability.toggle}
+                    disabled={!availability.ready || availability.saving}
                     label={t("availability.title")}
                 />
             </div>
-            {note && <p role="status" className="mt-2 text-[11px] text-[#9A6B00]">{note}</p>}
+            {availability.note && <p role="status" className="mt-2 text-[11px] text-[#9A6B00]">{availability.note}</p>}
 
-            <hr className="my-5 border-[#0000001A]" />
+            <hr className="my-6 border-[#0000001A]" />
 
-            <h2 className="text-[15px] font-bold text-[#414141]">{t("portfolio.title")}</h2>
-            <p className="mt-1 text-[11px] leading-[1.8] text-[#89949D]">{t("portfolio.desc")}</p>
+            <h2 className="text-[14px] font-bold text-[#141415]">{t("portfolio.title")}</h2>
+            <p className="mt-1.5 text-[10px] leading-[1.8] text-[#575757]">{t("portfolio.desc")}</p>
 
             <label
                 htmlFor="portfolio-input"
@@ -127,10 +121,10 @@ function SideCard({ profile, onProfileChange }) {
                     setDragging(false);
                     addPhotos(e.dataTransfer.files);
                 }}
-                className={`mt-4 flex h-[150px] cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed text-[11px] text-[#4B9AD2] transition-colors ${dragging ? "border-[#4B9AD2] bg-[#EAF3FB]" : "border-[#8EC0E4]"
+                className={`mt-4 flex h-[118px] cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed text-[9px] text-[#4B9AD2] transition-colors ${dragging ? "border-[#4B9AD2] bg-[#EAF3FB]" : "border-[#8EC0E4]"
                     }`}
             >
-                <ImagePlus size={22} />
+                <ImagePlus size={20} strokeWidth={1.6} />
                 {t("portfolio.drop")}
             </label>
             <input
@@ -169,7 +163,8 @@ function SideCard({ profile, onProfileChange }) {
     );
 }
 
-export default function CraftsmanHome({ profile, onProfileChange }) {
+/** الصفحة الرئيسية للحرفي: تنبيه الطلبات + الإحصائيات + فرص العمل + بطاقة التوفر */
+export default function CraftsmanHome({ profile, availability }) {
     const { t } = useTranslation("craftsmanDashboard");
     const services = useServices();
     const [requests, setRequests] = useState(null);
@@ -177,9 +172,10 @@ export default function CraftsmanHome({ profile, onProfileChange }) {
     const [location, setLocation] = useState("");
     const [serviceId, setServiceId] = useState("all");
     const [filters, setFilters] = useState({ location: "", serviceId: "all" });
-    // الفرصة المفتوحة بنافذة "قدم عرضك"، والفرص اللي انقدّم عليها
+    // الفرصة المفتوحة بنافذة التفاصيل/التقديم، والفرص اللي انقدّم عليها أو انحفظت
     const [applyJob, setApplyJob] = useState(null);
     const [applied, setApplied] = useState({});
+    const [saved, setSaved] = useState([]);
     const [flash, setFlash] = useState("");
 
     // ⚠️ ما في endpoint للتقديم على فرص المؤسسات لسا، فالعرض بينحفظ بالصفحة بس
@@ -189,7 +185,7 @@ export default function CraftsmanHome({ profile, onProfileChange }) {
         setApplyJob(null);
     };
 
-    // الطلبات اللي وصلت للحرفي (GET /service-requests) عشان أرقام "مكتملة" و"جديدة"
+    // الطلبات اللي وصلت للحرفي (GET /service-requests) عشان أرقام الطلبات والأعمال المكتملة
     useEffect(() => {
         let active = true;
         getServiceRequests()
@@ -201,18 +197,19 @@ export default function CraftsmanHome({ profile, onProfileChange }) {
     }, []);
 
     const craftsman = profile?.craftsman;
-    const count = (status) => (requests ? requests.filter((r) => r.status === status).length : null);
-    const loadingText = "…";
+    const loading = "…";
+    const count = (status) => (requests ? requests.filter((r) => !status || r.status === status).length : loading);
+    const h = "home.stats";
 
     const stats = [
-        // الأرباح لسا ما إلها بيانات بالباك إند
-        { key: "earnings", value: "—", tone: "text-[#13B83A]" },
-        { key: "completed", value: count("completed") ?? loadingText, tone: "text-[#4B9AD2]" },
-        { key: "newRequests", value: count("pending") ?? loadingText, tone: "text-[#22455E]" },
+        { key: "earnings", symbol: "₪", value: t(`${h}.earnings.value`, { value: SAMPLE.earningsToday }), note: t(`${h}.earnings.note`, { amount: SAMPLE.earningsMonth.toLocaleString("en-US") }) },
+        { key: "completed", icon: Briefcase, value: count("completed"), note: t(`${h}.completed.note`) },
+        { key: "requests", icon: Briefcase, value: count(), note: t(`${h}.requests.note`) },
         {
             key: "rating",
-            value: craftsman ? Number(craftsman.avg_rating || 0).toFixed(1) : loadingText,
-            tone: "text-[#E6B000]",
+            icon: Star,
+            value: craftsman ? Number(craftsman.avg_rating || 0).toFixed(1) : loading,
+            note: t(`${h}.rating.note`, { count: craftsman?.reviews_count ?? 0 }),
         },
     ];
 
@@ -222,28 +219,55 @@ export default function CraftsmanHome({ profile, onProfileChange }) {
             if (filters.serviceId !== "all" && String(j.serviceId) !== filters.serviceId) return false;
             if (!q) return true;
             const s = `jobs.sample.${j.id}`;
-            return [t(`${s}.location`), t(`${s}.org`)].join(" ").toLowerCase().includes(q);
+            return [t(`${s}.location`), t(`${s}.org`), t(`${s}.title`)].join(" ").toLowerCase().includes(q);
         });
     }, [filters, t]);
 
     return (
         <div className="mx-auto flex max-w-[1100px] flex-col gap-6">
-            {/* الإحصائيات */}
-            <section className="grid grid-cols-2 gap-4 lg:grid-cols-4 lg:gap-6">
-                {stats.map((s) => (
-                    <div
-                        key={s.key}
-                        className="flex flex-col items-center justify-center rounded-[24px] border border-[#0000000A] bg-white px-4 py-7 text-center shadow-[0_8px_28px_rgba(35,74,100,0.10)]"
-                    >
-                        <p className={`text-[19px] font-bold leading-none tabular-nums ${s.tone}`}>
-                            {t(`stats.${s.key}.value`, { value: s.value })}
-                        </p>
-                        <p className="mt-3 text-[12px] font-medium text-[#575757]">{t(`stats.${s.key}.label`)}</p>
+            {/* تنبيه الطلبات بانتظار الرد */}
+            {/* التدرّج من #CAEBFF (جهة البداية) لـ #FFFFFF (جهة النهاية) */}
+            <section className="flex flex-col gap-4 rounded-[20px] border border-[#D6ECFB] bg-linear-to-l from-[#CAEBFF] to-[#FFFFFF] px-5 py-5 shadow-[0_2px_10px_rgba(75,154,210,0.08)] ltr:bg-linear-to-r sm:flex-row sm:items-center sm:justify-between sm:px-7">
+                <div className="flex items-center gap-4">
+                    {/* أيقونة لوح الطلبات مع علامة ✓ */}
+                    <svg width="56" height="56" viewBox="0 0 56 56" fill="none" aria-hidden="true" className="shrink-0">
+                        <rect x="11" y="9" width="30" height="39" rx="4" fill="#EAF5FE" stroke="#4B9AD2" strokeWidth="1.8" />
+                        <rect x="18.5" y="5" width="15" height="8" rx="2.5" fill="#4B9AD2" />
+                        <path d="M17 21h18M17 27h18M17 33h12" stroke="#8EC0E4" strokeWidth="2" strokeLinecap="round" />
+                        <circle cx="40" cy="42" r="9.5" fill="#4B9AD2" stroke="#FFFFFF" strokeWidth="2.5" />
+                        <path d="m35.8 42.2 2.9 2.9 5.6-5.8" stroke="#FFFFFF" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                    <div>
+                        <h2 className="text-[17px] font-bold text-[#141415]">{t("home.banner.title")}</h2>
+                        <p className="mt-1.5 text-[11px] text-[#414141]">{t("home.banner.subtitle", { count: SAMPLE.nearestDeadlineHours })}</p>
                     </div>
-                ))}
+                </div>
+                <Link
+                    to={`${BASE}/requests`}
+                    className="inline-flex h-10 w-fit shrink-0 items-center gap-2 rounded-xl bg-linear-to-l from-[#1591DCCC] to-[#1383C6] px-5 text-[12px] font-semibold text-white shadow-[0_3px_8px_rgba(19,131,198,0.25)] ltr:bg-linear-to-r btn-wipe"
+                >
+                    {t("home.banner.cta")}
+                    <ChevronLeft size={15} className="ltr:rotate-180" />
+                </Link>
             </section>
 
-            <div className="grid gap-6 lg:grid-cols-[1fr_300px]">
+            {/* الإحصائيات */}
+            <ul className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+                {stats.map(({ key, icon: Icon, symbol, value, note }) => (
+                    <li key={key} className={`${card} px-5 py-5`}>
+                        <p className="flex items-center gap-2 text-[12px] text-[#575757]">
+                            {t(`${h}.${key}.label`)}
+                            <span className="flex h-6 w-6 items-center justify-center rounded-full bg-[#EAF3FB] text-[#4B9AD2]" aria-hidden="true">
+                                {Icon ? <Icon size={12} strokeWidth={2} /> : <span className="text-[11px] font-bold leading-none">{symbol}</span>}
+                            </span>
+                        </p>
+                        <p className="mt-4 text-[22px] font-bold text-[#22455E] tabular-nums">{value}</p>
+                        <p className="mt-2 text-[10px] text-[#575757]">{note}</p>
+                    </li>
+                ))}
+            </ul>
+
+            <div className="grid items-start gap-6 lg:grid-cols-[1fr_300px]">
                 {/* فرص العمل */}
                 <section className={`${card} p-5`}>
                     <form
@@ -251,7 +275,7 @@ export default function CraftsmanHome({ profile, onProfileChange }) {
                             e.preventDefault();
                             setFilters({ location, serviceId });
                         }}
-                        className="flex flex-col gap-3 rounded-2xl border border-[#0000000D] p-3 shadow-[0_2px_12px_rgba(35,74,100,0.06)] sm:flex-row sm:items-center"
+                        className="flex flex-col gap-3 sm:flex-row sm:items-center"
                     >
                         <div className="relative min-w-0 flex-1">
                             <Search size={16} className="pointer-events-none absolute start-3 top-1/2 -translate-y-1/2 text-[#4B9AD2]" />
@@ -261,7 +285,7 @@ export default function CraftsmanHome({ profile, onProfileChange }) {
                                 onChange={(e) => setLocation(e.target.value)}
                                 placeholder={t("jobs.location")}
                                 aria-label={t("jobs.location")}
-                                className={`${field} ps-9 pe-4 placeholder:text-[#89949D]`}
+                                className={`${field} pe-4 ps-9 placeholder:text-[#89949D]`}
                             />
                         </div>
                         <div className="relative min-w-0 sm:w-[170px]">
@@ -270,7 +294,7 @@ export default function CraftsmanHome({ profile, onProfileChange }) {
                                 value={serviceId}
                                 onChange={(e) => setServiceId(e.target.value)}
                                 aria-label={t("jobs.serviceType")}
-                                className={`${field} cursor-pointer appearance-none ps-9 pe-9 ${serviceId === "all" ? "text-[#89949D]" : ""}`}
+                                className={`${field} cursor-pointer appearance-none pe-9 ps-9 ${serviceId === "all" ? "text-[#89949D]" : ""}`}
                             >
                                 <option value="all">{t("jobs.serviceType")}</option>
                                 {services.options.map((o) => (
@@ -281,10 +305,7 @@ export default function CraftsmanHome({ profile, onProfileChange }) {
                             </select>
                             <ChevronDown size={16} className="pointer-events-none absolute end-3 top-1/2 -translate-y-1/2 text-[#4B9AD2]" />
                         </div>
-                        <button
-                            type="submit"
-                            className="h-11 shrink-0 cursor-pointer rounded-xl bg-[#4B9AD2] px-10 text-[14px] font-semibold text-white btn-wipe"
-                        >
+                        <button type="submit" className="h-11 shrink-0 cursor-pointer rounded-xl bg-linear-to-l from-[#1591DCCC] to-[#1383C6] ltr:bg-linear-to-r px-10 text-[14px] font-semibold text-white btn-wipe">
                             {t("jobs.search")}
                         </button>
                     </form>
@@ -295,54 +316,70 @@ export default function CraftsmanHome({ profile, onProfileChange }) {
                         </p>
                     )}
 
-                    <div className="mt-4 flex items-center justify-between text-[11px] text-[#89949D]">
-                        <span>{t("jobs.nearby")}</span>
-                        <span>{t("jobs.sorted")}</span>
-                    </div>
+                    <h2 className="mt-6 text-[12px] font-semibold text-[#4B9AD2]">{t("jobs.title")}</h2>
 
                     {jobs.length ? (
-                        <ul className="mt-3 flex flex-col gap-4">
+                        <ul className="mt-3 flex flex-col gap-3">
                             {jobs.map((j) => {
                                 const s = `jobs.sample.${j.id}`;
+                                const org = t(`${s}.org`);
+                                const isSaved = saved.includes(j.id);
                                 return (
-                                    <li
-                                        key={j.id}
-                                        className="flex flex-col gap-4 rounded-2xl border border-[#0000000F] p-4 sm:flex-row sm:items-center sm:justify-between"
-                                    >
-                                        <div className="min-w-0">
-                                            <h3 className="text-[16px] font-bold text-[#414141]">{t(`${s}.service`)}</h3>
-                                            <p className="mt-2 flex items-center gap-1.5 text-[11px] text-[#575757]">
-                                                <span className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-[#22455E] text-[8px] font-bold text-white">
-                                                    {t(`${s}.org`).charAt(0)}
+                                    <li key={j.id} className="rounded-2xl border border-[#0000000F] bg-white p-4 shadow-[0_2px_10px_rgba(35,74,100,0.05)]">
+                                        <div className="flex items-start justify-between gap-3">
+                                            <div className="flex min-w-0 items-center gap-3">
+                                                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#EEF5FC] text-[14px] font-bold text-[#575757]">
+                                                    {org.trim().charAt(0)}
                                                 </span>
-                                                {t(`${s}.org`)}
-                                            </p>
-                                            <p className="mt-1.5 text-[13px] text-[#414141]">{t(`${s}.desc`)}</p>
-                                            <p className="mt-3 text-[10px] text-[#4B9AD2]">
-                                                {t("jobs.deadline", { date: t(`${s}.date`) })}
-                                            </p>
-                                            <span className="mt-2 inline-block rounded-md bg-[#4B9AD2] px-2 py-0.5 text-[10px] font-medium text-white">
-                                                {t("jobs.experience", { years: j.experience })}
+                                                <div className="min-w-0">
+                                                    <h3 className="truncate text-[15px] font-bold text-[#141415]">{t(`${s}.title`)}</h3>
+                                                    <p className="mt-1.5 truncate text-[11px] text-[#89949D]">
+                                                        {t(`${s}.location`)} · {t("jobs.distance", { km: j.distance })}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            <span className="shrink-0 rounded-full border border-[#CFE3F3] bg-[#EEF5FC] px-3 py-0.5 text-[11px] text-[#4B9AD2]">
+                                                {t("jobs.orgType")}
                                             </span>
                                         </div>
-                                        {applied[j.id] ? (
-                                            <span className="inline-flex h-8 shrink-0 items-center gap-1 self-start rounded-full bg-[#DDF6E3] px-4 text-[12px] font-medium text-[#2EAF4E] sm:self-center">
-                                                <Check size={14} />
-                                                {t("jobs.applied")}
-                                            </span>
-                                        ) : (
-                                            <button
-                                                type="button"
-                                                onClick={() => {
-                                                    setFlash("");
-                                                    setApplyJob(j);
-                                                }}
-                                                className="inline-flex h-8 shrink-0 cursor-pointer items-center gap-1 self-start rounded-full bg-[#4B9AD2] px-4 text-[12px] font-medium text-white btn-wipe sm:self-center"
-                                            >
-                                                {t("jobs.apply")}
-                                                <ChevronLeft size={14} className="ltr:rotate-180" />
-                                            </button>
-                                        )}
+
+                                        <div className="mt-3 flex items-end justify-between gap-3 border-t border-[#0000000A] pt-3">
+                                            <div>
+                                                <p className="text-[12px] text-[#575757]">{t("jobs.budget")}</p>
+                                                <p className="mt-1 text-[14px] font-bold text-[#141415] tabular-nums">
+                                                    {t("jobs.budgetValue", { min: j.budget[0], max: j.budget[1] })}
+                                                </p>
+                                            </div>
+                                            <div className="flex items-center gap-2">
+                                                <button
+                                                    type="button"
+                                                    onClick={() => setSaved((list) => (isSaved ? list.filter((x) => x !== j.id) : [...list, j.id]))}
+                                                    aria-pressed={isSaved}
+                                                    aria-label={isSaved ? t("jobs.unsave") : t("jobs.save")}
+                                                    className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg text-[#4B9AD2] hover:bg-[#EEF5FC]"
+                                                >
+                                                    <Bookmark size={17} fill={isSaved ? "currentColor" : "none"} />
+                                                </button>
+                                                {applied[j.id] ? (
+                                                    <span className="inline-flex h-8 items-center gap-1 rounded-lg bg-[#DDF6E3] px-3 text-[11px] font-medium text-[#2EAF4E]">
+                                                        <Check size={13} />
+                                                        {t("jobs.applied")}
+                                                    </span>
+                                                ) : (
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => {
+                                                            setFlash("");
+                                                            setApplyJob(j);
+                                                        }}
+                                                        className="inline-flex h-10 cursor-pointer items-center gap-3 rounded-xl bg-linear-to-l from-[#1591DCCC] to-[#1383C6] ltr:bg-linear-to-r px-4 text-[13px] font-semibold text-white shadow-[0_3px_8px_rgba(19,131,198,0.25)] btn-wipe"
+                                                    >
+                                                        {t("jobs.details")}
+                                                        <ChevronLeft size={17} strokeWidth={2.5} className="ltr:rotate-180" />
+                                                    </button>
+                                                )}
+                                            </div>
+                                        </div>
                                     </li>
                                 );
                             })}
@@ -352,7 +389,7 @@ export default function CraftsmanHome({ profile, onProfileChange }) {
                     )}
                 </section>
 
-                <SideCard profile={profile} onProfileChange={onProfileChange} />
+                <SideCard availability={availability} />
             </div>
 
             {applyJob && (
@@ -360,7 +397,7 @@ export default function CraftsmanHome({ profile, onProfileChange }) {
                     key={applyJob.id}
                     job={{
                         id: applyJob.id,
-                        title: t(`jobs.sample.${applyJob.id}.service`),
+                        title: t(`jobs.sample.${applyJob.id}.title`),
                         org: t(`jobs.sample.${applyJob.id}.org`),
                         desc: t(`jobs.sample.${applyJob.id}.desc`),
                         location: t(`jobs.sample.${applyJob.id}.location`),

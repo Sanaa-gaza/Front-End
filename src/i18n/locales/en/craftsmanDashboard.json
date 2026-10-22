@@ -42,7 +42,8 @@
                 "desc": "A whole building needs a plumber to handle all technical work",
                 "location": "Gaza",
                 "date": "1 November 2026",
-                "time": "Today 4:30 PM"
+                "time": "Today 4:30 PM",
+                "title": "Plumber for a 4-storey building's pipework"
             },
             "j2": {
                 "service": "Plumber",
@@ -50,7 +51,8 @@
                 "desc": "An institution needs its internal water network rebuilt",
                 "location": "Nuseirat",
                 "date": "1 November 2026",
-                "time": "Tomorrow 10:00 AM"
+                "time": "Tomorrow 10:00 AM",
+                "title": "Install a sink mixer and shower"
             },
             "j3": {
                 "service": "Electrician",
@@ -58,7 +60,8 @@
                 "desc": "Full electrical installation for a new training center",
                 "location": "Khan Yunis",
                 "date": "10 November 2026",
-                "time": "Sunday 9:00 AM"
+                "time": "Sunday 9:00 AM",
+                "title": "Bathroom plumbing maintenance"
             },
             "j4": {
                 "service": "Carpenter",
@@ -66,7 +69,8 @@
                 "desc": "Making and installing wooden doors and cabinets for classrooms",
                 "location": "Deir Al-Balah",
                 "date": "15 November 2026",
-                "time": "Monday 11:00 AM"
+                "time": "Monday 11:00 AM",
+                "title": "Make wooden doors and cabinets"
             }
         },
         "modal": {
@@ -89,16 +93,25 @@
             "durationRequired": "Enter the execution period",
             "sent": "Your offer was sent to {{org}}."
         },
-        "applied": "Applied"
+        "applied": "Applied",
+        "title": "Job opportunities",
+        "orgType": "Institution",
+        "distance": "{{km}} km away",
+        "budget": "Budget",
+        "budgetValue": "{{min}} - {{max}} ILS",
+        "details": "View details",
+        "save": "Save opportunity",
+        "unsave": "Remove from saved"
     },
     "availability": {
         "title": "Available for work",
         "on": "You are now available to receive requests",
         "off": "You are not available to receive requests right now",
-        "notSaved": "The status was not saved; this is not available on the server yet."
+        "notSaved": "The status was not saved; this is not available on the server yet.",
+        "pill": "Available for requests"
     },
     "portfolio": {
-        "title": "Attach photos of your work, if any",
+        "title": "Attach photos of your work if any",
         "desc": "Photos of your previous work help build trust with customers",
         "drop": "Click or drag a photo",
         "remove": "Remove photo",
@@ -182,32 +195,44 @@
         "empty": "No requests in this tab",
         "sample": {
             "q1": {
-                "title": "Inspect and fix an underground water leak and replace an Italian float valve",
-                "desc": "The customer asked for a full inspection of the line. The main valve was replaced; the outer cover still needs installing, followed by a full sewage line treatment.",
-                "customer": "Mohammad Ahmad",
-                "delivery": "Today 6:00 PM",
-                "place": "Gaza - Sheikh Radwan"
+                "title": "Replace sink mixer and check water pressure",
+                "customer": "Mohannad Al-Masri",
+                "place": "Beit Lahia . Abdel Aziz St.",
+                "delivery": "4:00 – 6:00 PM",
+                "deadline": "Reply within 18 minutes before the request expires",
+                "desc": "The old mixer leaks from the base and the bathroom water pressure is weak. Replace the mixer with a new one (provided by the customer) and check the line pressure."
             },
             "q2": {
-                "title": "Run a new water line to the kitchen",
-                "desc": "Run hot and cold water lines to the kitchen, install a new mixer and test the pressure afterwards.",
-                "customer": "Sami Al-Ali",
-                "delivery": "Tomorrow 11:00 AM",
-                "place": "Gaza - Al-Rimal"
+                "title": "Replace sink mixer and check water pressure",
+                "customer": "Mohannad Al-Masri",
+                "place": "Beit Lahia . Abdel Aziz St.",
+                "delivery": "4:00 – 6:00 PM",
+                "deadline": "Reply by tomorrow 10 AM",
+                "desc": "Replace the kitchen sink mixer and check water pressure across the apartment."
             },
             "q3": {
-                "title": "Fix a leak in the rooftop water tank",
-                "desc": "The rooftop tank is leaking; locate and fix the leak and replace the float valve.",
-                "customer": "Ahmad Khaled",
-                "delivery": "Sunday 9:00 AM",
-                "place": "Nuseirat"
+                "title": "Inspect and fix an underground water leak",
+                "customer": "Mohammad Ahmad",
+                "place": "Gaza - Sheikh Radwan",
+                "delivery": "Today 6:00 PM",
+                "deadline": "",
+                "desc": "Full inspection of the underground water line, fixing the leak and replacing the float valve."
             },
             "q4": {
-                "title": "Install a home water pump",
-                "desc": "Install a pump to raise the water pressure on the second floor and connect it to the ground tank.",
-                "customer": "Yousef Hamdan",
-                "delivery": "Tuesday 4:00 PM",
-                "place": "Deir Al-Balah"
+                "title": "Extend a water line to the roof",
+                "customer": "Reem Al-Attar",
+                "place": "Deir al-Balah",
+                "delivery": "Sunday 10:00 AM",
+                "deadline": "",
+                "desc": "Extend a water line from the ground tank to the roof to install an extra tank."
+            },
+            "q5": {
+                "title": "Install an electric water heater",
+                "customer": "Saeed Abu Khalil",
+                "place": "Gaza - Shujaiya",
+                "delivery": "Tomorrow 12:00 PM",
+                "deadline": "",
+                "desc": "Install a new 80-liter electric heater with water and power connections."
             }
         },
         "followModal": {
@@ -277,6 +302,86 @@
             "priceRequired": "Enter the offer value",
             "durationRequired": "Enter the duration",
             "startRequired": "Choose a start date"
+        },
+        "page": {
+            "title": "Requests awaiting your reply",
+            "views": {
+                "incoming": "Incoming",
+                "offers": "My offers"
+            },
+            "filters": {
+                "pending": "Awaiting reply",
+                "accepted": "Accepted",
+                "rejected": "Rejected"
+            },
+            "customerType": "Customer",
+            "distance": "{{km}} km",
+            "location": "Location",
+            "slot": "Time",
+            "customer": "Customer",
+            "value": "Listed value",
+            "details": "View details",
+            "accept": "Accept request",
+            "otherPrice": "Offer a different price",
+            "close": "Close",
+            "acceptedNote": "You accepted this request. Follow it from “Current jobs”",
+            "rejectedNote": "You rejected this request",
+            "awaitingCustomer": "Awaiting customer reply",
+            "acceptedFlash": "{{customer}}'s request was accepted and moved to current jobs.",
+            "empty": {
+                "pending": "No requests awaiting your reply",
+                "accepted": "No accepted requests",
+                "rejected": "No rejected requests"
+            }
+        },
+        "offers": {
+            "filters": {
+                "all": "All",
+                "accepted": "Accepted",
+                "rejected": "Rejected"
+            },
+            "statuses": {
+                "pending": "Sent - under review",
+                "closed": "Closed",
+                "accepted": "Your offer was chosen",
+                "rejected": "Not chosen"
+            },
+            "duration": "Duration",
+            "myOffer": "My offer",
+            "price": "{{amount}} ILS",
+            "notes": {
+                "pending": "Offers accepted until {{date}} : closes in {{left}}",
+                "closed": "Offers closed on {{date}}, awaiting the result",
+                "accepted": "The project moved to current jobs",
+                "rejected": "Another offer was chosen for this tender",
+                "awaitingCustomer": "Different-price offer on a customer request · awaiting the customer"
+            },
+            "empty": "No offers",
+            "sample": {
+                "o1": {
+                    "org": "Al-Noor Development Foundation",
+                    "title": "Water network maintenance . Rimal School",
+                    "duration": "1 month",
+                    "noteArgs": {
+                        "date": "Oct 19",
+                        "left": "2 days"
+                    }
+                },
+                "o2": {
+                    "org": "Al-Amal Charity",
+                    "title": "Water network maintenance . Rimal School",
+                    "duration": "1 month",
+                    "noteArgs": {
+                        "date": "Oct 14"
+                    }
+                },
+                "o3": {
+                    "org": "Al-Rahma Development Foundation",
+                    "title": "Water network maintenance . Rimal School",
+                    "duration": "1 month",
+                    "noteArgs": {}
+                }
+            }
         }
     },
     "currentPage": {
@@ -363,6 +468,256 @@
                 "service": "Solar energy",
                 "notes": "The customer cancelled because parts were unavailable."
             }
+        }
+    },
+    "home": {
+        "banner": {
+            "title": "Requests awaiting your reply",
+            "subtitle": "The nearest reply deadline ends in {{count}} hours",
+            "cta": "View requests"
+        },
+        "stats": {
+            "earnings": {
+                "label": "Today's earnings",
+                "value": "{{value}} ILS",
+                "note": "Of {{amount}} ₪ this month"
+            },
+            "completed": {
+                "label": "Completed jobs",
+                "note": "Last job 3 days ago"
+            },
+            "requests": {
+                "label": "Requests",
+                "note": "Last request a week ago"
+            },
+            "rating": {
+                "label": "Ratings",
+                "note": "From {{count}} reviews"
+            }
+        }
+    },
+    "notifications": {
+        "n1": {
+            "title": "Reply deadline ends in 30 minutes",
+            "body": "Khaled Ashour's “Leak under the sink” request is awaiting your reply.",
+            "time": "5 min ago"
+        },
+        "n2": {
+            "title": "New request",
+            "body": "Samar Al-Najjar sent a “Replace sink mixer” request for 70 ILS, today from 4 to 6 PM.",
+            "time": "20 min ago"
+        },
+        "n3": {
+            "title": "Payment confirmed",
+            "body": "Al-Noor Development paid 1200 ILS and the amount is held for you. Work starts Saturday, Oct 17.",
+            "time": "1 hour ago"
+        },
+        "n4": {
+            "title": "New message",
+            "body": "Eng. Rami Hassan: “Please work after 12 PM because of school hours.”",
+            "time": "3 hours ago"
+        }
+    },
+    "profilePage": {
+        "sections": {
+            "account": "My account",
+            "verification": "Verification",
+            "works": "My work",
+            "saved": "Saved list",
+            "notifications": "Notification settings",
+            "personal": "Personal information",
+            "password": "Password"
+        },
+        "soon": "This section will be added soon.",
+        "edit": {
+            "title": "Edit profile",
+            "photo": "Profile photo",
+            "photoHint": "A photo that clearly shows your face · JPG or PNG up to 5MB",
+            "changePhoto": "Change photo",
+            "photoType": "The photo must be JPG or PNG",
+            "photoSize": "The photo is larger than 5MB",
+            "name": "Full name",
+            "phone": "Phone number",
+            "governorate": "Governorate",
+            "address": "Home address",
+            "craft": "Craft",
+            "experience": "Experience",
+            "experienceOptions": {
+                "lt1": "Less than a year",
+                "1_2": "1 - 2 years",
+                "2_5": "2 - 5 years",
+                "5_10": "5 - 10 years",
+                "gt10": "More than 10 years"
+            },
+            "select": "Choose",
+            "bio": "About you",
+            "optional": "(optional)",
+            "bioPlaceholder": "Write a short bio about your experience and the kind of work you do...",
+            "craftNoteTitle": "Changing your craft is sent to the Sanaa team for review",
+            "craftNoteDesc": "Your profile stays visible with your current craft until approved.",
+            "nameRequired": "Name is required",
+            "required": "This field is required",
+            "save": "Save changes",
+            "saving": "Saving...",
+            "saved": "Changes saved successfully",
+            "cancel": "Cancel",
+            "chooseGovernorateFirst": "Choose the governorate first",
+            "loading": "Loading..."
+        },
+        "works": {
+            "title": "My work",
+            "subtitle": "Your work is shown to customers and institutions when they review your request or offer",
+            "add": "Add work",
+            "drop": "Click or drag a photo",
+            "options": "Options for {{title}}",
+            "edit": "Edit",
+            "delete": "Delete",
+            "confirmDelete": "Delete “{{title}}” from your work?",
+            "added": "The work was added.",
+            "updated": "The work was updated.",
+            "deleted": "The work was deleted.",
+            "modal": {
+                "addTitle": "Add work",
+                "editTitle": "Edit work",
+                "title": "Work title",
+                "titlePlaceholder": "e.g. Water pipe repairs for a building",
+                "titleRequired": "Work title is required",
+                "date": "Completion date",
+                "photos": "Work photos",
+                "save": "Publish work",
+                "cancel": "Cancel",
+                "photosRequired": "Add at least one photo of the work",
+                "desc": "Work description",
+                "descPlaceholder": "Briefly describe what you did, such as materials and duration",
+                "photosCount": "{{count}} of {{max}} photos",
+                "addPhoto": "Add photo",
+                "morePhoto": "Another photo",
+                "area": "Area",
+                "chooseArea": "Choose the area",
+                "noGovernorate": "Set your governorate in “Edit profile” first",
+                "chooseDate": "Choose the month"
+            }
+        },
+        "saved": {
+            "tabs": {
+                "all": "All",
+                "open": "Open",
+                "closed": "Closed"
+            },
+            "budget": "Budget",
+            "budgetValue": "{{min}} - {{max}}",
+            "deadline": "Deadline",
+            "location": "Location",
+            "unsave": "Remove from saved list",
+            "removed": "The opportunity was removed from your saved list.",
+            "undo": "Undo",
+            "closedLabel": "Applications closed",
+            "empty": "No saved opportunities",
+            "sample": {
+                "s1": {
+                    "title": "Bathroom plumbing maintenance - Rimal School",
+                    "org": "Al-Noor Foundation",
+                    "location": "Gaza Rimal",
+                    "desc": "Full maintenance of the school's bathroom plumbing, replacing damaged mixers and pipes."
+                },
+                "s2": {
+                    "title": "Bathroom plumbing maintenance - Rimal School",
+                    "org": "Al-Noor Foundation",
+                    "location": "Gaza Rimal",
+                    "desc": "Full maintenance of the school's bathroom plumbing, replacing damaged mixers and pipes."
+                },
+                "s3": {
+                    "title": "Water line extension for a health center",
+                    "org": "Al-Shifa Charity",
+                    "location": "Khan Younis",
+                    "desc": "Extend a new water line from the main tank to the clinic rooms."
+                }
+            }
+        },
+        "notificationSettings": {
+            "appTitle": "App notifications",
+            "smsTitle": "SMS messages",
+            "required": "Required",
+            "lockedNote": "Request and payment notifications can't be turned off because they involve deadlines and money.",
+            "items": {
+                "requests": {
+                    "title": "New requests & reply deadlines",
+                    "desc": "New requests, and a reminder 30 minutes before the deadline"
+                },
+                "payments": {
+                    "title": "Payments & wallet",
+                    "desc": "Payment confirmations and transfers to your wallet"
+                },
+                "tenders": {
+                    "title": "Tenders",
+                    "desc": "New tenders that suit you, results of your offers, and deadline extensions"
+                },
+                "messages": {
+                    "title": "Messages",
+                    "desc": "Messages from customers and institutions"
+                },
+                "reviews": {
+                    "title": "Reviews",
+                    "desc": "When someone adds a new review for you"
+                },
+                "sms": {
+                    "title": "Important notifications by SMS",
+                    "desc": "Payment confirmations and reply deadlines when the internet is weak"
+                }
+            }
+        },
+        "personal": {
+            "rows": {
+                "name": "Full name",
+                "phone": "Phone number",
+                "email": "Email",
+                "address": "Home address",
+                "joined": "Member since"
+            },
+            "change": "Change",
+            "edit": "Edit",
+            "save": "Save",
+            "saved": "Saved successfully",
+            "nameNote": "To change your name, contact support, because it's linked to your verified ID."
+        },
+        "password": {
+            "title": "Password",
+            "current": "Current password",
+            "password": "New password",
+            "confirm": "Confirm password",
+            "forgot": "Forgot your password?",
+            "save": "Save password",
+            "saving": "Saving...",
+            "success": "Password changed successfully",
+            "currentRequired": "Enter your current password",
+            "sameAsCurrent": "The new password must differ from the current one",
+            "unavailable": "Changing the password isn't available from the server yet"
+        },
+        "verification": {
+            "verifiedTitle": "Your account is verified",
+            "verifiedDesc": "Approved on {{date}} . The verified badge appears next to your name",
+            "verifiedDescNoDate": "Your account verification was approved . The verified badge appears next to your name",
+            "pendingTitle": "Verification under review",
+            "pendingDesc": "The Sanaa team is reviewing your documents. You'll be notified once a decision is made.",
+            "steps": {
+                "submitted": "Documents sent",
+                "reviewing": "Under review",
+                "approved": "Approved"
+            },
+            "documentsTitle": "Documents",
+            "documents": {
+                "photo": {
+                    "title": "Personal photo",
+                    "visibility": "Visible to customers and institutions"
+                },
+                "id": {
+                    "title": "ID photo",
+                    "visibility": "Seen by the Sanaa team only"
+                }
+            },
+            "statusAccepted": "Accepted",
+            "statusReviewing": "Under review",
+            "statusMissing": "Not uploaded"
         }
     }
 }

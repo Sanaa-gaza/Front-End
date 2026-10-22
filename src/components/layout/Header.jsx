@@ -8,6 +8,9 @@ const NAV_ITEMS = [
     { key: "home", scroll: "home" },
     { key: "services", scroll: "services" },
     { key: "craftsmen", path: "/craftsmen" },
+    // ⚠️ ما في صفحات تعريفية للمقاول والمؤسسة لسا، فبتفتح صفحة إنشاء الحساب الخاصة بكل نوع
+    { key: "contractor", path: "/contractor-signup" },
+    { key: "institution", path: "/institution-signup" },
     { key: "about", path: "/about" },
     { key: "contact", path: "/contact" },
 ];
@@ -91,7 +94,7 @@ export default function Header() {
                     />
                 </button>
 
-                <nav className="hidden lg:flex items-center gap-9 text-[15px] font-medium text-[#22455E]">
+                <nav className="hidden lg:flex items-center gap-6 xl:gap-8 text-[15px] font-medium text-[#22455E]">
                     {NAV_ITEMS.map((item) => (
                         <button
                             key={item.key}
@@ -113,7 +116,7 @@ export default function Header() {
                         type="button"
                         onClick={toggleLang}
                         aria-label="Language"
-                        className="flex h-9 w-9 items-center justify-center rounded-full border border-[#2563EB] text-[11px] font-bold text-[#2563EB] cursor-pointer btn-wipe btn-wipe-outline"
+                        className="flex h-9 w-9 items-center justify-center rounded-full border border-[#4B9AD2] text-[11px] font-bold text-[#4B9AD2] cursor-pointer btn-wipe btn-wipe-outline"
                     >
                         {i18n.language === "ar" ? "EN" : "AR"}
                     </button>

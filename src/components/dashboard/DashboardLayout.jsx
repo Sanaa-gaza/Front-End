@@ -30,6 +30,9 @@ function TopbarAvatar({ path, name }) {
  *   searchTo     — لو موجود: أيقونة بحث بتفتح هالرابط بدل خانة البحث
  *   hideSearch   — إخفاء البحث نهائياً (صفحات تصميمها بدون بحث)
  *   hideSidebar  — إخفاء القائمة الجانبية (صفحات بعرض كامل زي الملف المهني)
+ *   hideLanguage — إخفاء زر تبديل اللغة (لوحات تصميمها بدونه)
+ *   topbarExtra  — عناصر إضافية بالشريط العلوي قبل الإشعارات (مثل "متاح للطلبات" عند الحرفي)
+ *   notificationTabs / notificationVariant — تبويبات قائمة الإشعارات وشكلها (شوفي NotificationsPanel)
  *   searchPlaceholder — نص خانة البحث البسيطة
  *   loginPath    — صفحة الدخول بعد الخروج أو انتهاء الجلسة (الأدمن له صفحة خاصة)
  *   showAdd      — زر "+" (افتراضياً ظاهر)
@@ -44,6 +47,10 @@ export default function DashboardLayout({
     searchTo,
     hideSearch = false,
     hideSidebar = false,
+    hideLanguage = false,
+    topbarExtra = null,
+    notificationTabs,
+    notificationVariant,
     searchPlaceholder,
     loginPath = "/login",
     showAdd = true,
@@ -263,16 +270,24 @@ export default function DashboardLayout({
                                     <Plus size={17} />
                                 </button>
                             ))}
-                        <button
-                            type="button"
-                            onClick={() => i18n.changeLanguage(isRtl ? "en" : "ar")}
-                            aria-label={t("language")}
-                            title={t("language")}
-                            className="flex h-9 w-9 items-center justify-center rounded-full border border-[#C7E0F1] text-[12px] font-medium text-[#4B9AD2] cursor-pointer btn-wipe btn-wipe-outline"
-                        >
-                            {isRtl ? "EN" : "AR"}
-                        </button>
-                        <NotificationsPanel notifications={notifications} onRead={onReadNotifications} />
+                        {topbarExtra}
+                        {!hideLanguage && (
+                            <button
+                                type="button"
+                                onClick={() => i18n.changeLanguage(isRtl ? "en" : "ar")}
+                                aria-label={t("language")}
+                                title={t("language")}
+                                className="flex h-9 w-9 items-center justify-center rounded-full border border-[#C7E0F1] text-[12px] font-medium text-[#4B9AD2] cursor-pointer btn-wipe btn-wipe-outline"
+                            >
+                                {isRtl ? "EN" : "AR"}
+                            </button>
+                        )}
+                        <NotificationsPanel
+                            notifications={notifications}
+                            onRead={onReadNotifications}
+                            tabs={notificationTabs}
+                            variant={notificationVariant}
+                        />
                     </div>
                 </header>
 

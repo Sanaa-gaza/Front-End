@@ -4,7 +4,9 @@
         "services": "Services",
         "craftsmen": "Craftsmen",
         "about": "About Sanaa",
-        "contact": "Contact Us"
+        "contact": "Contact Us",
+        "contractor": "Contractor",
+        "institution": "Institution"
     },
     "login": "Login",
     "createAccount": "Create Account",

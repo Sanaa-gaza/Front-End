@@ -3,9 +3,8 @@ import { Link, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Check, ImageIcon, X } from "lucide-react";
 import { getStoredUser } from "../../../api/session";
-import { REQUESTS, REQUEST_STATUS_STYLES } from "./requestsData";
-import { USERS } from "./usersData";
-import AssignModal from "./AssignModal";
+import { AssignModal, REQUESTS, REQUEST_STATUS_STYLES } from "./AdminRequests";
+import { USERS } from "./AdminUsers";
 
 const BASE = "/dashboard/admin";
 

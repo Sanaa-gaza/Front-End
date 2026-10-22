@@ -2,8 +2,7 @@ import React, { useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Ban, Briefcase, CircleCheck, Clock, FileText, MessageSquare, Star } from "lucide-react";
-import { STATUS_STYLES, VERIFICATION_STYLES, findUser } from "./usersData";
-import SuspendModal from "./SuspendModal";
+import { STATUS_STYLES, SuspendModal, VERIFICATION_STYLES, findUser } from "./AdminUsers";
 
 const BASE = "/dashboard/admin";
 

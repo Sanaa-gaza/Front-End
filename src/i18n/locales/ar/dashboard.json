@@ -24,8 +24,11 @@
             "unread": "غير مقروءة",
             "tenders": "المناقصات",
             "messages": "الرسائل",
-            "system": "النظام"
-        }
+            "system": "النظام",
+            "requests": "الطلبات",
+            "finance": "المالية"
+        },
+        "markAllShort": "تعيين الكل كمقروء"
     },
     "datePicker": {
         "week": "بعد أسبوع",

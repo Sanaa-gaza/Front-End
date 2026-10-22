@@ -4,7 +4,9 @@
         "services": "الخدمات",
         "craftsmen": "الحرفيين",
         "about": "عن صنعة",
-        "contact": "تواصل معنا"
+        "contact": "تواصل معنا",
+        "contractor": "المقاول",
+        "institution": "المؤسسة"
     },
     "login": "تسجيل الدخول",
     "createAccount": "إنشاء حساب",

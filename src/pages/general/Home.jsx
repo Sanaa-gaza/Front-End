@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { ChevronDown, LayoutGrid, Search } from "lucide-react";
 import Header from "../../components/layout/Header";
 import Footer from "../../components/layout/Footer";
 import { getFeaturedCraftsmen } from "../../api/endpoints";
@@ -225,25 +226,28 @@ function HeroSection() {
             id="home"
             className="relative overflow-hidden bg-linear-to-br from-[#E4EFFA] via-[#F2F8FD] to-white"
         >
-            <div className="relative mx-auto flex min-h-[640px] max-w-[1440px] flex-col justify-start px-5 pb-28 pt-36 sm:pt-40 lg:pt-44 sm:px-10 lg:min-h-[100svh] lg:px-[6%] lg:pb-40">
-                <div className="relative z-30 max-w-[760px]">
-                    <h1 className="text-[32px] font-bold leading-[1.4] text-[#38749E] sm:text-[40px] xl:text-[42px]">
+            {/* نفس حدود الهيدر (px-4 / sm:px-10 / lg:px-[6%] + max-w-[1320px]) عشان الكلام والصورة يكونوا على مستواه */}
+            <div className="relative flex min-h-[640px] flex-col px-4 pt-40 sm:px-10 sm:pt-48 lg:min-h-[100svh] lg:px-[6%] lg:pt-32">
+                {/* بالشاشات الكبيرة: الكلام والصورة بصف واحد بأسفل القسم، والكلام بالنص عمودياً على مستوى الصورة */}
+                <div className="relative mx-auto flex w-full max-w-[1320px] flex-1 flex-col lg:mt-auto lg:flex-none lg:flex-row lg:items-center lg:justify-between">
+                <div className="relative z-30 max-w-[760px] px-1 pb-28 sm:px-8 lg:mb-20 lg:w-[660px] lg:shrink-0 lg:px-0 lg:pb-0">
+                    <h1 className="text-[32px] font-bold leading-[1.4] text-[#38749E] sm:text-[40px]">
                         {t("hero.title")}
                     </h1>
 
-                    <p className="mt-3 max-w-[560px] text-[16px] leading-[1.9] text-[#575757] sm:text-[19px]">
+                    <p className="mt-4 max-w-[570px] text-[17px] leading-[2.1] text-[#575757] sm:text-[22px]">
                         {t("hero.desc")}
                     </p>
 
-                    <div className="mt-5 flex flex-wrap items-center gap-x-6 gap-y-2 text-[12px] text-[#575757]">
-                        <div className="flex items-center gap-2">
+                    <div className="mt-6 flex flex-wrap items-center gap-x-5 gap-y-2 text-[14px] text-[#575757]">
+                        <div className="flex items-center gap-2.5">
                             <div className="flex -space-x-2 rtl:space-x-reverse">
                                 {AVATARS.map((src, i) => (
                                     <img
                                         key={i}
                                         src={src}
                                         alt=""
-                                        className="h-6 w-6 rounded-full border border-white object-cover"
+                                        className="h-8 w-8 rounded-full border-2 border-white object-cover"
                                     />
                                 ))}
                             </div>
@@ -254,7 +258,7 @@ function HeroSection() {
                         </div>
 
                         <div className="flex items-center gap-1.5">
-                            <i className="fa-solid fa-star text-[11px] text-[#F6C343]"></i>
+                            <i className="fa-solid fa-star text-[14px] text-[#F6C343]"></i>
                             <span>
                                 <bdi dir="ltr" className="inline-block font-medium">{t("hero.rating")}</bdi>{" "}
                                 {t("hero.ratingLabel")}
@@ -271,25 +275,25 @@ function HeroSection() {
                             const qs = params.toString();
                             navigate(qs ? `/craftsmen?${qs}` : "/craftsmen");
                         }}
-                        className="mt-9 flex w-full max-w-[600px] flex-wrap items-center gap-2.5 rounded-2xl bg-white p-3 shadow-[0_10px_35px_rgba(43,91,120,0.12)] sm:flex-nowrap"
+                        className="mt-10 flex w-full max-w-[610px] flex-wrap items-center gap-3 rounded-[28px] border border-white/70 bg-white/80 px-5 py-4 shadow-[0_12px_32px_rgba(43,91,120,0.12)] backdrop-blur sm:flex-nowrap"
                     >
                         <div className="relative min-w-0 flex-1 basis-full sm:basis-auto">
-                            <i className="fa-solid fa-magnifying-glass pointer-events-none absolute start-4 top-1/2 -translate-y-1/2 text-[13px] text-[#4B9AD2]"></i>
+                            <Search size={16} strokeWidth={2} className="pointer-events-none absolute start-4 top-1/2 -translate-y-1/2 text-[#38749E]" />
                             <input
                                 type="text"
                                 value={query}
                                 onChange={(e) => setQuery(e.target.value)}
                                 placeholder={t("hero.searchPlaceholder")}
-                                className="h-11 w-full rounded-full border border-[#4B9AD2]/40 bg-white ps-10 pe-4 text-[13px] text-[#141415] outline-none placeholder:text-[#89949D] focus:border-[#4B9AD2]"
+                                className="h-[42px] w-full rounded-xl border border-[#4B9AD2] bg-white pe-4 ps-10 text-[13px] text-[#141415] outline-none placeholder:text-[#575757] focus:ring-1 focus:ring-[#4B9AD2]"
                             />
                         </div>
 
-                        <div className="relative w-[46%] shrink-0 sm:w-[170px]">
-                            <i className="fa-solid fa-table-cells-large pointer-events-none absolute start-4 top-1/2 -translate-y-1/2 text-[13px] text-[#4B9AD2]"></i>
+                        <div className="relative w-[46%] shrink-0 sm:w-[207px]">
+                            <LayoutGrid size={16} strokeWidth={1.7} className="pointer-events-none absolute start-4 top-1/2 -translate-y-1/2 text-[#4B9AD2]" />
                             <select
                                 value={service}
                                 onChange={(e) => setService(e.target.value)}
-                                className={`h-11 w-full cursor-pointer appearance-none rounded-full border border-[#4B9AD2]/40 bg-white ps-10 pe-8 text-[13px] outline-none focus:border-[#4B9AD2] ${service ? "text-[#141415]" : "text-[#89949D]"
+                                className={`h-[42px] w-full cursor-pointer appearance-none rounded-xl border border-[#4B9AD2] bg-white pe-10 ps-10 text-[13px] outline-none focus:ring-1 focus:ring-[#4B9AD2] ${service ? "text-[#141415]" : "text-[#575757]"
                                     }`}
                             >
                                 <option value="">{t("hero.serviceType")}</option>
@@ -299,12 +303,12 @@ function HeroSection() {
                                     </option>
                                 ))}
                             </select>
-                            <i className="fa-solid fa-chevron-down pointer-events-none absolute end-3 top-1/2 -translate-y-1/2 text-[10px] text-[#89949D]"></i>
+                            <ChevronDown size={17} strokeWidth={2} className="pointer-events-none absolute end-3.5 top-1/2 -translate-y-1/2 text-[#38749E]" />
                         </div>
 
                         <button
                             type="submit"
-                            className="h-11 flex-1 shrink-0 rounded-xl bg-[#4B9AD2] px-7 text-[14px] font-semibold text-white cursor-pointer sm:flex-none btn-wipe"
+                            className="h-[42px] flex-1 shrink-0 rounded-xl bg-[#4B9AD2] text-[16px] font-semibold text-white shadow-[0_4px_10px_rgba(75,154,210,0.25)] cursor-pointer sm:w-[132px] sm:flex-none btn-wipe"
                         >
                             {t("hero.search")}
                         </button>
@@ -314,18 +318,23 @@ function HeroSection() {
                 <img
                     src="/images/الهيرو.svg"
                     alt=""
-                    className="pointer-events-none relative z-10 mt-10 w-full select-none lg:absolute lg:bottom-0 lg:end-0 lg:mt-0 lg:w-[54%] lg:max-w-[820px]"
+                    // الصورة فيها فراغ شفاف ~15% على كل جنب، فبنزيحها لبرا بـ 10% عشان الأشخاص نفسهم يكونوا على حافة الهيدر
+                    // ونازلة لأسفل القسم (self-end) عشان الموجة البيضاء (z-20) تغطي حافتها السفلية وتاخد شكل المنحنى
+                    // وبتاخد المساحة الباقية جنب الكلام (ومعها شوي من الفراغ الشفاف تحت الكلام بـ -ms)
+                    className="pointer-events-none relative z-10 -mt-16 w-full select-none lg:-me-[10%] lg:-ms-[9%] lg:mt-0 lg:w-auto lg:min-w-0 lg:max-w-[940px] lg:flex-1 lg:self-end"
                 />
+                </div>
             </div>
 
             <svg
-                viewBox="0 0 1440 120"
+                viewBox="0 0 1440 100"
                 preserveAspectRatio="none"
                 aria-hidden="true"
-                className="pointer-events-none absolute inset-x-0 bottom-[-1px] z-20 ltr:-scale-x-100 h-[80px] w-full sm:h-[120px]"
+                className="pointer-events-none absolute inset-x-0 bottom-[-1px] z-20 ltr:-scale-x-100 h-[70px] w-full sm:h-[100px]"
             >
                 <path
-                    d="M0,96 C220,100 520,92 760,68 C940,48 1040,14 1160,14 C1300,14 1380,32 1440,46 L1440,120 L0,120 Z"
+                    // نفس منحنى فيجما: بينزل من الطرف لأدنى نقطة تحت الصورة، وبيطلع لقمة تحت صندوق البحث، وبينزل شوي للطرف الثاني
+                    d="M0,39 C200,70 400,95 578,95 C780,95 950,10 1157,10 C1290,10 1380,28 1440,39 L1440,100 L0,100 Z"
                     fill="#ffffff"
                 />
             </svg>
