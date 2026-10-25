@@ -9,6 +9,7 @@ import About from "./pages/general/About";
 import Contact from "./pages/general/Contact";
 import Craftsmen from "./pages/general/Craftsmen";
 import CraftsmanProfile from "./pages/general/CraftsmanProfile";
+import Chats from "./pages/general/Chats";
 import Dashboard from "./pages/dashboard/Dashboard";
 import InstitutionDashboard from "./pages/dashboard/institution/InstitutionDashboard";
 import CraftsmanDashboard from "./pages/dashboard/craftsman/CraftsmanDashboard";
@@ -45,6 +46,7 @@ export default function App() {
         <Route path="/contact" element={<Contact />} />
         <Route path="/craftsmen" element={<Craftsmen />} />
         <Route path="/craftsmen/:craftsmanKey" element={<CraftsmanProfile />} />
+        <Route path="/chats" element={<Chats />} />
         <Route path="/get-started" element={<RoleSelection />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/dashboard/institution/*" element={<InstitutionDashboard />} />

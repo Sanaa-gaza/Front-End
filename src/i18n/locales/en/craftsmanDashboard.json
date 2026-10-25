@@ -118,7 +118,7 @@
         "notSaved": "Saving work photos to your account is not available on the server yet."
     },
     "searchPage": {
-        "search": "Search",
+        "search": "Search for a tender",
         "location": "Location",
         "serviceType": "Service type",
         "searchButton": "Search",
@@ -130,45 +130,56 @@
         "valueAmount": "{{amount}} ILS",
         "delivery": "Delivery time",
         "place": "Location",
-        "details": "Details",
+        "details": "View details",
         "empty": "No matching results",
         "sample": {
             "s1": {
-                "title": "Inspect and fix an underground water leak and replace an Italian float valve",
-                "company": "Golden Paint Co.",
-                "desc": "The customer asked for a full inspection of the line. The main valve was replaced; the outer cover still needs installing, followed by a full sewage line treatment.",
+                "title": "Bathroom plumbing maintenance - Rimal School",
+                "company": "Al-Noor Foundation",
+                "desc": "Full maintenance of the school's bathroom plumbing and replacing damaged mixers and valves.",
                 "delivery": "Today 6:00 PM",
-                "place": "Gaza - Sheikh Radwan"
+                "place": "Gaza, Rimal"
             },
             "s2": {
-                "title": "Install a solar water heater and new pipes",
+                "title": "Solar heaters installation - Al-Irada Center",
                 "company": "Al-Irada Charity",
-                "desc": "Install a solar heater on the roof and run hot water pipes to the bathrooms and kitchen.",
+                "desc": "Installing solar heaters on the center's roof with hot-water pipe extensions.",
                 "delivery": "Tomorrow 10:00 AM",
                 "place": "Nuseirat"
             },
             "s3": {
-                "title": "Main electrical panel maintenance",
-                "company": "Al-Noor Society",
-                "desc": "Inspect the main panel, replace damaged breakers and tidy the wiring inside the panel.",
+                "title": "Electrical panels maintenance - Association building",
+                "company": "Al-Noor Association",
+                "desc": "Inspecting main electrical panels, replacing faulty breakers and organizing wiring.",
                 "delivery": "Sunday 2:00 PM",
-                "place": "Khan Yunis"
+                "place": "Khan Younis"
             },
             "s4": {
-                "title": "Paint a residential building facade",
-                "company": "Colors Co.",
-                "desc": "Paint the front facade of a three-storey building after treating the cracks.",
+                "title": "Painting an administrative building's facades",
+                "company": "Al-Alwan Development",
+                "desc": "Painting the exterior facades of a three-storey building with crack treatment.",
                 "delivery": "Thursday 9:00 AM",
-                "place": "Deir Al-Balah"
+                "place": "Deir al-Balah"
             },
             "s5": {
-                "title": "Install wooden doors for a school",
+                "title": "Wooden doors installation - Al-Amal School",
                 "company": "Al-Amal School",
-                "desc": "Make and install 12 wooden classroom doors with locks and handles.",
+                "desc": "Making and installing 12 wooden classroom doors with locks and handles.",
                 "delivery": "Saturday 8:00 AM",
                 "place": "Rafah"
             }
-        }
+        },
+        "filters": "Filters",
+        "orgType": "Institution",
+        "budget": "Budget",
+        "budgetRange": "{{min}} - {{max}}",
+        "closeDate": "Closing date",
+        "craft": "Craft",
+        "rating": "Rating",
+        "ratingFrom": "{{n}} and above",
+        "topRated": "Top rated",
+        "lastDate": "Deadline",
+        "removeFilter": "Remove filter {{name}}"
     },
     "requestsPage": {
         "tabs": {
@@ -382,6 +393,16 @@
                     "noteArgs": {}
                 }
             }
+        },
+        "detailsPage": {
+            "accept": "Accept request",
+            "agreeNote": "Accepting the request means you agree to this amount",
+            "timeValue": "Today · {{time}}",
+            "statuses": {
+                "accepted": "Accepted",
+                "rejected": "Rejected",
+                "offered": "Different-price offer sent"
+            }
         }
     },
     "currentPage": {
@@ -467,6 +488,310 @@
                 "delivery": "6 September 2026",
                 "service": "Solar energy",
                 "notes": "The customer cancelled because parts were unavailable."
+            }
+        },
+        "search": "Search for a request",
+        "filters": {
+            "all": "All",
+            "customer": "Customer",
+            "institution": "Institution",
+            "cancelled": "Cancelled"
+        },
+        "statuses": {
+            "accepted": "Accepted",
+            "awaitingPayment": "Awaiting payment",
+            "awaitingConfirm": "Awaiting customer confirmation",
+            "cancelled": "Cancelled",
+            "scheduled": "Confirmed"
+        },
+        "bars": {
+            "accepted": "When finished, tap _ Task completed _",
+            "awaitingPayment": "Waiting for the customer's payment",
+            "awaitingConfirm": "Waiting for the customer to confirm the service is complete",
+            "cancelled": "This request was cancelled",
+            "scheduled": "Amount held · waiting for the start date"
+        },
+        "doneMsg": "{{name}} was notified that the task is done; waiting for their confirmation.",
+        "works": {
+            "w1": {
+                "title": "Replace sink mixer and check water pressure",
+                "owner": "Mohammad Hamdouna",
+                "place": "Beit Lahia"
+            },
+            "w2": {
+                "title": "Water leak inspection",
+                "owner": "Saeed Hamdan",
+                "place": "Jabalia"
+            },
+            "w3": {
+                "title": "Leak under the sink",
+                "owner": "Suad Tawfiq",
+                "place": "Beit Lahia"
+            },
+            "w4": {
+                "title": "Bathroom plumbing maintenance - Rimal School",
+                "owner": "Al-Noor Development Foundation",
+                "place": "Gaza, Rimal"
+            },
+            "w5": {
+                "title": "Solar heaters installation - Al-Irada Center",
+                "owner": "Al-Irada Charity",
+                "place": "Nuseirat"
+            },
+            "w6": {
+                "title": "Outdoor lighting installation",
+                "owner": "Ahmad Nasser",
+                "place": "Rafah"
+            },
+            "w7": {
+                "title": "Restroom renovation - Al-Amal School",
+                "owner": "Al-Noor Development Foundation",
+                "place": "Deir al-Balah"
+            }
+        },
+        "acceptedToast": "Request accepted, waiting for the customer's payment",
+        "details": {
+            "title": "Request details",
+            "notFound": "This request was not found",
+            "notes": {
+                "awaitingPayment": "If the appointment arrives without payment, the request is cancelled automatically",
+                "awaitingConfirm": "The amount will be transferred to your wallet after the customer confirms",
+                "accepted": "Go to the appointment, and when finished tap \"Work completed\"",
+                "scheduled": "Execution starts automatically on {{date}}"
+            },
+            "amount": "{{amount}} ILS",
+            "since": "Customer since {{year}}",
+            "desc": "The kitchen mixer is leaking from below, and the water pressure has been weak in the whole house for a week. I need the mixer replaced and the tank and pipes checked.",
+            "time": "Requested time",
+            "timeValue": "Today · 4:00 – 6:00 PM",
+            "distance": "Distance",
+            "distanceValue": "{{km}} km",
+            "budget": "Expected budget",
+            "budgetValue": "{{min}} – {{max}} ILS",
+            "map": "Request location on the map",
+            "address": "{{place}} - Town · exact address",
+            "chatPlaceholder": "Write a message",
+            "attach": "Attach a photo",
+            "send": "Send",
+            "messages": [
+                {
+                    "from": "them",
+                    "text": "Hi, the building is next to Al-Huda mosque, second floor"
+                },
+                {
+                    "from": "me",
+                    "text": "OK. Is the mixer wall-mounted or on the sink?"
+                },
+                {
+                    "from": "system",
+                    "text": "The customer paid the required amount; it is held by Sanaa until the service is complete"
+                },
+                {
+                    "from": "them",
+                    "text": "On the wall"
+                },
+                {
+                    "from": "me",
+                    "text": "I'm heading out now and will be there on time"
+                }
+            ],
+            "headings": {
+                "accepted": "Confirmed — the amount is held until the service is complete",
+                "awaitingPayment": "Waiting for the customer's payment",
+                "awaitingConfirm": "Waiting for the customer to confirm the service is complete",
+                "scheduled": "Confirmed — the amount is held until the service is complete"
+            },
+            "done": "Work completed",
+            "doneModal": {
+                "title": "Announce work completion",
+                "photos": "Delivery photos",
+                "optional": "(optional - recommended)",
+                "add": "Add photo",
+                "remove": "Remove photo",
+                "confirm": "Confirm work completion",
+                "close": "Close",
+                "noticeOrg": "The institution will be notified to review the work and confirm delivery.",
+                "noticeCustomer": "The customer will be notified to review the work and confirm receipt.",
+                "summary": "Summary of the work done",
+                "summaryPlaceholder": "e.g. Replaced the water network on all three floors and checked the pressure in all bathrooms.",
+                "chars": "{{count}} characters",
+                "required": "Write a summary of the work done",
+                "photosCount": "{{count}} of {{max}} photos",
+                "attached": "Attached",
+                "another": "Another photo",
+                "logTitle": "Work completion announced"
+            },
+            "project": {
+                "title": "Project details",
+                "headings": {
+                    "awaitingPayment": "Waiting for the institution's payment",
+                    "accepted": "Confirmed — the amount is held until the project is complete",
+                    "awaitingConfirm": "Waiting for the institution to confirm delivery",
+                    "scheduled": "Confirmed — the amount is held until the service is complete"
+                },
+                "notes": {
+                    "awaitingPayment": "Execution doesn't start until the amount is held, even if the start date arrives",
+                    "accepted": "Start on schedule, and when finished tap \"Work completed\"",
+                    "awaitingConfirm": "The amount will be transferred to your wallet after the institution confirms",
+                    "scheduled": "Execution starts automatically on {{date}}"
+                },
+                "steps": {
+                    "awarded": "Awarded",
+                    "payment": "Payment",
+                    "execution": "Execution",
+                    "delivery": "Delivery",
+                    "completed": "Completed",
+                    "customerPayment": "Customer payment"
+                },
+                "tabs": {
+                    "details": "Details",
+                    "log": "Execution log",
+                    "chat": "Chat"
+                },
+                "since": "Institution since {{year}}",
+                "tender": "Tender {{number}}",
+                "desc": "Replace 12 damaged faucets and fix sink leaks in the ground-floor bathrooms (6 bathrooms); materials on the craftsman per the attached specifications.",
+                "days": "{{count}} days",
+                "rows": {
+                    "value": "Award value",
+                    "duration": "Duration",
+                    "start": "Start",
+                    "end": "Expected delivery"
+                },
+                "held": "Held for you by Sanaa",
+                "countdown": {
+                    "title": "Execution starts in",
+                    "days": "days",
+                    "hours": "hours",
+                    "minutes": "minutes",
+                    "note": "No need to press anything; the status changes to \"In progress\" on time. Prepare the materials and coordinate access with the institution.",
+                    "weekdays": [
+                        "Sun",
+                        "Mon",
+                        "Tue",
+                        "Wed",
+                        "Thu",
+                        "Fri",
+                        "Sat"
+                    ]
+                },
+                "inProgress": {
+                    "title": "In progress",
+                    "delivery": "Expected delivery {{date}}",
+                    "day": "Day {{n}} of {{total}}"
+                },
+                "update": {
+                    "button": "Add update",
+                    "title": "Add update",
+                    "subtitle": "The update appears to the institution in the execution log right away.",
+                    "placeholder": "e.g. Replaced the main pipes on the first floor; the second floor tomorrow.",
+                    "required": "This field is required",
+                    "photosCount": "{{count}} of {{max}} uploaded",
+                    "submit": "Publish update",
+                    "titleLabel": "Update title",
+                    "titleHint": "Short summary",
+                    "titlePlaceholder": "e.g. 60% of the work done",
+                    "details": "Details",
+                    "detailsHint": "Describe exactly what was done",
+                    "photos": "Photos (optional)",
+                    "attached": "Attached",
+                    "addPhoto": "Add photo",
+                    "anotherPhoto": "Another photo"
+                },
+                "authors": {
+                    "me": "You",
+                    "system": "Sanaa"
+                },
+                "now": "Now",
+                "logEmpty": "No updates yet",
+                "logs": {
+                    "awaitingPayment": [
+                        {
+                            "author": "system",
+                            "title": "Payment hold requested",
+                            "text": "A payment hold request was sent to the institution; execution starts after the hold.",
+                            "time": "Oct 11"
+                        },
+                        {
+                            "author": "system",
+                            "title": "Awarded",
+                            "text": "The tender was awarded to your offer.",
+                            "time": "Oct 10"
+                        }
+                    ],
+                    "scheduled": [
+                        {
+                            "author": "system",
+                            "title": "Amount held",
+                            "text": "The institution held the amount with Sanaa; execution starts automatically on schedule.",
+                            "time": "Yesterday · 4:30 PM"
+                        },
+                        {
+                            "author": "system",
+                            "title": "Awarded",
+                            "text": "The tender was awarded to your offer.",
+                            "time": "Oct 10"
+                        }
+                    ],
+                    "accepted": [
+                        {
+                            "author": "me",
+                            "title": "Replaced 7 faucets",
+                            "text": "Replaced 7 faucets in the students' bathrooms; the rest tomorrow morning.",
+                            "time": "Now",
+                            "photos": 3
+                        },
+                        {
+                            "author": "org",
+                            "title": "Note",
+                            "text": "Please work after 12 PM because of school hours.",
+                            "time": "Yesterday · 2:05 PM"
+                        },
+                        {
+                            "author": "me",
+                            "title": "Bought faucets and fittings",
+                            "text": "Bought 12 faucets and their fittings per the attached specifications.",
+                            "time": "Sat Oct 17",
+                            "photos": 3
+                        },
+                        {
+                            "author": "system",
+                            "title": "Execution started",
+                            "text": "Execution started automatically after the amount was held. Duration 7 days.",
+                            "time": "Sat Oct 17"
+                        }
+                    ]
+                },
+                "customerLogs": {
+                    "accepted": [
+                        {
+                            "author": "system",
+                            "title": "Paid",
+                            "text": "The customer paid; the amount is held by Sanaa until the service is complete.",
+                            "time": "Today 9:20 AM"
+                        },
+                        {
+                            "author": "system",
+                            "title": "Request accepted",
+                            "text": "You accepted the customer's request.",
+                            "time": "Today 9:10 AM"
+                        }
+                    ],
+                    "awaitingPayment": [
+                        {
+                            "author": "system",
+                            "title": "Payment requested",
+                            "text": "A payment request was sent to the customer.",
+                            "time": "Today 9:12 AM"
+                        },
+                        {
+                            "author": "system",
+                            "title": "Request accepted",
+                            "text": "You accepted the customer's request.",
+                            "time": "Today 9:10 AM"
+                        }
+                    ]
+                }
             }
         }
     },

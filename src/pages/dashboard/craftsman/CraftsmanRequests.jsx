@@ -1,27 +1,44 @@
 import React, { useEffect, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { CalendarDays, ChevronLeft, CircleCheck, Clock, ImagePlus, LockKeyhole, MapPin, X } from "lucide-react";
+import { CalendarDays, Check, ChevronLeft, CircleCheck, Clock, ImageIcon, LockKeyhole, MapPin, X } from "lucide-react";
 
 // ===== بيانات تجريبية =====
 // الطلبات الحقيقية موجودة بالسيرفر (GET /service-requests + accept/reject/complete بـ src/api/endpoints.js)،
 // بس ما فيها "القيمة المعلن عنها" ولا "الموقع الجغرافي". لما يضيفهم الباك إند، استبدلي REQUESTS بالطلب الحقيقي.
 // status: pending (بانتظار الرد) | accepted | rejected | offered (عرض بسعر آخر — بيظهر بتبويب "عروضي")
-// urgent: مهلة الرد قربت تخلص (الشريط أصفر)
+// urgent: مهلة الرد قربت تخلص (الشريط أصفر) — budget: الميزانية المتوقعة [أقل، أعلى] بالشيكل
 const REQUESTS = [
-    { id: "q1", number: "M2026-001", status: "pending", urgent: true, value: 70, distance: 2 },
-    { id: "q2", number: "M2026-002", status: "pending", urgent: false, value: 70, distance: 2 },
-    { id: "q3", number: "M2026-003", status: "accepted", value: 300, distance: 4.1 },
-    { id: "q4", number: "M2026-004", status: "rejected", value: 450, distance: 9.5, reason: "far" },
-    { id: "q5", number: "M2026-005", status: "offered", value: 180, distance: 3.2, offer: { price: 220, duration: "يومين" } },
+    { id: "q1", number: "M2026-001", status: "pending", urgent: true, value: 70, distance: 1.2, budget: [50, 80] },
+    { id: "q2", number: "M2026-002", status: "pending", urgent: false, value: 70, distance: 2, budget: [50, 80] },
+    { id: "q3", number: "M2026-003", status: "accepted", value: 300, distance: 4.1, budget: [250, 350] },
+    { id: "q4", number: "M2026-004", status: "rejected", value: 450, distance: 9.5, reason: "far", budget: [400, 500] },
+    { id: "q5", number: "M2026-005", status: "offered", value: 180, distance: 3.2, offer: { price: 220, duration: "يومين" }, budget: [150, 220] },
 ];
+const PHOTOS = 4;
+const BASE = "/dashboard/craftsman";
+
+/** بيانات الطلب المقبول اللي بتنبعت للأعمال الجارية (بتظهر بأول القائمة "بانتظار الدفع") */
+function acceptedState(t, request) {
+    const s = `requestsPage.sample.${request.id}`;
+    return {
+        accepted: {
+            id: request.id,
+            title: t(`${s}.title`),
+            owner: t(`${s}.customer`),
+            // المنطقة بس (قبل اسم الشارع)
+            place: t(`${s}.place`).split(" . ")[0],
+            desc: t(`${s}.desc`),
+            amount: request.value,
+            distance: request.distance,
+            budget: request.budget,
+        },
+    };
+}
 
 const REJECT_REASONS = ["price", "far", "unavailable", "outOfScope"];
-const START_OPTIONS = ["today", "tomorrow", "week"];
 
 const card = "rounded-[20px] border border-[#0000000D] bg-white shadow-[0_4px_24px_rgba(35,74,100,0.08)]";
-const input =
-    "h-11 w-full rounded-xl border border-[#8EC0E4] bg-white px-4 text-[13px] text-[#414141] outline-none placeholder:text-[#89949D] focus:border-[#4B9AD2] focus:ring-1 focus:ring-[#4B9AD2]";
 const textarea =
     "w-full resize-none rounded-xl border border-[#8EC0E4] bg-white px-4 py-3 text-[13px] text-[#414141] outline-none placeholder:text-[#89949D] focus:border-[#4B9AD2] focus:ring-1 focus:ring-[#4B9AD2]";
 
@@ -39,71 +56,6 @@ function ChoiceButton({ active, onClick, children }) {
         >
             {children}
         </button>
-    );
-}
-
-/** منطقة رفع المرفقات (سحب وإفلات أو ضغط) مع قائمة الملفات المختارة */
-function FileDrop({ id, files, onChange }) {
-    const { t } = useTranslation("craftsmanDashboard");
-    const [dragging, setDragging] = useState(false);
-
-    const addFiles = (list) => {
-        const picked = Array.from(list || []);
-        if (picked.length) onChange((f) => [...f, ...picked]);
-    };
-
-    return (
-        <>
-            <label
-                htmlFor={id}
-                onDragOver={(e) => {
-                    e.preventDefault();
-                    setDragging(true);
-                }}
-                onDragLeave={() => setDragging(false)}
-                onDrop={(e) => {
-                    e.preventDefault();
-                    setDragging(false);
-                    addFiles(e.dataTransfer.files);
-                }}
-                className={`flex cursor-pointer flex-col items-center justify-center gap-1.5 rounded-xl border-2 border-dashed px-4 py-5 text-center text-[11px] text-[#4B9AD2] transition-colors ${dragging ? "border-[#4B9AD2] bg-[#EAF3FB]" : "border-[#8EC0E4]"
-                    }`}
-            >
-                <ImagePlus size={18} />
-                {t("requestsPage.followModal.dropHint")}
-            </label>
-            <input
-                id={id}
-                type="file"
-                multiple
-                accept="image/jpeg,image/png,application/pdf"
-                className="hidden"
-                onChange={(e) => {
-                    addFiles(e.target.files);
-                    e.target.value = "";
-                }}
-            />
-            {files.length > 0 && (
-                <ul className="mt-3 flex flex-wrap gap-2">
-                    {files.map((f, i) => (
-                        <li
-                            key={`${f.name}-${i}`}
-                            className="flex items-center gap-1.5 rounded-full bg-[#EAF3FB] py-1 pe-1.5 ps-3 text-[11px] text-[#38749E]"
-                        >
-                            <span className="max-w-[160px] truncate" dir="ltr">{f.name}</span>
-                            <button
-                                type="button"
-                                onClick={() => onChange((list) => list.filter((_, j) => j !== i))}
-                                aria-label={t("requestsPage.followModal.removeFile", { name: f.name })}
-                                className="flex h-5 w-5 cursor-pointer items-center justify-center rounded-full hover:bg-white"
-                            >
-                                <X size={12} />
-                            </button>
-                        </li>
-                    ))}
-                </ul>
-            )}
-        </>
     );
 }
 
@@ -240,228 +192,6 @@ function RejectModal({ request, onClose, onConfirm }) {
     );
 }
 
-/** نافذة "تقديم عرض": القيمة + المدة + موعد البدء + ملاحظات + مرفقات */
-function OfferModal({ request, onClose, onConfirm }) {
-    const { t } = useTranslation("craftsmanDashboard");
-    const s = `requestsPage.sample.${request.id}`;
-    const [price, setPrice] = useState("");
-    const [duration, setDuration] = useState("");
-    const [start, setStart] = useState("");
-    const [notes, setNotes] = useState("");
-    const [files, setFiles] = useState([]);
-    const [errors, setErrors] = useState({});
-
-    const submit = () => {
-        const next = {};
-        if (!(Number(price) > 0)) next.price = t("requestsPage.offerModal.priceRequired");
-        if (!(Number(duration) > 0)) next.duration = t("requestsPage.offerModal.durationRequired");
-        if (!start) next.start = t("requestsPage.offerModal.startRequired");
-        setErrors(next);
-        if (Object.keys(next).length) return;
-        onConfirm({
-            price: Number(price),
-            duration: t("requestsPage.offerModal.days", { count: Number(duration) }),
-            start,
-            notes: notes.trim(),
-            files: files.map((f) => f.name),
-        });
-    };
-
-    const clearError = (key) => setErrors((e) => ({ ...e, [key]: "" }));
-
-    return (
-        <RequestModal
-            id="offer-title"
-            title={t("requestsPage.offerModal.title")}
-            request={request}
-            subtitle={t("requestsPage.offerModal.summary", {
-                customer: t(`${s}.customer`),
-                value: request.value.toLocaleString("en-US"),
-            })}
-            confirmLabel={t("requestsPage.offerModal.confirm")}
-            onClose={onClose}
-            onSubmit={submit}
-        >
-            <div className="mt-5 grid grid-cols-2 gap-4">
-                <div>
-                    <label htmlFor="offer-price" className="mb-1.5 block text-[12px] text-[#575757]">
-                        {t("requestsPage.offerModal.price")}
-                    </label>
-                    <input
-                        id="offer-price"
-                        type="number"
-                        min="1"
-                        inputMode="decimal"
-                        placeholder="0"
-                        value={price}
-                        onChange={(e) => {
-                            setPrice(e.target.value);
-                            clearError("price");
-                        }}
-                        aria-invalid={!!errors.price}
-                        className={input}
-                    />
-                    {errors.price && <p className="mt-1 text-[11px] text-red-500">{errors.price}</p>}
-                </div>
-                <div>
-                    <label htmlFor="offer-duration" className="mb-1.5 block text-[12px] text-[#575757]">
-                        {t("requestsPage.offerModal.duration")}
-                    </label>
-                    <div className="relative">
-                        <input
-                            id="offer-duration"
-                            type="number"
-                            min="1"
-                            inputMode="numeric"
-                            placeholder="0"
-                            value={duration}
-                            onChange={(e) => {
-                                setDuration(e.target.value);
-                                clearError("duration");
-                            }}
-                            aria-invalid={!!errors.duration}
-                            className={`${input} pe-12`}
-                        />
-                        <span className="pointer-events-none absolute inset-y-0 end-4 flex items-center text-[12px] text-[#575757]">
-                            {t("requestsPage.offerModal.day")}
-                        </span>
-                    </div>
-                    {errors.duration && <p className="mt-1 text-[11px] text-red-500">{errors.duration}</p>}
-                </div>
-            </div>
-
-            <fieldset className="mt-5">
-                <legend className="mb-3 text-[12px] text-[#575757]">{t("requestsPage.offerModal.start")}</legend>
-                <div className="flex flex-wrap gap-3">
-                    {START_OPTIONS.map((key) => (
-                        <ChoiceButton
-                            key={key}
-                            active={start === key}
-                            onClick={() => {
-                                setStart(key);
-                                clearError("start");
-                            }}
-                        >
-                            <span className="px-3">{t(`requestsPage.offerModal.starts.${key}`)}</span>
-                        </ChoiceButton>
-                    ))}
-                </div>
-                {errors.start && <p className="mt-2 text-[11px] text-red-500">{errors.start}</p>}
-            </fieldset>
-
-            <label htmlFor="offer-notes" className="mb-1.5 mt-5 block text-[12px] text-[#575757]">
-                {t("requestsPage.offerModal.notes")}
-            </label>
-            <textarea
-                id="offer-notes"
-                rows={4}
-                value={notes}
-                onChange={(e) => setNotes(e.target.value)}
-                placeholder={t("requestsPage.offerModal.notesPlaceholder")}
-                className={textarea}
-            />
-
-            <p className="mb-1.5 mt-5 text-[12px] text-[#575757]">{t("requestsPage.followModal.attachments")}</p>
-            <FileDrop id="offer-files" files={files} onChange={setFiles} />
-        </RequestModal>
-    );
-}
-
-/** نافذة "تفاصيل الطلب": الوصف + المعلومات، ومنها القبول أو تقديم عرض بسعر آخر */
-function DetailsModal({ request, onClose, onAccept, onOffer }) {
-    const { t } = useTranslation("craftsmanDashboard");
-    const rp = "requestsPage";
-    const s = `${rp}.sample.${request.id}`;
-    const pending = request.status === "pending";
-    const closeRef = useRef(onClose);
-    useEffect(() => {
-        closeRef.current = onClose;
-    }, [onClose]);
-
-    useEffect(() => {
-        const onKey = (e) => e.key === "Escape" && closeRef.current();
-        window.addEventListener("keydown", onKey);
-        document.body.style.overflow = "hidden";
-        return () => {
-            window.removeEventListener("keydown", onKey);
-            document.body.style.overflow = "";
-        };
-    }, []);
-
-    const rows = [
-        { key: "customer", value: t(`${s}.customer`) },
-        { key: "value", value: t(`${rp}.valueAmount`, { amount: request.value.toLocaleString("en-US") }) },
-        { key: "slot", value: t(`${s}.delivery`) },
-        { key: "location", value: t(`${s}.place`) },
-    ];
-
-    return (
-        <div
-            className="fixed inset-0 z-[60] flex items-center justify-center bg-[#141415]/40 p-4 backdrop-blur-[2px]"
-            onMouseDown={(e) => e.target === e.currentTarget && onClose()}
-        >
-            <div
-                role="dialog"
-                aria-modal="true"
-                aria-labelledby="details-title"
-                className="flex max-h-[92vh] w-full max-w-[480px] flex-col overflow-hidden rounded-[22px] bg-white shadow-[0_24px_60px_rgba(20,20,21,0.25)]"
-            >
-                <div className="flex items-start justify-between gap-3 border-b border-[#0000000F] px-6 py-4">
-                    <div className="min-w-0">
-                        <h2 id="details-title" className="text-[16px] font-bold text-[#141415]">{t(`${s}.title`)}</h2>
-                        <p className="mt-1 text-[10px] text-[#89949D]" dir="ltr">#{request.number}</p>
-                    </div>
-                    <button
-                        type="button"
-                        onClick={onClose}
-                        aria-label={t(`${rp}.page.close`)}
-                        className="flex h-7 w-7 shrink-0 cursor-pointer items-center justify-center rounded-full text-[#575757] hover:bg-[#F2F4F6]"
-                    >
-                        <X size={17} />
-                    </button>
-                </div>
-
-                <div className="overflow-y-auto px-6 py-5">
-                    <p className="text-[12px] font-bold text-[#141415]">{t(`${rp}.detailsModal.desc`)}</p>
-                    <p className="mt-2 rounded-xl bg-[#F5F8FB] px-4 py-3 text-[12px] leading-[1.9] text-[#414141]">{t(`${s}.desc`)}</p>
-                    <dl className="mt-4 divide-y divide-[#0000000F] rounded-xl border border-[#0000000F] px-4">
-                        {rows.map((row) => (
-                            <div key={row.key} className="flex items-center justify-between gap-3 py-3 text-[12px]">
-                                <dt className="text-[#575757]">{t(`${rp}.page.${row.key}`)}</dt>
-                                <dd className="text-end font-semibold text-[#141415]">{row.value}</dd>
-                            </div>
-                        ))}
-                    </dl>
-                    {request.offer && (
-                        <p className="mt-4 rounded-xl bg-[#FFF8DD] px-4 py-3 text-[12px] text-[#8A6D00]">
-                            {t(`${rp}.offerLabel`, { price: request.offer.price.toLocaleString("en-US"), duration: request.offer.duration })}
-                        </p>
-                    )}
-                </div>
-
-                {pending && (
-                    <div className="flex gap-3 border-t border-[#0000000F] px-6 py-4">
-                        <button
-                            type="button"
-                            onClick={() => onOffer(request)}
-                            className="h-11 flex-1 cursor-pointer rounded-xl border border-[#4B9AD2] bg-white text-[13px] font-semibold text-[#4B9AD2] btn-wipe btn-wipe-outline"
-                        >
-                            {t(`${rp}.page.otherPrice`)}
-                        </button>
-                        <button
-                            type="button"
-                            onClick={() => onAccept(request)}
-                            className="h-11 flex-1 cursor-pointer rounded-xl bg-linear-to-l from-[#1591DCCC] to-[#1383C6] text-[13px] font-semibold text-white shadow-[0_4px_10px_rgba(19,131,198,0.3)] btn-wipe ltr:bg-linear-to-r"
-                        >
-                            {t(`${rp}.page.accept`)}
-                        </button>
-                    </div>
-                )}
-            </div>
-        </div>
-    );
-}
-
 /** بطاقة طلب: العنوان + العميل + الموقع والموعد + مهلة الرد + الأزرار حسب الحالة */
 function RequestCard({ request, onDetails, onReject }) {
     const { t } = useTranslation("craftsmanDashboard");
@@ -500,8 +230,9 @@ function RequestCard({ request, onDetails, onReject }) {
 
             {/* مهلة الرد (للطلبات بانتظار الرد) */}
             {request.status === "pending" && (
+                // المستعجل (مهلة قصيرة) أصفر، والعادي رمادي
                 <p
-                    className={`mt-3 flex items-center gap-2 rounded-full px-3 py-2 text-[10px] font-semibold ${request.urgent ? "bg-[#FFFAE6] text-[#FFCC00]" : "bg-[#F2F3F5] text-[#575757]"
+                    className={`mt-3 flex items-center gap-2 rounded-full px-3 py-2 text-[10px] font-semibold ${request.urgent ? "bg-[#FFFAE6] text-[#FFCC00]" : "bg-[#F4F4F4] text-[#919191]"
                         }`}
                 >
                     <Clock size={13} />
@@ -547,6 +278,147 @@ function RequestCard({ request, onDetails, onReject }) {
                 )}
             </div>
         </li>
+    );
+}
+
+// ==================== صفحة تفاصيل الطلب ====================
+
+/** تفاصيل طلب وارد (/dashboard/craftsman/requests/:requestId): العميل + القبول/الرفض + الطلب + الموعد + الخريطة */
+export function CraftsmanRequestDetails() {
+    const { t } = useTranslation("craftsmanDashboard");
+    const navigate = useNavigate();
+    const { requestId } = useParams();
+    const { state } = useLocation();
+    const [rejecting, setRejecting] = useState(false);
+    // الطلب بييجي مع الرابط (بحالته الحالية)، ولو انفتح مباشرة بندوّر بالبيانات
+    const request = state?.request || REQUESTS.find((x) => x.id === requestId);
+    const rp = "requestsPage";
+    const d = "currentPage.details";
+    const box = "rounded-[20px] border border-[#0000001A] bg-white";
+
+    if (!request) {
+        return (
+            <div className={`${box} mx-auto max-w-[1000px] p-10 text-center`}>
+                <p className="text-[14px] font-bold text-[#414141]">{t(`${d}.notFound`)}</p>
+                <Link to={`${BASE}/requests`} className="mt-4 inline-block text-[13px] text-[#4B9AD2] hover:underline">
+                    {t(`${rp}.page.title`)}
+                </Link>
+            </div>
+        );
+    }
+
+    const s = `${rp}.sample.${request.id}`;
+    const customer = t(`${s}.customer`);
+    const area = t(`${s}.place`).split(" . ")[0];
+    const pending = request.status === "pending";
+    const rows = [
+        { key: "time", value: t(`${rp}.detailsPage.timeValue`, { time: t(`${s}.delivery`) }) },
+        { key: "distance", value: t(`${d}.distanceValue`, { km: request.distance }) },
+        { key: "budget", value: t(`${d}.budgetValue`, { min: request.budget[0], max: request.budget[1] }) },
+    ];
+
+    return (
+        <div className="mx-auto flex max-w-[1000px] flex-col gap-4">
+            <nav aria-label="breadcrumb" className="flex items-center gap-1.5 text-[11px] text-[#575757]">
+                <Link to={`${BASE}/requests`} className="text-[#4B9AD2] hover:underline">
+                    {t(`${rp}.page.title`)}
+                </Link>
+                <span aria-hidden="true">/</span>
+                <span aria-current="page">{t(`${d}.title`)}</span>
+            </nav>
+
+            {/* العميل + القبول والرفض */}
+            <section className={`${box} flex flex-col gap-4 p-4 sm:flex-row sm:items-center sm:justify-between sm:px-5`}>
+                <div className="flex items-center gap-3">
+                    <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-[#EEF5FC] text-[18px] font-bold text-[#4B9AD2]">
+                        {customer.trim().charAt(0)}
+                    </span>
+                    <div>
+                        <p className="text-[17px] font-bold text-[#1E293B]">{customer}</p>
+                        <p className="mt-0.5 text-[11px] text-[#89949D]">
+                            {t(`${rp}.page.customerType`)} . {t(`${rp}.page.distance`, { km: request.distance })}
+                        </p>
+                    </div>
+                </div>
+                {pending ? (
+                    <div className="flex flex-wrap gap-3">
+                        <button
+                            type="button"
+                            onClick={() => setRejecting(true)}
+                            className="inline-flex h-10 min-w-[84px] cursor-pointer items-center justify-center gap-1.5 rounded-xl border border-[#D64545] bg-white px-4 text-[13px] font-semibold text-[#D64545] transition-colors hover:bg-[#FFF6F6]"
+                        >
+                            <X size={15} />
+                            {t(`${rp}.reject`)}
+                        </button>
+                        <button
+                            type="button"
+                            onClick={() => navigate(`${BASE}/current`, { state: acceptedState(t, request) })}
+                            className="inline-flex h-10 min-w-[118px] cursor-pointer items-center justify-center gap-2 rounded-xl bg-[#4B9AD2] px-5 text-[13px] font-semibold text-white btn-wipe"
+                        >
+                            <Check size={15} strokeWidth={2.5} />
+                            {t(`${rp}.detailsPage.accept`)}
+                        </button>
+                    </div>
+                ) : (
+                    <span className="w-fit rounded-full bg-[#EEF5FC] px-3 py-1 text-[11px] font-semibold text-[#4B9AD2]">
+                        {t(`${rp}.detailsPage.statuses.${request.status}`)}
+                    </span>
+                )}
+            </section>
+
+            <div className="grid items-start gap-4 lg:grid-cols-[1fr_230px]">
+                <div className="flex min-w-0 flex-col gap-4">
+                    {/* الطلب */}
+                    <section className={`${box} p-5`}>
+                        <h1 className="text-[17px] font-bold text-[#1E293B]">{t(`${s}.title`)}</h1>
+                        <p className="mt-2 text-[13px] leading-[1.9] text-[#475569]">{t(`${s}.desc`)}</p>
+                        <ul className="mt-4 grid grid-cols-4 gap-2">
+                            {Array.from({ length: PHOTOS }, (_, i) => (
+                                <li key={i} className="flex aspect-[4/3] items-center justify-center rounded-xl bg-[#E4EFFA] text-[#8EC0E4]">
+                                    <ImageIcon size={16} />
+                                </li>
+                            ))}
+                        </ul>
+                    </section>
+
+                    {/* الخريطة (Google Maps embed — ما بيحتاج مفتاح) */}
+                    <section className="relative h-[200px] overflow-hidden rounded-[20px] border border-[#0000001A] bg-[#E5ECF1]">
+                        <iframe
+                            title={t(`${d}.map`)}
+                            src={`https://www.google.com/maps?q=${encodeURIComponent(area)}&t=k&z=15&output=embed`}
+                            loading="lazy"
+                            referrerPolicy="no-referrer-when-downgrade"
+                            className="h-full w-full border-0"
+                        />
+                        <span className="pointer-events-none absolute bottom-3 end-3 rounded-lg bg-white px-3 py-1.5 text-[11px] font-bold text-[#1E293B] shadow">
+                            {t(`${d}.address`, { place: area })}
+                        </span>
+                    </section>
+                </div>
+
+                {/* الموعد والمسافة والميزانية */}
+                <section className={`${box} flex flex-col gap-3.5 border-t-2 border-t-[#9CC9EA] p-4`}>
+                    {rows.map(({ key, value }) => (
+                        <p key={key} className="flex items-center justify-between gap-3 text-[11px]">
+                            <span className="text-[#89949D]">{t(`${d}.${key}`)}</span>
+                            <span className="font-bold text-[#1E293B] tabular-nums">{value}</span>
+                        </p>
+                    ))}
+                    <p className="mt-1 text-[11px] text-[#4B9AD2]">{t(`${rp}.detailsPage.agreeNote`)}</p>
+                </section>
+            </div>
+
+            {rejecting && (
+                <RejectModal
+                    request={request}
+                    onClose={() => setRejecting(false)}
+                    // بنرجع لقائمة الطلبات وبيتسجل الرفض هناك
+                    onConfirm={({ reason, notes }) =>
+                        navigate(`${BASE}/requests`, { state: { rejected: { id: request.id, reason, notes } } })
+                    }
+                />
+            )}
+        </div>
     );
 }
 
@@ -684,14 +556,28 @@ function OffersView({ counterOffers }) {
 /** طلبات الحرفي: الواردة (بانتظار الرد / مقبولة / مرفوضة) + عروضي */
 export default function CraftsmanRequests() {
     const { t } = useTranslation("craftsmanDashboard");
+    const navigate = useNavigate();
+    const { state, pathname } = useLocation();
     const rp = "requestsPage";
+    // رفض من صفحة تفاصيل الطلب
+    const rejected = state?.rejected;
     const [view, setView] = useState("incoming");
     const [filter, setFilter] = useState("pending");
-    // ⚠️ القبول/الرفض/العروض بالصفحة بس لحد ما نربطها بالسيرفر
-    const [requests, setRequests] = useState(REQUESTS);
-    // النافذة المفتوحة: { request, type: "details" | "reject" | "offer" }
+    // ⚠️ القبول/الرفض بالصفحة بس لحد ما نربطها بالسيرفر
+    const [requests, setRequests] = useState(() =>
+        rejected
+            ? REQUESTS.map((r) => (r.id === rejected.id ? { ...r, status: "rejected", reason: rejected.reason, rejectNotes: rejected.notes } : r))
+            : REQUESTS
+    );
+    // نافذة الرفض المفتوحة: { request, type: "reject" }
     const [dialog, setDialog] = useState(null);
-    const [flash, setFlash] = useState("");
+    const [flash, setFlash] = useState(rejected ? t("requestsPage.rejectModal.done") : "");
+
+    // بنمسح الـ state عشان الرفض ما يتكرر مع تحديث الصفحة
+    useEffect(() => {
+        if (rejected) navigate(pathname, { replace: true, state: null });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     const updateRequest = (id, changes) => setRequests((list) => list.map((r) => (r.id === id ? { ...r, ...changes } : r)));
     const open = (type) => (request) => {
@@ -699,22 +585,9 @@ export default function CraftsmanRequests() {
         setDialog({ request, type });
     };
 
-    const accept = (request) => {
-        updateRequest(request.id, { status: "accepted" });
-        setFlash(t(`${rp}.page.acceptedFlash`, { customer: t(`${rp}.sample.${request.id}.customer`) }));
-        setDialog(null);
-    };
-
     const confirmReject = ({ reason, notes }) => {
         updateRequest(dialog.request.id, { status: "rejected", reason, rejectNotes: notes });
         setFlash(t(`${rp}.rejectModal.done`));
-        setDialog(null);
-    };
-
-    // عرض بسعر آخر: الطلب بينتقل لتبويب "عروضي"
-    const confirmOffer = (offer) => {
-        updateRequest(dialog.request.id, { status: "offered", offer });
-        setFlash(t("jobs.modal.sent", { org: t(`${rp}.sample.${dialog.request.id}.customer`) }));
         setDialog(null);
     };
 
@@ -739,10 +612,11 @@ export default function CraftsmanRequests() {
                                 setView(key);
                                 setFlash("");
                             }}
-                            className={`relative cursor-pointer px-1 pb-3 text-[19px] font-bold text-[#4B9AD2] transition-opacity ${active ? "" : "opacity-90 hover:opacity-100"}`}
+                            // nav-link = نفس هوفر روابط الهيدر (خط بيمتد تحت الكلمة من جهة البداية)
+                            style={{ paddingBottom: 12 }}
+                            className={`nav-link cursor-pointer px-3 text-[19px] font-bold text-[#4B9AD2] ${active ? "nav-link-active" : ""}`}
                         >
                             {t(`${rp}.page.views.${key}`)}
-                            {active && <span aria-hidden="true" className="absolute inset-x-[-10px] bottom-0 h-[1.5px] rounded-full bg-[#4B9AD2]" />}
                         </button>
                     );
                 })}
@@ -783,7 +657,7 @@ export default function CraftsmanRequests() {
             ) : visible.length ? (
                 <ul className="flex flex-col gap-4">
                     {visible.map((r) => (
-                        <RequestCard key={r.id} request={r} onDetails={open("details")} onReject={open("reject")} />
+                        <RequestCard key={r.id} request={r} onDetails={(req) => navigate(`${BASE}/requests/${req.id}`, { state: { request: req } })} onReject={open("reject")} />
                     ))}
                 </ul>
             ) : (
@@ -792,18 +666,6 @@ export default function CraftsmanRequests() {
                 </p>
             )}
 
-            {dialog?.type === "details" && (
-                <DetailsModal
-                    key={`details-${dialog.request.id}`}
-                    request={dialog.request}
-                    onClose={() => setDialog(null)}
-                    onAccept={accept}
-                    onOffer={(request) => setDialog({ request, type: "offer" })}
-                />
-            )}
-            {dialog?.type === "offer" && (
-                <OfferModal key={`offer-${dialog.request.id}`} request={dialog.request} onClose={() => setDialog(null)} onConfirm={confirmOffer} />
-            )}
             {dialog?.type === "reject" && (
                 <RejectModal key={`reject-${dialog.request.id}`} request={dialog.request} onClose={() => setDialog(null)} onConfirm={confirmReject} />
             )}

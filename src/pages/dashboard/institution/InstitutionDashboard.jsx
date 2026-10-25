@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import { Route, Routes, matchPath, useLocation } from "react-router-dom";
+import { Route, Routes, matchPath, useLocation, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { Briefcase, CircleDollarSign, House, UserRound, Wallet } from "lucide-react";
+import { Briefcase, ChevronLeft, CircleDollarSign, House, UserRound, Wallet } from "lucide-react";
 import { ClipboardLines, SquareTrendingUp } from "../../../components/dashboard/navIcons";
 import RequireRole from "../../../components/dashboard/RequireRole";
 import DashboardLayout from "../../../components/dashboard/DashboardLayout";
@@ -18,6 +18,7 @@ import InstitutionProviderProfile from "./InstitutionProviderProfile";
 import InstitutionOffers from "./InstitutionOffers";
 import InstitutionOfferDetails from "./InstitutionOfferDetails";
 import InstitutionMessages from "./InstitutionMessages";
+import { ChatBox } from "../../general/Chats";
 
 const BASE = "/dashboard/institution";
 
@@ -26,12 +27,33 @@ const BASE = "/dashboard/institution";
 // category: التبويب اللي بيظهر فيه، to: الصفحة اللي بيفتحها الإشعار
 const NOTIFICATIONS = [
     { id: "n1", type: "tender", category: "tenders", to: `${BASE}/tenders` },
-    { id: "n2", type: "accepted", category: "tenders", to: `${BASE}/offers` },
-    { id: "n3", type: "message", category: "messages", to: `${BASE}/messages` },
+    { id: "n2", type: "accepted", category: "requests", to: `${BASE}/offers` },
+    { id: "n3", type: "message", category: "requests", to: `${BASE}/messages` },
     { id: "n4", type: "update", category: "tenders", to: `${BASE}/tenders`, read: true },
     { id: "n5", type: "closed", category: "tenders", to: `${BASE}/tenders`, read: true },
-    { id: "n6", type: "announcement", category: "system", to: `${BASE}/tenders`, read: true },
+    { id: "n6", type: "payment", category: "finance", to: `${BASE}/projects`, read: true },
 ];
+// نفس تبويبات قائمة إشعارات الحرفي
+const NOTIFICATION_TABS = ["all", "requests", "tenders", "finance"];
+
+/** المحادثات (من "بدء محادثة" بالملف المهني) — بدون قائمة جانبية، فزر الرجوع هو طريق الخروج */
+function InstitutionChats() {
+    const { t } = useTranslation("providerProfile");
+    const navigate = useNavigate();
+    return (
+        <div className="mx-auto flex max-w-[1100px] flex-col gap-4">
+            <button
+                type="button"
+                onClick={() => navigate(-1)}
+                className="inline-flex w-fit cursor-pointer items-center gap-1 text-[12px] font-medium text-[#4B9AD2] hover:underline"
+            >
+                <ChevronLeft size={14} className="rtl:rotate-180" />
+                {t("back")}
+            </button>
+            <ChatBox />
+        </div>
+    );
+}
 
 /**
  * لوحة تحكم المؤسسة — كل صفحاتها بتنعرض جوا نفس الهيكل (قائمة جانبية + شريط علوي).
@@ -41,6 +63,7 @@ export default function InstitutionDashboard() {
     const { t } = useTranslation("institutionDashboard");
     const { pathname } = useLocation();
     const isProviderProfile = Boolean(matchPath(`${BASE}/providers/:providerId`, pathname));
+    const isChats = Boolean(matchPath(`${BASE}/chats`, pathname));
     // ⚠️ حالة "مقروء" بالصفحة بس لحد ما يصير في endpoint
     const [readIds, setReadIds] = useState([]);
     const notifications = NOTIFICATIONS.map((n) => ({
@@ -110,14 +133,17 @@ export default function InstitutionDashboard() {
         <RequireRole role="institution">
             <DashboardLayout
                 navItems={navItems}
-                // صفحة الملف المهني لمزوّد الخدمة: بدون قائمة جانبية، والشريط العلوي بدون بحث وبدون "+"
-                showAdd={!isProviderProfile}
-                hideSearch={isProviderProfile}
-                hideSidebar={isProviderProfile}
+                // الملف المهني لمزوّد الخدمة والمحادثات: بدون قائمة جانبية، والشريط العلوي بدون بحث وبدون "+"
+                showAdd={!isProviderProfile && !isChats}
+                hideSearch={isProviderProfile || isChats}
+                hideSidebar={isProviderProfile || isChats}
                 addTo={`${BASE}/tenders/new`}
                 searchSections={searchSections}
                 searchItems={searchItems}
                 notifications={notifications}
+                // نفس شكل قائمة إشعارات لوحة الحرفي
+                notificationVariant="compact"
+                notificationTabs={NOTIFICATION_TABS}
                 onReadNotifications={(ids) => setReadIds((list) => [...new Set([...list, ...ids])])}
             >
                 <Routes>
@@ -130,6 +156,8 @@ export default function InstitutionDashboard() {
                     <Route path="projects" element={<InstitutionProjects />} />
                     <Route path="projects/:projectId" element={<InstitutionProjectDetails />} />
                     <Route path="messages" element={<InstitutionMessages />} />
+                    {/* بتفتح من "بدء محادثة" بالملف المهني لمزوّد الخدمة */}
+                    <Route path="chats" element={<InstitutionChats />} />
                     <Route path="providers" element={<InstitutionProviders />} />
                     <Route path="providers/:providerId" element={<InstitutionProviderProfile />} />
                     <Route path="settings" element={<InstitutionSettings />} />

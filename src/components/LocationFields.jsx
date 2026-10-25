@@ -6,6 +6,7 @@ import { useGovernorates, useAreas } from "../hooks/useReferenceData";
 /**
  * المحافظة + المنطقة من الباك إند (governorate_id / area_id).
  * المناطق بتنحمّل حسب المحافظة المختارة، وتغيير المحافظة بيفضّي المنطقة.
+ * areaLabel: عنوان حقل المنطقة (افتراضياً "عنوان السكن")
  */
 const LocationPinIcon = (
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
@@ -21,6 +22,7 @@ export default function LocationFields({
     onAreaChange,
     governorateError,
     areaError,
+    areaLabel,
     className = "mb-4",
 }) {
     const { t } = useTranslation("signupCommon");
@@ -45,7 +47,7 @@ export default function LocationFields({
             />
 
             <SelectField
-                label={t("area")}
+                label={areaLabel || t("area")}
                 id="area"
                 icon={LocationPinIcon}
                 placeholder={areas.loading ? t("loadingOptions") : t("areaPlaceholder")}

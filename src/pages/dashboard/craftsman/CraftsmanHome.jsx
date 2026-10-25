@@ -34,6 +34,8 @@ const JOBS = [
 const SAMPLE = { earningsToday: 11, earningsMonth: 2340, nearestDeadlineHours: 18 };
 
 const card = "rounded-[20px] border border-[#0000000D] bg-white shadow-[0_4px_24px_rgba(35,74,100,0.08)]";
+// بوكس بإطار خفيف بدون ظل (البحث وبطاقات فرص العمل)
+const box = "rounded-[20px] border border-[#0000000F] bg-white";
 const field =
     "h-11 w-full rounded-xl border border-[#8EC0E4] bg-white text-[12px] text-[#414141] outline-none transition-colors focus:border-[#4B9AD2] focus:ring-1 focus:ring-[#4B9AD2]";
 
@@ -269,13 +271,13 @@ export default function CraftsmanHome({ profile, availability }) {
 
             <div className="grid items-start gap-6 lg:grid-cols-[1fr_300px]">
                 {/* فرص العمل */}
-                <section className={`${card} p-5`}>
+                <section className="flex min-w-0 flex-col">
                     <form
                         onSubmit={(e) => {
                             e.preventDefault();
                             setFilters({ location, serviceId });
                         }}
-                        className="flex flex-col gap-3 sm:flex-row sm:items-center"
+                        className={`${box} flex flex-col gap-3 p-4 sm:flex-row sm:items-center`}
                     >
                         <div className="relative min-w-0 flex-1">
                             <Search size={16} className="pointer-events-none absolute start-3 top-1/2 -translate-y-1/2 text-[#4B9AD2]" />
@@ -305,30 +307,30 @@ export default function CraftsmanHome({ profile, availability }) {
                             </select>
                             <ChevronDown size={16} className="pointer-events-none absolute end-3 top-1/2 -translate-y-1/2 text-[#4B9AD2]" />
                         </div>
-                        <button type="submit" className="h-11 shrink-0 cursor-pointer rounded-xl bg-linear-to-l from-[#1591DCCC] to-[#1383C6] ltr:bg-linear-to-r px-10 text-[14px] font-semibold text-white btn-wipe">
+                        <button type="submit" className="h-11 shrink-0 cursor-pointer rounded-xl bg-linear-to-l from-[#4B9AD2] to-[#5BAEE4] px-10 text-[16px] font-semibold text-white shadow-[0_3px_8px_rgba(75,154,210,0.25)] btn-wipe ltr:bg-linear-to-r sm:w-[140px] sm:px-0">
                             {t("jobs.search")}
                         </button>
                     </form>
 
                     {flash && (
-                        <p role="status" className="mt-4 rounded-lg border border-[#BFEBCD] bg-[#E8F8EE] px-4 py-2.5 text-[12px] text-[#2E9E5B]">
+                        <p role="status" className="mt-4 rounded-xl border border-[#BFEBCD] bg-[#E8F8EE] px-4 py-2.5 text-[12px] text-[#2E9E5B]">
                             {flash}
                         </p>
                     )}
 
-                    <h2 className="mt-6 text-[12px] font-semibold text-[#4B9AD2]">{t("jobs.title")}</h2>
+                    <h2 className="mt-6 text-[13px] font-semibold text-[#4B9AD2]">{t("jobs.title")}</h2>
 
                     {jobs.length ? (
-                        <ul className="mt-3 flex flex-col gap-3">
+                        <ul className="mt-4 flex flex-col gap-3">
                             {jobs.map((j) => {
                                 const s = `jobs.sample.${j.id}`;
                                 const org = t(`${s}.org`);
                                 const isSaved = saved.includes(j.id);
                                 return (
-                                    <li key={j.id} className="rounded-2xl border border-[#0000000F] bg-white p-4 shadow-[0_2px_10px_rgba(35,74,100,0.05)]">
+                                    <li key={j.id} className={`${box} p-5`}>
                                         <div className="flex items-start justify-between gap-3">
                                             <div className="flex min-w-0 items-center gap-3">
-                                                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#EEF5FC] text-[14px] font-bold text-[#575757]">
+                                                <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border-4 border-[#EEF5FC] bg-white text-[14px] font-bold text-[#4B9AD2]">
                                                     {org.trim().charAt(0)}
                                                 </span>
                                                 <div className="min-w-0">
@@ -338,12 +340,12 @@ export default function CraftsmanHome({ profile, availability }) {
                                                     </p>
                                                 </div>
                                             </div>
-                                            <span className="shrink-0 rounded-full border border-[#CFE3F3] bg-[#EEF5FC] px-3 py-0.5 text-[11px] text-[#4B9AD2]">
+                                            <span className="shrink-0 rounded-full bg-[#EEF5FC] px-3 py-1 text-[10px] text-[#4B9AD2]">
                                                 {t("jobs.orgType")}
                                             </span>
                                         </div>
 
-                                        <div className="mt-3 flex items-end justify-between gap-3 border-t border-[#0000000A] pt-3">
+                                        <div className="mt-4 flex items-end justify-between gap-3 border-t border-[#0000000F] pt-3">
                                             <div>
                                                 <p className="text-[12px] text-[#575757]">{t("jobs.budget")}</p>
                                                 <p className="mt-1 text-[14px] font-bold text-[#141415] tabular-nums">
@@ -385,7 +387,7 @@ export default function CraftsmanHome({ profile, availability }) {
                             })}
                         </ul>
                     ) : (
-                        <p className="py-10 text-center text-[13px] text-[#89949D]">{t("jobs.empty")}</p>
+                        <p className={`${box} mt-4 py-10 text-center text-[13px] text-[#89949D]`}>{t("jobs.empty")}</p>
                     )}
                 </section>
 

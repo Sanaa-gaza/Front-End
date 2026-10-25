@@ -1,5 +1,5 @@
 import React from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useLocation, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import ProviderProfile from "../../../components/profile/ProviderProfile";
 import { PROVIDERS } from "./providersData";
@@ -14,6 +14,8 @@ export default function InstitutionProviderProfile() {
     const { t } = useTranslation("institutionDashboard");
     const { t: tp } = useTranslation("providerProfile");
     const { providerId } = useParams();
+    // لو جاي من "الملف المهني" بكارد متقدم (تفاصيل العرض) بنعرض اسمه وتخصصه بدل بيانات العيّنة
+    const from = useLocation().state?.provider;
     const p = PROVIDERS.find((x) => x.id === providerId);
 
     if (!p) {
@@ -29,20 +31,22 @@ export default function InstitutionProviderProfile() {
 
     // ⚠️ النبذة وساعات العمل ومناطق الخدمة نصوص افتراضية لحد ما تيجي من السيرفر
     const s = `providersPage.sample.${p.id}`;
-    const craft = t(`${s}.specialty`);
-    const location = t(`${s}.location`);
-    const name = t(`${s}.name`);
+    const craft = from?.craft || t(`${s}.specialty`);
+    const location = from?.location || t(`${s}.location`);
+    const name = from?.name || t(`${s}.name`);
+    const years = from?.years ?? p.years;
     const profile = {
+        id: p.id,
         name,
         craft,
         location,
-        bio: tp("defaultBio", { craft, years: p.years }),
-        about: tp("defaultAbout", { name, craft, years: p.years }),
+        bio: tp("defaultBio", { craft, years }),
+        about: tp("defaultAbout", { name, craft, years }),
         portfolio: PORTFOLIO,
         portfolioTotal: 16,
         reviews: tp("sampleReviews", { returnObjects: true }),
-        rating: p.rating,
-        verified: p.verified,
+        rating: from?.rating ?? p.rating,
+        verified: from?.verified ?? p.verified,
         hours: { days: tp("defaultDays"), time: tp("defaultTime") },
         areas: tp("nearby", { area: location }),
     };
@@ -50,8 +54,8 @@ export default function InstitutionProviderProfile() {
     return (
         <ProviderProfile
             profile={profile}
-            chatTo={`${BASE}/messages`}
-            requestTo={`${BASE}/tenders/new`}
+            chatTo={`${BASE}/chats`}
+            chatState={{ craftsman: { id: p.id, full_name: name } }}
             // الصفحة بدون قائمة جانبية، فرابط الرجوع هو طريق الخروج منها
             backTo={`${BASE}/providers`}
             backLabel={tp("backToProviders")}

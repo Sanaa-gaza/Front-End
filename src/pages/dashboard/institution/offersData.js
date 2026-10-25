@@ -10,9 +10,9 @@ export const OFFERS = [
 ];
 
 // المتقدمين على المناقصة (النصوص بملف الترجمة: offerDetails.applicantsSample.<id>)
-// craftsman: مفتاح صفحة الملف المهني (/craftsmen/:craftsmanKey)
+// provider: رقم ملفه المهني بلوحة المؤسسة (/dashboard/institution/providers/:providerId)
 export const APPLICANTS = [
-    { id: "a1", craftsman: "mohammad-agha", price: 1980, years: 8, rating: 4.9, reviews: 100, date: "2026-10-01", verified: true },
-    { id: "a2", craftsman: "khaled-nasser", price: 2350, years: 11, rating: 4.7, reviews: 64, date: "2026-10-02", verified: true },
-    { id: "a3", craftsman: "yousef-hamdan", price: 1750, years: 5, rating: 4.4, reviews: 31, date: "2026-10-03", verified: false },
+    { id: "a1", provider: "p2", price: 1980, years: 8, rating: 4.9, reviews: 100, date: "2026-10-01", verified: true },
+    { id: "a2", provider: "p4", price: 2350, years: 11, rating: 4.7, reviews: 64, date: "2026-10-02", verified: true },
+    { id: "a3", provider: "p6", price: 1750, years: 5, rating: 4.4, reviews: 31, date: "2026-10-03", verified: false },
 ];

@@ -1,223 +1,190 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { Check, CircleAlert, Hash, MapPin, MessageSquareText, UserRound, Wrench } from "lucide-react";
-import StatusTabs from "../../../components/dashboard/StatusTabs";
-import SearchField from "../../../components/dashboard/SearchField";
+import { ChevronLeft, CircleCheck, CircleX, Clock, Search } from "lucide-react";
 
 // ===== بيانات تجريبية =====
-// ما في endpoint بالسيرفر للأعمال الحالية بمراحلها (الأقرب GET /service-requests + complete بـ src/api/endpoints.js).
+// ما في endpoint بالسيرفر للأعمال الجارية بحالاتها (الأقرب GET /service-requests + complete بـ src/api/endpoints.js).
 // لما يضيفها الباك إند، استبدلي WORKS بالبيانات الحقيقية.
-// step: رقم المرحلة الحالية من STEPS (0 = استلام الطلب)، phone: رقم العميل لزر "تواصل مع العميل"
-const WORKS = [
-    { id: "w1", number: "89253", status: "inProgress", step: 0, phone: "+970599000001", synced: 15 },
-    { id: "w2", number: "89261", status: "inProgress", step: 1, phone: "+970599000002", synced: 40 },
-    { id: "w3", number: "89274", status: "inProgress", step: 2, phone: "+970599000003", synced: 5 },
-    { id: "w4", number: "89280", status: "inProgress", step: 1, phone: "+970599000004", synced: 25 },
-    { id: "w5", number: "89102", status: "completed", step: 3, phone: "+970599000005" },
-    { id: "w6", number: "89110", status: "cancelled", step: 0, phone: "+970599000006" },
+// source: customer (طلب عميل) | institution (مناقصة مؤسسة)
+// status: awaitingPayment (بانتظار الدفع) → scheduled (المبلغ محجوز، التنفيذ لسا ما بدأ) → accepted (التنفيذ شغّال)
+//         → awaitingConfirm (بانتظار تأكيد العميل/المؤسسة) | cancelled
+// amount: المبلغ بالشيكل، distance: بالكيلومتر، budget: الميزانية المتوقعة [أقل، أعلى] (بتظهر بصفحة التفاصيل)
+// مشاريع المؤسسات: tender رقم المناقصة، start تاريخ البدء، days مدة التنفيذ بالأيام
+// ⚠️ موعد بدء تجريبي بعد يوم و14 ساعة و20 دقيقة من فتح الصفحة (عشان يبيّن العدّاد)
+const SAMPLE_START = new Date(Date.now() + ((24 + 14) * 60 + 20) * 60000).toISOString();
+// ⚠️ مشروع قيد التنفيذ بلّش اليوم الساعة 8 الصبح
+const TODAY_START = (() => {
+    const d = new Date();
+    return new Date(d.getFullYear(), d.getMonth(), d.getDate(), 8).toISOString();
+})();
+
+export const WORKS = [
+    { id: "w1", source: "customer", status: "accepted", amount: 70, distance: 1.2, budget: [50, 80] },
+    { id: "w2", source: "customer", status: "awaitingPayment", amount: 120, distance: 2.4, budget: [100, 150] },
+    { id: "w3", source: "customer", status: "awaitingConfirm", amount: 90, distance: 1.8, budget: [70, 110] },
+    { id: "w4", source: "institution", status: "awaitingPayment", amount: 1200, distance: 4.1, budget: [1000, 1400], tender: "T-2026-031", start: "2026-10-17", days: 7 },
+    { id: "w5", source: "institution", status: "scheduled", amount: 2800, distance: 6.5, budget: [2500, 3200], tender: "T-2026-027", start: SAMPLE_START, days: 7 },
+    { id: "w7", source: "institution", status: "accepted", amount: 1200, distance: 3.2, budget: [1000, 1400], tender: "T-2026-031", start: TODAY_START, days: 7 },
+    { id: "w6", source: "customer", status: "cancelled", amount: 150, distance: 9, budget: [120, 180] },
 ];
 
-const TABS = ["all", "open", "submitted", "inProgress", "completed", "cancelled", "draft"];
-const STEPS = ["received", "started", "finishing", "delivered"];
+const TABS = ["all", "customer", "institution", "cancelled"];
 
-const STATUS_STYLES = {
-    open: "bg-[#E4EFFA] text-[#4B9AD2]",
-    submitted: "bg-[#FFF3D6] text-[#B7791F]",
-    inProgress: "bg-[#DDF6E3] text-[#2EAF4E]",
-    completed: "bg-[#E4EFFA] text-[#4B9AD2]",
-    cancelled: "bg-[#FDE2E2] text-[#D64545]",
-    draft: "bg-[#EEF0F2] text-[#575757]",
+// ألوان كل حالة: الشارة أعلى البطاقة + الشريط تحت (الإطار فاتح والنص غامق)
+const STATUS = {
+    accepted: { badge: "bg-[#E6F9EC] text-[#03C03C]", bar: "border-[#A5FFC9] bg-[#A5FFC9]/25 text-[#03C03C]", icon: CircleCheck },
+    scheduled: { badge: "bg-[#E6F9EC] text-[#03C03C]", bar: "border-[#A5FFC9] bg-[#A5FFC9]/25 text-[#03C03C]", icon: CircleCheck },
+    awaitingPayment: { badge: "bg-[#FFEFB0]/60 text-[#A86A4E]", bar: "border-[#FFEFB0] bg-[#FFEFB0]/45 text-[#A86A4E]", icon: Clock },
+    awaitingConfirm: { badge: "bg-[#C7E0F1]/50 text-[#4B9AD2]", bar: "border-[#C7E0F1] bg-[#C7E0F1]/35 text-[#4B9AD2]", icon: Clock },
+    cancelled: { badge: "bg-[#F4F4F4] text-[#919191]", bar: "border-[#E4E4E4] bg-[#F4F4F4] text-[#919191]", icon: CircleX },
 };
 
-const card = "rounded-[20px] border border-[#0000000D] bg-white shadow-[0_4px_24px_rgba(35,74,100,0.08)]";
+const box = "rounded-[20px] border border-[#0000001A] bg-white";
 
-/** مراحل العمل: المنتهية والحالية أزرق، والجاية باهتة */
-function Steps({ current }) {
+/** بطاقة عمل: صاحب الطلب + العنوان + شارة الحالة، وتحتها شريط الحالة */
+function WorkCard({ work }) {
     const { t } = useTranslation("craftsmanDashboard");
-    return (
-        <ol className="flex items-start">
-            {STEPS.map((key, i) => {
-                const done = i < current;
-                const active = i === current;
-                const reached = i <= current;
-                return (
-                    <li key={key} className="relative flex flex-1 flex-col items-center gap-2 text-center">
-                        {/* الخط الواصل بالمرحلة اللي قبلها */}
-                        {i > 0 && (
-                            <span
-                                aria-hidden
-                                className={`absolute end-1/2 top-[13px] h-px w-full ${reached ? "bg-[#4B9AD2]" : "bg-[#CFDCE6]"}`}
-                            />
-                        )}
-                        <span
-                            className={`relative z-[1] flex h-[27px] w-[27px] items-center justify-center rounded-full border-2 bg-white ${reached ? "border-[#4B9AD2]" : "border-[#DCEAF8]"
-                                }`}
-                        >
-                            {done ? (
-                                <Check size={13} strokeWidth={3} className="text-[#4B9AD2]" />
-                            ) : (
-                                <span className={`h-2.5 w-2.5 rounded-full ${active ? "bg-[#4B9AD2]" : "bg-[#C9DFF0]"}`} />
-                            )}
-                        </span>
-                        <span
-                            aria-current={active ? "step" : undefined}
-                            className={`text-[11px] ${reached ? "font-medium text-[#4B9AD2]" : "text-[#B4BEC6]"}`}
-                        >
-                            {t(`currentPage.steps.${key}`)}
-                        </span>
-                    </li>
-                );
-            })}
-        </ol>
-    );
-}
-
-/** بطاقة عمل واحد: العنوان والمعلومات والمراحل والملاحظات */
-function WorkCard({ work, onComplete }) {
-    const { t } = useTranslation("craftsmanDashboard");
-    const s = `currentPage.sample.${work.id}`;
-
-    const infos = ["startDate", "delivery", "service", "place"];
-    const meta = [
-        { key: "customer", icon: UserRound, text: t("currentPage.customer", { name: t(`${s}.customer`) }) },
-        { key: "place", icon: MapPin, text: t(`${s}.place`) },
-        { key: "number", icon: Hash, text: t("currentPage.number", { number: work.number }) },
-    ];
+    const s = `currentPage.works.${work.id}`;
+    // الطلب اللي انقبل من صفحة الطلبات بييجي بنصوصه، والباقي من ملف الترجمة
+    const text = (key) => work[key] || t(`${s}.${key}`);
+    const owner = text("owner");
+    const { badge, bar, icon: Icon } = STATUS[work.status];
+    // الشريط رابط لتفاصيل الطلب (ومنها "تم إنجاز العمل")، والملغاة بدون إجراء
+    const linked = work.status !== "cancelled";
+    const BarTag = linked ? Link : "div";
+    const barProps = linked ? { to: `/dashboard/craftsman/current/${work.id}`, state: { work } } : {};
 
     return (
-        <li className={card}>
-            <div className="p-5 sm:p-6">
-                <div className="flex items-start justify-between gap-3">
-                    <div className="flex min-w-0 items-center gap-3">
-                        <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-[#8EC0E4] text-[#4B9AD2]">
-                            <Wrench size={20} />
-                        </span>
-                        <h2 className="text-[18px] font-bold leading-[1.6] text-[#22455E]">{t(`${s}.title`)}</h2>
-                    </div>
-                    <span className={`shrink-0 whitespace-nowrap rounded-full px-2.5 py-0.5 text-[10px] font-medium ${STATUS_STYLES[work.status]}`}>
-                        {t(`currentPage.tabs.${work.status}`)}
+        <li className={`${box} p-4 sm:p-5`}>
+            <div className="flex items-start justify-between gap-3">
+                <div className="flex min-w-0 items-center gap-3">
+                    <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border-4 border-[#EEF5FC] bg-white text-[13px] font-bold text-[#4B9AD2]">
+                        {owner.trim().charAt(0)}
                     </span>
-                </div>
-
-                <ul className="mt-3 flex flex-wrap gap-x-5 gap-y-1.5 text-[11px] text-[#575757]">
-                    {meta.map(({ key, icon: Icon, text }) => (
-                        <li key={key} className="flex items-center gap-1.5">
-                            <Icon size={13} className="text-[#4B9AD2]" />
-                            {text}
-                        </li>
-                    ))}
-                </ul>
-
-                <div className="mt-6 flex flex-col gap-5 lg:flex-row">
-                    <div className="min-w-0 flex-1">
-                        <Steps current={work.step} />
-
-                        <dl className="mt-6 grid grid-cols-2 gap-3 md:grid-cols-4">
-                            {infos.map((key) => (
-                                <div key={key} className="rounded-xl border border-[#DCEAF8] bg-white px-3 py-3">
-                                    <dt className="text-[10px] text-[#89949D]">{t(`currentPage.${key}`)}</dt>
-                                    <dd className="mt-2 text-[11px] font-semibold text-[#414141]">{t(`${s}.${key}`)}</dd>
-                                </div>
-                            ))}
-                        </dl>
+                    <div className="min-w-0">
+                        <h2 className="text-[15px] font-bold text-[#1E293B]">{text("title")}</h2>
+                        <p className="mt-1 text-[11px] text-[#475569]">
+                            {owner} | {text("place")}
+                        </p>
                     </div>
-
-                    <aside className="rounded-2xl bg-[#FDE8E8] px-5 py-5 text-center lg:w-[230px] lg:shrink-0">
-                        <h3 className="flex items-center justify-center gap-2 text-[14px] font-semibold text-[#414141]">
-                            <CircleAlert size={15} className="text-[#D64545]" />
-                            {t("currentPage.notes")}
-                        </h3>
-                        <p className="mt-3 text-[11px] leading-[2] text-[#575757]">{t(`${s}.notes`)}</p>
-                    </aside>
                 </div>
+                <span className={`shrink-0 whitespace-nowrap rounded-full px-2.5 py-0.5 text-[10px] font-medium ${badge}`}>
+                    {t(`currentPage.statuses.${work.status}`)}
+                </span>
             </div>
 
-            {work.status === "inProgress" && (
-                <div className="flex flex-col gap-4 border-t border-[#0000000F] px-5 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-6">
-                    <p className="flex items-center gap-1.5 text-[11px] text-[#575757]">
-                        <span className="flex h-4 w-4 items-center justify-center rounded border border-[#2EAF4E] text-[#2EAF4E]">
-                            <Check size={11} strokeWidth={3} />
-                        </span>
-                        {t("currentPage.synced", { count: work.synced })}
-                    </p>
-                    <div className="flex flex-wrap gap-3">
-                        <button
-                            type="button"
-                            onClick={() => onComplete(work)}
-                            className="inline-flex h-10 min-w-[120px] cursor-pointer items-center justify-center rounded-xl border border-[#4B9AD2] px-5 text-[13px] font-semibold text-[#4B9AD2] btn-wipe btn-wipe-outline"
-                        >
-                            {t("currentPage.markComplete")}
-                        </button>
-                        <a
-                            href={`tel:${work.phone}`}
-                            className="inline-flex h-10 min-w-[150px] items-center justify-center gap-2 rounded-xl bg-[#4B9AD2] px-5 text-[13px] font-semibold text-white btn-wipe"
-                        >
-                            <MessageSquareText size={15} />
-                            {t("currentPage.contact")}
-                        </a>
-                    </div>
-                </div>
-            )}
+            <BarTag
+                {...barProps}
+                className={`mt-4 flex w-full items-center justify-between gap-3 rounded-xl border px-4 py-3 text-start text-[12px] font-semibold ${bar} ${linked ? "cursor-pointer transition-opacity hover:opacity-80" : ""}`}
+            >
+                <span className="flex items-center gap-2">
+                    <Icon size={16} className="shrink-0" />
+                    {t(`currentPage.bars.${work.status}`)}
+                </span>
+                <ChevronLeft size={16} className="shrink-0 ltr:rotate-180" />
+            </BarTag>
         </li>
     );
 }
 
-/** صفحة "الأعمال الحالية" للحرفي: بحث بالعنوان + فلترة بالحالة */
+/** صفحة "الأعمال الجارية" للحرفي: بحث + فلترة (عميل / مؤسسة / ملغاة) */
 export default function CraftsmanCurrent() {
     const { t } = useTranslation("craftsmanDashboard");
+    const navigate = useNavigate();
+    const { state, pathname } = useLocation();
+    const accepted = state?.accepted;
     const [query, setQuery] = useState("");
     const [tab, setTab] = useState("all");
-    // ⚠️ "تحديد كمكتمل" بالصفحة بس لحد ما نربطها بالسيرفر
-    const [works, setWorks] = useState(WORKS);
+    // الطلب اللي انقبل للتو من صفحة الطلبات بيظهر بأول القائمة "بانتظار الدفع"
+    const [works] = useState(() =>
+        accepted ? [{ ...accepted, id: `new-${accepted.id}`, source: "customer", status: "awaitingPayment" }, ...WORKS] : WORKS
+    );
     const [flash, setFlash] = useState("");
+    // رسالة "تم قبول الطلب" فوق، بتختفي لحالها
+    const [toast, setToast] = useState(accepted ? t("currentPage.acceptedToast") : "");
 
-    const complete = (work) => {
-        setWorks((list) => list.map((w) => (w.id === work.id ? { ...w, status: "completed", step: STEPS.length - 1 } : w)));
-        setFlash(t("currentPage.completed", { title: t(`currentPage.sample.${work.id}.title`) }));
-    };
-
-    const counts = useMemo(() => {
-        const c = { all: works.length };
-        works.forEach((w) => {
-            c[w.status] = (c[w.status] || 0) + 1;
-        });
-        return c;
-    }, [works]);
+    useEffect(() => {
+        if (!accepted) return undefined;
+        // بنمسح الـ state عشان الرسالة ما ترجع مع تحديث الصفحة
+        navigate(pathname, { replace: true, state: null });
+        const id = setTimeout(() => setToast(""), 4000);
+        return () => clearTimeout(id);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     const q = query.trim().toLowerCase();
-    const visible = works.filter(
-        (w) =>
-            (tab === "all" || w.status === tab) &&
-            (!q || t(`currentPage.sample.${w.id}.title`).toLowerCase().includes(q))
-    );
+    const visible = works.filter((w) => {
+        if (tab === "cancelled" ? w.status !== "cancelled" : tab !== "all" && w.source !== tab) return false;
+        if (!q) return true;
+        const s = `currentPage.works.${w.id}`;
+        return [w.title || t(`${s}.title`), w.owner || t(`${s}.owner`), w.place || t(`${s}.place`)].join(" ").toLowerCase().includes(q);
+    });
 
     return (
-        <div className="mx-auto flex max-w-[1000px] flex-col gap-6">
-            <SearchField value={query} onChange={setQuery} placeholder={t("currentPage.searchPlaceholder")} />
+        <div className="mx-auto flex max-w-[1000px] flex-col gap-5">
+            {toast && (
+                <p
+                    role="status"
+                    className="fixed left-1/2 top-[84px] z-50 flex -translate-x-1/2 items-center gap-2 rounded-xl bg-[#1B7F3B] px-7 py-3 text-[12px] font-semibold text-white shadow-[0_10px_24px_rgba(27,127,59,0.3)]"
+                >
+                    <CircleCheck size={15} />
+                    {toast}
+                </p>
+            )}
 
-            <StatusTabs
-                tabs={TABS.map((key) => ({ key, label: t(`currentPage.tabs.${key}`), count: counts[key] || 0 }))}
-                value={tab}
-                onChange={(key) => {
-                    setTab(key);
-                    setFlash("");
-                }}
-            />
+            <h1 className="text-[24px] font-bold text-[#22455E]">{t("nav.current")}</h1>
+
+            <div className="relative">
+                <Search size={15} className="pointer-events-none absolute start-4 top-1/2 -translate-y-1/2 text-[#A9B3BB]" />
+                <input
+                    type="search"
+                    value={query}
+                    onChange={(e) => setQuery(e.target.value)}
+                    placeholder={t("currentPage.search")}
+                    aria-label={t("currentPage.search")}
+                    className="h-12 w-full rounded-2xl border border-[#0000001A] bg-white pe-4 ps-11 text-[13px] text-[#414141] outline-none transition-colors placeholder:text-[#A9B3BB] focus:border-[#4B9AD2] focus:ring-1 focus:ring-[#4B9AD2] [&::-webkit-search-cancel-button]:hidden"
+                />
+            </div>
+
+            <div role="tablist" className="flex flex-wrap gap-2">
+                {TABS.map((key) => {
+                    const active = tab === key;
+                    return (
+                        <button
+                            key={key}
+                            type="button"
+                            role="tab"
+                            aria-selected={active}
+                            onClick={() => {
+                                setTab(key);
+                                setFlash("");
+                            }}
+                            className={`h-9 min-w-[56px] cursor-pointer rounded-full border px-4 text-[12px] transition-colors ${active
+                                ? "min-w-[72px] border-[#4B9AD2] bg-[#4B9AD2] font-semibold text-white"
+                                : "border-[#0000001A] bg-white text-[#475569] hover:border-[#8EC0E4] hover:text-[#4B9AD2]"
+                                }`}
+                        >
+                            {t(`currentPage.filters.${key}`)}
+                        </button>
+                    );
+                })}
+            </div>
 
             {flash && (
-                <p role="status" className="rounded-lg border border-[#BFEBCD] bg-[#E8F8EE] px-4 py-3 text-[13px] text-[#2E9E5B]">
+                <p role="status" className="rounded-xl border border-[#BFEBCD] bg-[#E8F8EE] px-4 py-3 text-[13px] text-[#2E9E5B]">
                     {flash}
                 </p>
             )}
 
             {visible.length ? (
-                <ul className="flex flex-col gap-5">
+                <ul className="flex flex-col gap-4">
                     {visible.map((w) => (
-                        <WorkCard key={w.id} work={w} onComplete={complete} />
+                        <WorkCard key={w.id} work={w} />
                     ))}
                 </ul>
             ) : (
-                <p className={`${card} px-6 py-12 text-center text-[13px] text-[#89949D]`}>{t("currentPage.empty")}</p>
+                <p className={`${box} px-6 py-12 text-center text-[13px] text-[#89949D]`}>{t("currentPage.empty")}</p>
             )}
         </div>
     );

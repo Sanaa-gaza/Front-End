@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import {
+    Check,
     ChevronDown,
     CircleCheck,
     FilePlus2,
@@ -13,7 +14,7 @@ import {
     Settings,
     X,
 } from "lucide-react";
-import { useGovernorates } from "../../../hooks/useReferenceData";
+import { useGovernorates, useServices } from "../../../hooks/useReferenceData";
 import DateField from "../../../components/dashboard/DateField";
 
 const BASE = "/dashboard/institution";
@@ -56,6 +57,76 @@ function Label({ htmlFor, required, children }) {
     );
 }
 
+/** قائمة منسدلة للخدمات المطلوبة — بتسمح باختيار أكثر من خدمة (من GET /services) */
+function ServicesSelect({ id, value, onChange, invalid }) {
+    const { t } = useTranslation("institutionDashboard");
+    const services = useServices();
+    const [open, setOpen] = useState(false);
+    const boxRef = useRef(null);
+
+    useEffect(() => {
+        if (!open) return;
+        const onDown = (e) => !boxRef.current?.contains(e.target) && setOpen(false);
+        const onKey = (e) => e.key === "Escape" && setOpen(false);
+        document.addEventListener("mousedown", onDown);
+        document.addEventListener("keydown", onKey);
+        return () => {
+            document.removeEventListener("mousedown", onDown);
+            document.removeEventListener("keydown", onKey);
+        };
+    }, [open]);
+
+    const toggle = (v) => onChange(value.includes(v) ? value.filter((x) => x !== v) : [...value, v]);
+    const names = services.options.filter((o) => value.includes(String(o.value))).map((o) => o.label);
+
+    return (
+        <div ref={boxRef} className="relative">
+            <button
+                id={id}
+                type="button"
+                onClick={() => setOpen((o) => !o)}
+                aria-haspopup="listbox"
+                aria-expanded={open}
+                aria-invalid={invalid}
+                className={`${field} flex cursor-pointer items-center pe-10 ps-4 text-start ${names.length ? "" : "text-[#89949D]"}`}
+            >
+                <span className="truncate">{names.length ? names.join("، ") : t("createTender.servicesPlaceholder")}</span>
+            </button>
+            <ChevronDown size={16} className={`${iconEnd} transition-transform ${open ? "rotate-180" : ""}`} />
+            {open && (
+                <ul
+                    role="listbox"
+                    aria-multiselectable="true"
+                    className="absolute inset-x-0 top-full z-20 mt-1.5 max-h-60 overflow-y-auto rounded-xl border border-[#DDE3E8] bg-white p-1.5 shadow-[0_10px_30px_rgba(35,74,100,0.14)]"
+                >
+                    {services.loading ? (
+                        <li className="px-3 py-2 text-[12px] text-[#89949D]">{t("createTender.loading")}</li>
+                    ) : (
+                        services.options.map((o) => {
+                            const v = String(o.value);
+                            const on = value.includes(v);
+                            return (
+                                <li key={v} role="option" aria-selected={on}>
+                                    <button
+                                        type="button"
+                                        onClick={() => toggle(v)}
+                                        className={`flex w-full cursor-pointer items-center gap-2.5 rounded-lg px-3 py-2 text-start text-[13px] transition-colors hover:bg-[#F2F8FD] ${on ? "text-[#286292]" : "text-[#414141]"}`}
+                                    >
+                                        <span className={`flex h-4 w-4 shrink-0 items-center justify-center rounded border ${on ? "border-[#4B9AD2] bg-[#4B9AD2] text-white" : "border-[#C9D3DB]"}`}>
+                                            {on && <Check size={11} strokeWidth={3} />}
+                                        </span>
+                                        {o.label}
+                                    </button>
+                                </li>
+                            );
+                        })
+                    )}
+                </ul>
+            )}
+        </div>
+    );
+}
+
 const FieldError = ({ text }) => (text ? <p className="mt-1 text-[11px] text-red-500">{text}</p> : null);
 
 /** صفحة "إنشاء مناقصة جديدة" — بتفتح من زر "+" بالشريط العلوي */
@@ -68,6 +139,7 @@ export default function InstitutionCreateTender() {
         number: "",
         category: "",
         closeDate: "",
+        services: [],
         governorateId: "",
         value: "",
         submitDate: "",
@@ -126,10 +198,13 @@ export default function InstitutionCreateTender() {
         if (!form.number.trim()) next.number = req;
         if (!form.category) next.category = req;
         if (!form.closeDate) next.closeDate = req;
+        if (!form.services.length) next.services = req;
         if (!form.desc.trim()) next.desc = req;
         if (!form.governorateId) next.governorateId = req;
-        if (form.value && !(Number(form.value) > 0)) next.value = t("createTender.invalidValue");
-        if (form.closeDate && form.submitDate && form.submitDate > form.closeDate) next.submitDate = t("createTender.submitAfterClose");
+        if (!form.value) next.value = req;
+        else if (!(Number(form.value) > 0)) next.value = t("createTender.invalidValue");
+        if (!form.submitDate) next.submitDate = req;
+        else if (form.closeDate && form.submitDate > form.closeDate) next.submitDate = t("createTender.submitAfterClose");
         setErrors(next);
         if (Object.keys(next).length) {
             document.getElementById(`tender-${Object.keys(next)[0]}`)?.focus();
@@ -160,7 +235,7 @@ export default function InstitutionCreateTender() {
                     <button
                         type="button"
                         onClick={() => {
-                            setForm({ desc: "", name: "", number: "", category: "", closeDate: "", governorateId: "", value: "", submitDate: "" });
+                            setForm({ desc: "", name: "", number: "", category: "", closeDate: "", services: [], governorateId: "", value: "", submitDate: "" });
                             setFiles([]);
                             setMapQuery("");
                             setMapPlace("");
@@ -251,6 +326,20 @@ export default function InstitutionCreateTender() {
                     </div>
 
                     <div className="mt-4">
+                        <Label htmlFor="tender-services" required>{t("createTender.services")}</Label>
+                        <ServicesSelect
+                            id="tender-services"
+                            value={form.services}
+                            onChange={(services) => {
+                                setForm((f) => ({ ...f, services }));
+                                setErrors((er) => ({ ...er, services: "" }));
+                            }}
+                            invalid={!!errors.services}
+                        />
+                        <FieldError text={errors.services} />
+                    </div>
+
+                    <div className="mt-4">
                         <Label htmlFor="tender-desc" required>{t("createTender.desc")}</Label>
                         <textarea
                             id="tender-desc"
@@ -300,7 +389,7 @@ export default function InstitutionCreateTender() {
                         <FieldError text={errors.governorateId} />
                     </div>
                     <div>
-                        <Label htmlFor="tender-value">{t("createTender.value")}</Label>
+                        <Label htmlFor="tender-value" required>{t("createTender.value")}</Label>
                         <IconInput
                             adornment="₪"
                             id="tender-value"
@@ -315,7 +404,7 @@ export default function InstitutionCreateTender() {
                         <FieldError text={errors.value} />
                     </div>
                     <div>
-                        <Label htmlFor="tender-submitDate">{t("createTender.submitDate")}</Label>
+                        <Label htmlFor="tender-submitDate" required>{t("createTender.submitDate")}</Label>
                         <DateField
                             id="tender-submitDate"
                             min={today}

@@ -22,9 +22,24 @@
     "customerReviews": "Customer reviews",
     "allReviews": "View all reviews",
     "sampleReviews": [
-        { "name": "Um Mohammad", "date": "May 5, 2025", "rating": 5, "comment": "Punctual and high-quality work." },
-        { "name": "Saeed Abu Khalil", "date": "May 12, 2025", "rating": 5, "comment": "Professional and fast work, highly recommended." },
-        { "name": "Mahmoud Al-Shaer", "date": "May 20, 2025", "rating": 4, "comment": "Excellent service and fair prices, slightly late." }
+        {
+            "name": "Um Mohammad",
+            "date": "May 5, 2025",
+            "rating": 5,
+            "comment": "Punctual and high-quality work."
+        },
+        {
+            "name": "Saeed Abu Khalil",
+            "date": "May 12, 2025",
+            "rating": 5,
+            "comment": "Professional and fast work, highly recommended."
+        },
+        {
+            "name": "Mahmoud Al-Shaer",
+            "date": "May 20, 2025",
+            "rating": 4,
+            "comment": "Excellent service and fair prices, slightly late."
+        }
     ],
     "workAlt": "Work photo {{n}}",
     "tabs": {
@@ -41,5 +56,40 @@
     "notFound": "This profile was not found",
     "openFromList": "Open the professional profile from the craftsmen list to see its details.",
     "backToCraftsmen": "Back to craftsmen",
-    "backToProviders": "Back to service providers"
+    "backToProviders": "Back to service providers",
+    "requestModal": {
+        "title": "Request details",
+        "close": "Close",
+        "problem": "Issue",
+        "problemPlaceholder": "Describe the problem",
+        "details": "Details",
+        "detailsHint": "Explain the problem",
+        "detailsPlaceholder": "Request details",
+        "photos": "Photos",
+        "photosCount": "{{count}} of {{max}} uploaded",
+        "attached": "Attached",
+        "removePhoto": "Remove photo",
+        "addPhoto": "Add photo",
+        "anotherPhoto": "Another photo",
+        "day": "Day",
+        "dayPlaceholder": "DD/MM/YYYY",
+        "time": "Time",
+        "timePlaceholder": "Hour",
+        "send": "Send request",
+        "sending": "Sending...",
+        "required": "This field is required",
+        "failed": "Couldn't send the request, please try again.",
+        "sentTitle": "Your request was sent",
+        "sentDesc": "{{name}} received your request. You'll be notified when they reply.",
+        "done": "Done"
+    },
+    "card": {
+        "available": "Available",
+        "years": "{{count}} years experience",
+        "reviews": "({{count}} reviews)",
+        "verified": "Verified",
+        "visitProfile": "Visit profile",
+        "save": "Save",
+        "unsave": "Remove from saved"
+    }
 }

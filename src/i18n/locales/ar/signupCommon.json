@@ -47,5 +47,6 @@
     "loadingOptions": "جارِ التحميل...",
     "uploading": "جارِ رفع الملفات...",
     "idNumberInvalid": "رقم الهوية يجب أن يتكون من 9 أرقام",
-    "teamSizeInvalid": "يرجى إدخال عدد صحيح أكبر من صفر"
+    "teamSizeInvalid": "يرجى إدخال عدد صحيح أكبر من صفر",
+    "institutionArea": "عنوان المؤسسة"
 }

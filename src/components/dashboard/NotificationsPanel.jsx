@@ -12,6 +12,7 @@ import {
     LockKeyhole,
     Megaphone,
     MessageCircle,
+    MessageSquare,
     Timer,
     X,
 } from "lucide-react";
@@ -28,6 +29,7 @@ const TYPES = {
     deadline: { icon: Timer, style: "bg-[#FFF3D1] text-[#C99400]" },
     request: { icon: Briefcase, style: "bg-[#E4EFFA] text-[#4B9AD2]" },
     payment: { icon: LockKeyhole, style: "bg-[#DDF6E3] text-[#2EAF4E]" },
+    chat: { icon: MessageSquare, style: "bg-[#E4EFFA] text-[#4B9AD2]" },
 };
 
 const DEFAULT_TABS = ["all", "unread", "tenders", "messages", "system"];
@@ -95,7 +97,7 @@ export default function NotificationsPanel({ notifications = [], onRead, tabs = 
                 <div
                     role="dialog"
                     aria-label={t("notificationsPanel.title")}
-                    className={`fixed inset-x-3 top-[76px] z-50 flex max-h-[calc(100vh-96px)] flex-col overflow-hidden rounded-[20px] border border-[#0000000D] bg-white shadow-[0_18px_50px_rgba(35,74,100,0.18)] sm:absolute sm:inset-x-auto sm:end-0 sm:top-full sm:mt-3 ${compact ? "sm:w-[360px]" : "sm:w-[540px]"}`}
+                    className={`fixed inset-x-3 top-[76px] z-50 flex max-h-[calc(100vh-96px)] flex-col overflow-hidden rounded-[20px] border border-[#0000000D] bg-white shadow-[0_18px_50px_rgba(35,74,100,0.18)] sm:absolute sm:inset-x-auto sm:end-0 sm:top-full sm:mt-3 ${compact ? "sm:w-[480px]" : "sm:w-[540px]"}`}
                 >
                     <div className={`flex items-center justify-between gap-3 px-5 py-4 ${compact ? "" : "border-b border-[#0000000D]"}`}>
                         <h2 className={`flex items-center gap-2.5 ${compact ? "text-[15px] font-bold text-[#141415]" : "text-[17px] font-medium text-[#414141]"}`}>
@@ -138,10 +140,10 @@ export default function NotificationsPanel({ notifications = [], onRead, tabs = 
                                     role="tab"
                                     aria-selected={active}
                                     onClick={() => setTab(key)}
-                                    className={`flex cursor-pointer items-center justify-center gap-1.5 whitespace-nowrap rounded-full border px-3 transition-colors ${compact ? "h-8 text-[11px]" : "h-9 flex-auto text-[12px]"} ${active
+                                    className={`flex cursor-pointer items-center justify-center gap-1.5 whitespace-nowrap rounded-full border px-3 transition-colors ${compact ? "h-9 px-4 text-[12px]" : "h-9 flex-auto text-[12px]"} ${active
                                         ? "border-[#4B9AD2] bg-[#4B9AD2] text-white shadow-[0_4px_12px_rgba(75,154,210,0.25)]"
                                         : compact
-                                            ? "border-[#CFE3F3] bg-[#EEF5FC] text-[#38749E] hover:border-[#8EC0E4]"
+                                            ? "border-[#DDE3E8] bg-white text-[#414141] hover:border-[#8EC0E4]"
                                             : "border-[#E3E9EE] bg-[#F5F8FA] text-[#575757] hover:border-[#8EC0E4]"
                                         }`}
                                 >
@@ -159,7 +161,7 @@ export default function NotificationsPanel({ notifications = [], onRead, tabs = 
                         })}
                     </div>
 
-                    <div className={`overflow-y-auto px-5 ${compact ? "pb-5 pt-1" : "py-4"}`}>
+                    <div className={`overflow-y-auto ${compact ? "px-4 pb-5 pt-1" : "px-5 py-4"}`}>
                         {visible.length ? (
                             <ul className="flex flex-col gap-3">
                                 {visible.map((n) => {
@@ -170,16 +172,17 @@ export default function NotificationsPanel({ notifications = [], onRead, tabs = 
                                                 <button
                                                     type="button"
                                                     onClick={() => openItem(n)}
-                                                    className={`flex w-full cursor-pointer items-start gap-3 rounded-2xl border px-4 py-3.5 text-start transition-colors hover:border-[#8EC0E4] ${n.read ? "border-[#0000000F] bg-white" : "border-[#CFE3F3] bg-[#EEF5FC]"
+                                                    className={`flex w-full cursor-pointer items-start gap-3 rounded-2xl border p-4 text-start transition-colors hover:border-[#8EC0E4] ${n.read ? "border-[#DDE3E8] bg-white" : "border-[#CFE3F3] bg-[#EEF5FC]"
                                                         }`}
                                                 >
                                                     <span className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full ${style}`}>
                                                         <Icon size={17} />
                                                     </span>
                                                     <span className="min-w-0 flex-1">
-                                                        <span className="block text-[13px] font-bold text-[#141415]">{n.title}</span>
-                                                        <span className="mt-1 block text-[10px] leading-[1.8] text-[#575757]">{n.body}</span>
-                                                        <span className="mt-1.5 block text-end text-[9px] text-[#89949D]">{n.time}</span>
+                                                        <span className="block text-[14px] font-bold text-[#141415]">{n.title}</span>
+                                                        <span className="mt-1.5 block text-[11px] leading-[1.9] text-[#575757]">{n.body}</span>
+                                                        {/* الوقت تحت النص من بداية السطر */}
+                                                        <span className="mt-3 block text-[10px] text-[#89949D]">{n.time}</span>
                                                     </span>
                                                 </button>
                                             </li>

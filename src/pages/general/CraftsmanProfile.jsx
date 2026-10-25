@@ -36,6 +36,7 @@ export default function CraftsmanProfile() {
         const craft = c.craft?.name || "";
         const location = state.location || "";
         const profile = {
+            id: c.id,
             name: c.full_name,
             craft,
             location,
@@ -55,8 +56,8 @@ export default function CraftsmanProfile() {
             hours: { days: t("defaultDays"), time: t("defaultTime") },
             areas: location ? t("nearby", { area: location }) : "",
         };
-        // التواصل وطلب الخدمة بيحتاجوا تسجيل دخول
-        content = <ProviderProfile profile={profile} chatTo="/login" requestTo="/login" />;
+        // "بدء محادثة" بيفتح صفحة المحادثات مع هالحرفي ("طلب خدمة" بيفتح نافذة تفاصيل الطلب من جوّا ProviderProfile)
+        content = <ProviderProfile profile={profile} chatTo="/chats" chatState={{ craftsman: c }} />;
     }
 
     return (

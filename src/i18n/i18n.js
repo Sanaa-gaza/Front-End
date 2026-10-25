@@ -38,6 +38,8 @@ import arCraftsmanDashboard from "./locales/ar/craftsmanDashboard.json";
 import enCraftsmanDashboard from "./locales/en/craftsmanDashboard.json";
 import arProviderProfile from "./locales/ar/providerProfile.json";
 import enProviderProfile from "./locales/en/providerProfile.json";
+import arChats from "./locales/ar/chats.json";
+import enChats from "./locales/en/chats.json";
 import arAdminDashboard from "./locales/ar/adminDashboard.json";
 import enAdminDashboard from "./locales/en/adminDashboard.json";
 
@@ -66,6 +68,7 @@ i18n
                 institutionDashboard: arInstitutionDashboard,
                 craftsmanDashboard: arCraftsmanDashboard,
                 providerProfile: arProviderProfile,
+                chats: arChats,
                 adminDashboard: arAdminDashboard,
 
             },
@@ -88,6 +91,7 @@ i18n
                 institutionDashboard: enInstitutionDashboard,
                 craftsmanDashboard: enCraftsmanDashboard,
                 providerProfile: enProviderProfile,
+                chats: enChats,
                 adminDashboard: enAdminDashboard,
 
             },

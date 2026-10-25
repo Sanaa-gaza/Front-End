@@ -8,6 +8,7 @@ import { getCraftsmen } from "../../api/endpoints";
 import { fileUrl } from "../../api/client";
 import { parseApiError } from "../../api/errors";
 import { useAreas, useGovernorates, useServices } from "../../hooks/useReferenceData";
+import ProviderCard from "../../components/profile/ProviderCard";
 
 // ==================== اتجاه الصفحة حسب اللغة ====================
 
@@ -209,72 +210,23 @@ function useLocationName(governorateId, areaId) {
 // ==================== بطاقة الحرفي ====================
 
 function CraftsmanCard({ craftsman: c }) {
-    const { t } = useTranslation("craftsmen");
     const location = useLocationName(c.governorate_id, c.area_id);
-    const rating = Number(c.avg_rating || 0);
-
+    // ما في endpoint لحرفي واحد لسا، فبنبعت بياناته مع الرابط لصفحة الملف المهني
     return (
-        <article className="group relative overflow-hidden rounded-[24px] border border-[#0000000F] bg-white p-5 shadow-[0_6px_20px_rgba(43,91,120,0.08)] transition-all duration-300 ease-out hover:-translate-y-1.5 hover:shadow-[0_16px_32px_rgba(75,154,210,0.22)]">
-            {/* خط أزرق متدرج أعلى البطاقة */}
-            <span
-                aria-hidden="true"
-                className="absolute inset-x-0 top-0 h-1 bg-linear-to-r from-[#4B9AD2]/40 via-[#4B9AD2]/80 to-[#4B9AD2]/40"
-            />
-
-            <div className="flex items-center gap-4">
-                <div className="relative shrink-0">
-                    <CraftsmanPhoto
-                        path={c.personal_photo_path}
-                        name={c.full_name}
-                        className="h-20 w-20 rounded-full ring-4 ring-[#E4EFFA] transition-transform duration-300 group-hover:scale-105"
-                    />
-                    {c.is_trusted && (
-                        <span
-                            title={t("card.verified")}
-                            className="absolute -bottom-1 end-0 flex h-7 w-7 items-center justify-center rounded-full border-2 border-white bg-[#4B9AD2] text-white"
-                        >
-                            <i className="fa-solid fa-check text-[11px]"></i>
-                        </span>
-                    )}
-                </div>
-
-                <div className="min-w-0 flex-1">
-                    <h3 className="truncate text-[17px] font-bold text-[#414141]">{c.full_name}</h3>
-                    <p className="mt-0.5 text-[13px] text-[#4B9AD2]">{c.craft?.name}</p>
-                    <p className="mt-1 flex items-center gap-1.5 text-[11px] text-[#89949D]">
-                        <i className="fa-solid fa-star text-[12px] text-[#F6C90E]"></i>
-                        <bdi dir="ltr" className="font-bold text-[#414141]">
-                            {rating.toFixed(1)}
-                        </bdi>
-                        <span>{t("card.reviews", { count: c.reviews_count || 0 })}</span>
-                    </p>
-                </div>
-
-                {c.is_available && (
-                    <span className="shrink-0 self-start whitespace-nowrap rounded-full border border-[#BFEBCD] bg-[#E8F8EE] px-3 py-0.5 text-[10px] font-medium text-[#2EAF4E]">
-                        {t("card.available")}
-                    </span>
-                )}
-            </div>
-
-            {location && (
-                <div className="mt-5 flex flex-wrap items-center gap-x-6 gap-y-2 text-[13px] text-[#414141]">
-                    <span className="flex items-center gap-1.5">
-                        <i className="fa-solid fa-location-dot text-[12px] text-[#4B9AD2]"></i>
-                        {location}
-                    </span>
-                </div>
-            )}
-
-            {/* ما في endpoint لحرفي واحد لسا، فبنبعت بياناته مع الرابط لصفحة الملف المهني */}
-            <Link
-                to={`/craftsmen/${c.id}`}
-                state={{ craftsman: c, location }}
-                className="mt-5 flex h-12 w-full items-center justify-center rounded-xl bg-[#4B9AD2] text-[16px] font-medium text-white btn-wipe"
-            >
-                {t("card.professionalProfile")}
-            </Link>
-        </article>
+        <ProviderCard
+            name={c.full_name}
+            craft={c.craft?.name}
+            photo={fileUrl(c.personal_photo_path)}
+            rating={c.avg_rating || 0}
+            reviews={c.reviews_count || 0}
+            years={c.years_of_experience}
+            location={location}
+            verified={c.is_trusted}
+            available={c.is_available}
+            to={`/craftsmen/${c.id}`}
+            linkState={{ craftsman: c, location }}
+            size="sm"
+        />
     );
 }
 

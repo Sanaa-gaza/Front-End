@@ -8,7 +8,7 @@
     "desc": "If you have any question or need help, we are here for you. Contact us quickly and easily to get the support you need.",
     "form": {
         "name": "Full name",
-        "city": "City",
+        "city": "Governorate",
         "topic": "Message subject",
         "topicPlaceholder": "Choose a subject",
         "message": "Message",
@@ -16,7 +16,7 @@
         "note": "The Sanaa team will receive your message and reply to your email as soon as possible.",
         "errors": {
             "name": "Please enter your full name",
-            "city": "Please enter your city",
+            "city": "Please choose your governorate",
             "topic": "Please choose a subject",
             "message": "Please write your message",
             "email": "Please enter your email",
@@ -24,7 +24,9 @@
         },
         "sending": "Sending...",
         "success": "Your message was sent successfully. We will contact you soon.",
-        "email": "Email"
+        "email": "Email",
+        "cityPlaceholder": "Choose governorate",
+        "cityLoading": "Loading..."
     },
     "topics": {
         "general": "General inquiry",

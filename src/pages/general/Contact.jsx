@@ -6,6 +6,7 @@ import Footer from "../../components/layout/Footer";
 import { sendContactMessage } from "../../api/endpoints";
 import { parseApiError } from "../../api/errors";
 import { getToken } from "../../api/session";
+import { useGovernorates } from "../../hooks/useReferenceData";
 
 // ==================== بيانات التواصل ====================
 
@@ -185,6 +186,8 @@ export default function Contact() {
     const { t } = useTranslation(["contact", "signupCommon"]);
     // المستخدم المسجّل دخول: السيرفر بياخد إيميله من حسابه، فما بنطلبه
     const isGuest = !getToken();
+    // المحافظة: قائمة من GET /governorates (form.city = رقم المحافظة)
+    const governorates = useGovernorates();
     const [form, setForm] = useState(EMPTY_FORM);
     const [errors, setErrors] = useState({});
     const [sending, setSending] = useState(false);
@@ -200,7 +203,7 @@ export default function Contact() {
         e.preventDefault();
         const next = {
             name: form.name.trim() ? "" : "name",
-            city: form.city.trim() ? "" : "city",
+            city: form.city ? "" : "city",
             email: !isGuest ? "" : !form.email.trim() ? "email" : EMAIL_PATTERN.test(form.email.trim()) ? "" : "emailInvalid",
             topic: form.topic ? "" : "topic",
             message: form.message.trim() ? "" : "message",
@@ -213,7 +216,8 @@ export default function Contact() {
         try {
             const res = await sendContactMessage({
                 full_name: form.name.trim(),
-                city: form.city.trim(),
+                // ⚠️ السيرفر بياخد حقل city كنص، فبنبعت اسم المحافظة
+                city: governorates.options.find((o) => String(o.value) === String(form.city))?.label || "",
                 ...(isGuest && { email: form.email.trim() }),
                 subject: form.topic,
                 message: form.message.trim(),
@@ -296,13 +300,24 @@ export default function Contact() {
                                         {t("form.city")}
                                     </label>
                                     <div className="relative">
-                                        <i className="fa-solid fa-location-dot pointer-events-none absolute end-3 top-1/2 -translate-y-1/2 text-[13px] text-[#4B9AD2]"></i>
-                                        <input
+                                        <select
                                             id="c-city"
                                             value={form.city}
                                             onChange={update("city")}
-                                            className={`${inputBase} ${borderFor("city")} pe-9 ps-3`}
-                                        />
+                                            className={`${inputBase} ${borderFor("city")} cursor-pointer appearance-none ps-3 pe-9 ${
+                                                form.city ? "" : "text-[12px] text-[#A9B3BB]"
+                                            }`}
+                                        >
+                                            <option value="" disabled hidden>
+                                                {governorates.loading ? t("form.cityLoading") : t("form.cityPlaceholder")}
+                                            </option>
+                                            {governorates.options.map((o) => (
+                                                <option key={o.value} value={o.value} className="text-[#141415]">
+                                                    {o.label}
+                                                </option>
+                                            ))}
+                                        </select>
+                                        <i className="fa-solid fa-chevron-down pointer-events-none absolute end-3 top-1/2 -translate-y-1/2 text-[10px] text-[#4B9AD2]"></i>
                                     </div>
                                     {errorText("city")}
                                 </div>
@@ -338,8 +353,8 @@ export default function Contact() {
                                         id="c-topic"
                                         value={form.topic}
                                         onChange={update("topic")}
-                                        className={`${inputBase} ${borderFor("topic")} cursor-pointer appearance-none ps-9 pe-3 ${
-                                            form.topic ? "" : "text-[#89949D]"
+                                        className={`${inputBase} ${borderFor("topic")} cursor-pointer appearance-none ps-3 pe-9 ${
+                                            form.topic ? "" : "text-[12px] text-[#A9B3BB]"
                                         }`}
                                     >
                                         <option value="" disabled hidden>
@@ -351,7 +366,7 @@ export default function Contact() {
                                             </option>
                                         ))}
                                     </select>
-                                    <i className="fa-solid fa-chevron-down pointer-events-none absolute start-3 top-1/2 -translate-y-1/2 text-[10px] text-[#4B9AD2]"></i>
+                                    <i className="fa-solid fa-chevron-down pointer-events-none absolute end-3 top-1/2 -translate-y-1/2 text-[10px] text-[#4B9AD2]"></i>
                                 </div>
                                 {errorText("topic")}
                             </div>

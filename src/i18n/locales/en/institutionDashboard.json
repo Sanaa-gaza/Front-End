@@ -10,10 +10,22 @@
         "settings": "Settings & verification"
     },
     "stats": {
-        "openTenders": "Open tenders",
-        "newOffers": "New offers",
-        "activeProjects": "Active projects",
-        "pendingReviews": "Projects awaiting your review"
+        "activeProjects": {
+            "title": "Active projects",
+            "desc": "Open projects"
+        },
+        "tenders": {
+            "title": "Tenders",
+            "desc": "Open tenders"
+        },
+        "offers": {
+            "title": "Offers",
+            "desc": "New offers not reviewed"
+        },
+        "completed": {
+            "title": "Completed projects",
+            "desc": "Projects awaiting your rating"
+        }
     },
     "kyc": {
         "title": "Notice: institution account verification (KYC) is under review",
@@ -198,7 +210,13 @@
         "stagesTitle": "Project stages & progress",
         "currentStage": "Current stage: {{ordinal}} — {{name}}",
         "allDone": "All project stages are complete",
-        "ordinals": ["1st", "2nd", "3rd", "4th", "5th"],
+        "ordinals": [
+            "1st",
+            "2nd",
+            "3rd",
+            "4th",
+            "5th"
+        ],
         "stages": {
             "created": "Project created",
             "accepted": "Offer accepted",
@@ -237,8 +255,14 @@
             "download": "Download {{name}}",
             "unavailable": "File not available yet",
             "files": {
-                "f1": { "name": "Field inspection & moisture report.pdf", "date": "Nov 02, 2026" },
-                "f2": { "name": "Materials warranty & paint quality certificate.pdf", "date": "Oct 15, 2026" }
+                "f1": {
+                    "name": "Field inspection & moisture report.pdf",
+                    "date": "Nov 02, 2026"
+                },
+                "f2": {
+                    "name": "Materials warranty & paint quality certificate.pdf",
+                    "date": "Oct 15, 2026"
+                }
             }
         },
         "chat": {
@@ -598,31 +622,56 @@
         "undo": "Undo",
         "profile": "Professional profile",
         "sample": {
-            "o1": { "craft": "Carpenter & furniture restoration", "location": "Gaza, Nuseirat" },
-            "o2": { "craft": "Electrician & wiring", "location": "Gaza, Rimal" },
-            "o3": { "craft": "Building restoration contractor", "location": "Deir al-Balah" },
-            "o4": { "craft": "General construction contractor", "location": "Khan Younis" }
+            "o1": {
+                "craft": "Carpentry & furniture restoration craftsmen",
+                "location": "Gaza, Nuseirat",
+                "desc": "Our foundation seeks comprehensive restoration and renovation of the \"Board Room\" facilities, including maintaining, renewing and rehabilitating the existing wooden furniture to the highest quality standards, matching our corporate identity and ready for use in the best possible condition."
+            },
+            "o2": {
+                "craft": "Electrician & wiring",
+                "location": "Gaza, Rimal",
+                "desc": "Our foundation needs new electrical installations in the administration building to approved safety standards, including modern distribution boards and energy-efficient lighting."
+            },
+            "o3": {
+                "craft": "Building restoration contractor",
+                "location": "Deir al-Balah",
+                "desc": "We are looking for a contractor to restore the school building, repair damaged roofs and walls, and rehabilitate classrooms so they are safe and ready for students."
+            },
+            "o4": {
+                "craft": "General construction contractor",
+                "location": "Khan Younis",
+                "desc": "Our foundation is tendering the construction of a complete medical complex including clinics, waiting rooms and service facilities, per the approved plans and specifications."
+            }
         },
         "applicantsSample": {
             "a1": {
-                "name": "Mohammad Al-Agha",
-                "specialty": "Plumbing",
+                "name": "Waseem Mohammad",
+                "specialty": "Electrical",
                 "location": "Nuseirat",
-                "desc": "I provide high-quality restoration and wooden furniture maintenance with attention to detail and over 12 years of experience in carpentry and interior decoration. My team is ready to start immediately once the offer is accepted, fully committed to the schedule and on-time delivery."
+                "desc": "Full commitment to all occupational safety requirements and use of standard-compliant materials to prevent future faults, with a warranty on installation and maintenance work.",
+                "address": "Khan Younis, Al-Mawasi"
             },
             "a2": {
                 "name": "Khaled Nasser",
                 "specialty": "Carpentry",
                 "location": "Gaza",
-                "desc": "Carpenter and interior decorator with long experience restoring offices and meeting halls. I work with a complete team and offer a one-year warranty on all work after delivery."
+                "desc": "Carpenter and interior decorator with long experience restoring offices and meeting halls. I work with a complete team and offer a one-year warranty on all work after delivery.",
+                "address": "Gaza, Al-Rimal"
             },
             "a3": {
                 "name": "Yousef Hamdan",
                 "specialty": "Painting & decor",
                 "location": "Deir al-Balah",
-                "desc": "Specialized in painting, decoration and interior finishing. Punctual, using high-quality materials at fair prices."
+                "desc": "Specialized in painting, decoration and interior finishing. Punctual, using high-quality materials at fair prices.",
+                "address": "Deir al-Balah, Al-Baraka"
             }
-        }
+        },
+        "descTitle": "Description",
+        "prevPhoto": "Previous photo",
+        "nextPhoto": "Next photo",
+        "photo": "Photo {{n}}",
+        "morePhotos": "{{count}} more photos",
+        "applicantsCount": "Applicants"
     },
     "messagesPage": {
         "search": "Search by subject or reference number",
@@ -850,8 +899,8 @@
                 "time": "1 day ago"
             },
             "n6": {
-                "title": "New announcement published",
-                "body": "A tender for \"Computer supply\" was announced by the Ministry of Education.",
+                "title": "Payment transferred",
+                "body": "1200 ILS was transferred to craftsman Khaled Yousef for the \"Building maintenance\" project.",
                 "time": "2 days ago"
             }
         }
@@ -913,7 +962,9 @@
             "denied": "Location access was not allowed. Allow it in your browser or type the place name.",
             "failed": "Couldn't find your location. Try again or type the place name.",
             "empty": "Type the place name first."
-        }
+        },
+        "services": "Required services",
+        "servicesPlaceholder": "Services I need"
     },
     "searchSections": {
         "pages": "Pages",

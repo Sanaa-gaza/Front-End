@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import { ArrowLeft, ArrowRight, Check, ChevronDown, LayoutGrid, MapPin, Search, Star, Wrench } from "lucide-react";
 import { useServices } from "../../../hooks/useReferenceData";
 import { PROVIDERS } from "./providersData";
+import ProviderCard from "../../../components/profile/ProviderCard";
 
 const BASE = "/dashboard/institution";
 const PAGE_SIZE = 6;
@@ -32,72 +33,22 @@ function FilterSelect({ value, onChange, label, children }) {
     );
 }
 
-function ProviderCard({ provider: p }) {
+function ProviderItem({ provider: p }) {
     const { t } = useTranslation("institutionDashboard");
     const s = `providersPage.sample.${p.id}`;
-    const name = t(`${s}.name`);
-    const tags = t(`${s}.tags`, { returnObjects: true });
-
     return (
-        <article className="flex flex-col rounded-[20px] border border-[#0000000F] border-t-[3px] border-t-[#8EC0E4] bg-white px-4 pb-5 pt-4 shadow-[0_6px_20px_rgba(43,91,120,0.08)] transition-shadow hover:shadow-[0_12px_28px_rgba(75,154,210,0.18)]">
-            <div className="flex items-start gap-3">
-                <div className="relative shrink-0">
-                    <div className="flex h-[84px] w-[84px] items-center justify-center rounded-full bg-[#EEF5FC] text-[18px] font-bold text-[#575757]">
-                        {name.charAt(0)}
-                    </div>
-                    {p.verified && (
-                        <span
-                            title={t("providersPage.verified")}
-                            className="absolute bottom-0.5 end-0.5 flex h-[22px] w-[22px] items-center justify-center rounded-full border-2 border-white bg-[#4B9AD2] text-white"
-                        >
-                            <Check size={12} strokeWidth={3} />
-                        </span>
-                    )}
-                </div>
-
-                <div className="min-w-0 flex-1 pt-3">
-                    <h3 className="truncate text-[15px] font-bold text-[#414141]">{name}</h3>
-                    <p className="mt-1.5 text-[12px] text-[#4B9AD2]">{t(`${s}.specialty`)}</p>
-                    <p className="mt-2 flex items-center gap-1 text-[10px] text-[#89949D]">
-                        <Star size={12} className="fill-[#F6C90E] text-[#F6C90E]" />
-                        <bdi dir="ltr" className="font-bold text-[#414141]">{p.rating}</bdi>
-                        {t("providersPage.reviews", { count: p.reviews })}
-                    </p>
-                </div>
-
-                {p.available && (
-                    <span className="shrink-0 whitespace-nowrap rounded-full border border-[#BFEBCD] bg-[#EEFAF2] px-3 py-1 text-[10px] text-[#2EAF4E]">
-                        {t("providersPage.available")}
-                    </span>
-                )}
-            </div>
-
-            <div className="mt-3 flex flex-wrap items-center gap-x-5 gap-y-1 text-[12px] text-[#414141]">
-                <span className="flex items-center gap-1.5">
-                    <Wrench size={13} className="text-[#4B9AD2]" />
-                    {t("providersPage.years", { count: p.years })}
-                </span>
-                <span className="flex items-center gap-1.5">
-                    <MapPin size={13} className="text-[#4B9AD2]" />
-                    {t(`${s}.location`)}
-                </span>
-            </div>
-
-            <ul className="mb-auto mt-4 flex flex-wrap gap-x-5 gap-y-2">
-                {(Array.isArray(tags) ? tags : []).map((tag) => (
-                    <li key={tag} className="rounded-full bg-[#EAF3FB] px-4 py-1.5 text-[11px] text-[#4B9AD2]">
-                        {tag}
-                    </li>
-                ))}
-            </ul>
-
-            <Link
-                to={`${BASE}/providers/${p.id}`}
-                className="mt-4 flex h-[42px] w-full items-center justify-center rounded-xl bg-[#4B9AD2] text-[16px] text-white btn-wipe"
-            >
-                {t("providersPage.profile")}
-            </Link>
-        </article>
+        <ProviderCard
+            name={t(`${s}.name`)}
+            craft={t(`${s}.specialty`)}
+            rating={p.rating}
+            reviews={p.reviews}
+            years={p.years}
+            location={t(`${s}.location`)}
+            verified={p.verified}
+            available={p.available}
+            to={`${BASE}/providers/${p.id}`}
+            size="sm"
+        />
     );
 }
 
@@ -234,7 +185,7 @@ export default function InstitutionProviders() {
             {visible.length ? (
                 <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
                     {visible.map((p) => (
-                        <ProviderCard key={p.id} provider={p} />
+                        <ProviderItem key={p.id} provider={p} />
                     ))}
                 </div>
             ) : (

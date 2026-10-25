@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { CircleAlert, Hourglass } from "lucide-react";
+import { CircleAlert, Hourglass, Star } from "lucide-react";
 import { getProfile } from "../../../api/endpoints";
 
 const BASE = "/dashboard/institution";
@@ -10,11 +10,26 @@ const BASE = "/dashboard/institution";
 // الباك إند لسا ما فيه endpoints للمناقصات والإحصائيات (سبرنت 1 بس للحسابات).
 // لما تجهز، استبدلي هاي القيم بطلبات من src/api/endpoints.js
 
+/** شنطة بخطين (نفس public/images/luggage-02.svg) بس بلون currentColor */
+function LuggageIcon({ size = 14, strokeWidth = 2 }) {
+    return (
+        <svg width={size} height={size} viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path
+                d="M7.84375 18.6154V8.09231M15.5625 18.6154V8.09231M8.4375 7.50769V5.16923C8.4375 4.52348 8.96916 4 9.625 4H13.7812C14.4371 4 14.9688 4.52348 14.9688 5.16923V7.50769M4.875 19.2H19.125C20.4367 19.2 21.5 18.153 21.5 16.8615V9.84615C21.5 8.55466 20.4367 7.50769 19.125 7.50769H4.875C3.56332 7.50769 2.5 8.55466 2.5 9.84615V16.8615C2.5 18.153 3.56332 19.2 4.875 19.2Z"
+                stroke="currentColor"
+                strokeWidth={strokeWidth}
+                strokeLinecap="round"
+            />
+        </svg>
+    );
+}
+
+// icon: أيقونة (lucide أو LuggageIcon)، أو symbol: رمز نصي (₪)
 const STATS = [
-    { key: "openTenders", value: 8 },
-    { key: "newOffers", value: 23 },
-    { key: "activeProjects", value: 12 },
-    { key: "pendingReviews", value: 3 },
+    { key: "activeProjects", value: 13, symbol: "₪" },
+    { key: "tenders", value: 8, icon: LuggageIcon },
+    { key: "offers", value: 3, icon: LuggageIcon },
+    { key: "completed", value: 4.5, icon: Star },
 ];
 
 const TENDERS = [
@@ -63,11 +78,17 @@ export default function InstitutionHome() {
     return (
         <div className="mx-auto flex max-w-[1100px] flex-col gap-6">
             {/* الإحصائيات */}
-            <section className="grid grid-cols-2 gap-4 lg:grid-cols-4">
-                {STATS.map((s) => (
-                    <div key={s.key} className={`${card} px-4 py-6 text-center`}>
-                        <p className="text-[30px] font-bold leading-none text-[#4B9AD2] tabular-nums">{s.value}</p>
-                        <p className="mt-3 text-[12px] font-medium text-[#414141]">{t(`stats.${s.key}`)}</p>
+            <section className="grid grid-cols-2 gap-4 lg:grid-cols-4 lg:gap-6">
+                {STATS.map(({ key, value, icon: Icon, symbol }) => (
+                    <div key={key} className="rounded-[28px] border border-[#0000001A] bg-white px-6 py-6">
+                        <p className="flex items-center gap-2.5 text-[13px] text-[#414141]">
+                            {t(`stats.${key}.title`)}
+                            <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#EAF3FB] text-[#4B9AD2]">
+                                {Icon ? <Icon size={13} strokeWidth={1.8} /> : <span className="text-[13px] font-bold leading-none">{symbol}</span>}
+                            </span>
+                        </p>
+                        <p className="mt-4 text-[26px] font-bold leading-none text-[#22455E] tabular-nums">{value}</p>
+                        <p className="mt-4 text-[12px] text-[#575757]">{t(`stats.${key}.desc`)}</p>
                     </div>
                 ))}
             </section>

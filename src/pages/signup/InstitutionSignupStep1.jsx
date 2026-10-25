@@ -196,6 +196,7 @@ export default function InstitutionSignupStep1() {
                                     onAreaChange={(v) => { setArea(v); clearError("area"); }}
                                     governorateError={tf(errors.city)}
                                     areaError={tf(errors.area)}
+                                    areaLabel={t("signupCommon:institutionArea")}
                                     className="mb-4"
                                 />
 

@@ -8,8 +8,9 @@ import ComingSoon from "../../../components/dashboard/ComingSoon";
 import { getProfile, updateProfile } from "../../../api/endpoints";
 import CraftsmanHome, { AvailabilityToggle } from "./CraftsmanHome";
 import CraftsmanSearch from "./CraftsmanSearch";
-import CraftsmanRequests from "./CraftsmanRequests";
+import CraftsmanRequests, { CraftsmanRequestDetails } from "./CraftsmanRequests";
 import CraftsmanCurrent from "./CraftsmanCurrent";
+import CraftsmanWorkDetails from "./CraftsmanWorkDetails";
 import CraftsmanProfile from "./CraftsmanProfile";
 
 const BASE = "/dashboard/craftsman";
@@ -21,7 +22,7 @@ const NOTIFICATIONS = [
     { id: "n1", type: "deadline", category: "requests", to: `${BASE}/requests` },
     { id: "n2", type: "request", category: "requests", to: `${BASE}/requests` },
     { id: "n3", type: "payment", category: "finance", to: `${BASE}/wallet` },
-    { id: "n4", type: "message", category: "tenders", to: `${BASE}/current`, read: true },
+    { id: "n4", type: "chat", category: "tenders", to: `${BASE}/current`, read: true },
 ];
 const NOTIFICATION_TABS = ["all", "requests", "tenders", "finance"];
 
@@ -128,7 +129,9 @@ export default function CraftsmanDashboard() {
                     <Route index element={<CraftsmanHome profile={profile} availability={availability} />} />
                     <Route path="search" element={<CraftsmanSearch />} />
                     <Route path="requests" element={<CraftsmanRequests />} />
+                    <Route path="requests/:requestId" element={<CraftsmanRequestDetails />} />
                     <Route path="current" element={<CraftsmanCurrent />} />
+                    <Route path="current/:workId" element={<CraftsmanWorkDetails />} />
                     <Route path="profile" element={<CraftsmanProfile profile={profile} onProfileChange={setProfile} />} />
                     <Route path="*" element={<ComingSoon homePath={BASE} />} />
                 </Routes>

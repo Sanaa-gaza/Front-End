@@ -47,5 +47,6 @@
     "loadingOptions": "Loading...",
     "uploading": "Uploading files...",
     "idNumberInvalid": "ID number must be exactly 9 digits",
-    "teamSizeInvalid": "Please enter a whole number greater than zero"
+    "teamSizeInvalid": "Please enter a whole number greater than zero",
+    "institutionArea": "Institution Address"
 }

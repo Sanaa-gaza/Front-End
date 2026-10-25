@@ -1,0 +1,44 @@
+{
+    "title": "Chats",
+    "search": "Search by craftsman or institution name",
+    "filter": "Filter chats",
+    "filters": {
+        "all": "All",
+        "craftsman": "Craftsmen",
+        "institution": "Institutions"
+    },
+    "timeAgo": "5 hours ago",
+    "now": "Now",
+    "noResults": "No matching chats",
+    "empty": "Start the conversation with {{name}}",
+    "pick": "Pick a chat from the list",
+    "placeholder": "Send a message",
+    "send": "Send",
+    "sample": {
+        "c1": {
+            "name": "Khaled Yousef",
+            "preview": "Sure, I'll do it as soon as I arrive",
+            "m1": "I'll finish my work soon"
+        },
+        "c2": {
+            "name": "Rami Hasan",
+            "preview": "Lights installed, thank you"
+        },
+        "c3": {
+            "name": "Samer Odeh",
+            "preview": "I can come Thursday at 4"
+        },
+        "c4": {
+            "name": "Mohammad Ahmad",
+            "preview": "Hi, I'm on my way"
+        },
+        "c5": {
+            "name": "Al-Noor Development Foundation",
+            "preview": "We received your offer, we'll contact you soon"
+        },
+        "c6": {
+            "name": "Ahmad Nasser",
+            "preview": "I sent you the work photos"
+        }
+    }
+}
