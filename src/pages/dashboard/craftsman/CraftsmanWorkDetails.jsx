@@ -5,7 +5,7 @@ import { Camera, Check, ChevronDown, CircleCheck, Clock, Flag, ImageIcon, Info, 
 import { WORKS } from "./CraftsmanCurrent";
 
 const BASE = "/dashboard/craftsman";
-const box = "rounded-[20px] border border-[#0000001A] bg-white";
+const box = "rounded-[20px] border border-[#DDDDDD] bg-white";
 
 // شريط الحالة أعلى الصفحة (نفس ألوان شريط البطاقة بالأعمال الجارية)
 // scheduled = المبلغ محجوز وموعد التنفيذ لسا ما إجا (العدّاد)، accepted = التنفيذ شغّال (زر "تم إنجاز العمل")
@@ -91,7 +91,7 @@ function DoneModal({ institution, onClose, onConfirm }) {
                 }}
                 className="mx-auto w-full max-w-[440px] rounded-[22px] bg-white shadow-[0_20px_60px_rgba(15,23,42,0.25)]"
             >
-                <div className="relative border-b border-[#0000000F] px-12 py-4 text-center">
+                <div className="relative border-b border-[#DDDDDD] px-12 py-4 text-center">
                     <h2 id="done-title" className="text-[17px] font-bold text-[#1E293B]">{t(`${d}.title`)}</h2>
                     <button
                         ref={closeRef}
@@ -197,7 +197,7 @@ function DoneModal({ institution, onClose, onConfirm }) {
                     </div>
                 </div>
 
-                <div className="border-t border-[#0000000F] px-5 py-4">
+                <div className="border-t border-[#DDDDDD] px-5 py-4">
                     <button
                         type="submit"
                         className="flex h-12 w-full cursor-pointer items-center justify-center gap-2 rounded-xl bg-linear-to-l from-[#1A78BE] to-[#5BAEE4] text-[14px] font-semibold text-white shadow-[0_6px_16px_rgba(26,120,190,0.3)] btn-wipe ltr:bg-linear-to-r"
@@ -247,7 +247,7 @@ function Chat({ initial }) {
                             key={m.id}
                             className={`max-w-[85%] rounded-2xl px-3.5 py-2.5 text-[11px] leading-[1.8] ${m.from === "me"
                                 ? "self-start bg-[#4B87BE] text-white"
-                                : "self-end border border-[#0000001A] bg-white text-[#1E293B]"
+                                : "self-end border border-[#DDDDDD] bg-white text-[#1E293B]"
                                 }`}
                         >
                             {m.text}
@@ -271,7 +271,7 @@ function Chat({ initial }) {
                         onChange={(e) => setDraft(e.target.value)}
                         placeholder={t(`${d}.chatPlaceholder`)}
                         aria-label={t(`${d}.chatPlaceholder`)}
-                        className="h-10 w-full rounded-xl border border-[#0000001A] bg-white pe-10 ps-3 text-[11px] text-[#414141] outline-none placeholder:text-[#A9B3BB] focus:border-[#4B9AD2] focus:ring-1 focus:ring-[#4B9AD2]"
+                        className="h-10 w-full rounded-xl border border-[#DDDDDD] bg-white pe-10 ps-3 text-[11px] text-[#414141] outline-none placeholder:text-[#A9B3BB] focus:border-[#4B9AD2] focus:ring-1 focus:ring-[#4B9AD2]"
                     />
                     <button
                         type="button"
@@ -298,7 +298,7 @@ function Chat({ initial }) {
                     type="submit"
                     disabled={!draft.trim()}
                     aria-label={t(`${d}.send`)}
-                    className="flex h-10 w-10 shrink-0 cursor-pointer items-center justify-center rounded-full border border-[#0000001A] text-[#475569] transition-colors hover:border-[#4B9AD2] hover:text-[#4B9AD2] disabled:cursor-default disabled:opacity-60"
+                    className="flex h-10 w-10 shrink-0 cursor-pointer items-center justify-center rounded-full border border-[#DDDDDD] text-[#475569] transition-colors hover:border-[#4B9AD2] hover:text-[#4B9AD2] disabled:cursor-default disabled:opacity-60"
                 >
                     <SendHorizontal size={17} className="rotate-180 ltr:rotate-0" />
                 </button>
@@ -338,7 +338,7 @@ function ProjectSteps({ current, institution }) {
                                     ? i === 1
                                         ? "bg-[#F2C200]"
                                         : "bg-[#3D8BC9]"
-                                    : "border-2 border-[#DDE3E8] bg-[#F7FAFD]"
+                                    : "border-2 border-[#DDDDDD] bg-[#F7FAFD]"
                                 }`}
                         >
                             {done && <Check size={16} strokeWidth={3} />}
@@ -400,8 +400,8 @@ function LogEntry({ entry, ownerName, latest }) {
                 className={`min-w-0 flex-1 rounded-xl border p-3.5 ${latest
                     ? "border-[#8EC0E4] bg-white shadow-[0_0_0_3px_rgba(142,192,228,0.18)]"
                     : entry.author === "org"
-                        ? "border-[#0000000F] bg-[#F7F9FB]"
-                        : "border-[#0000001A] bg-white"
+                        ? "border-[#DDDDDD] bg-[#F7F9FB]"
+                        : "border-[#DDDDDD] bg-white"
                     }`}
             >
                 <p className="flex items-center justify-between gap-3 text-[10px]">
@@ -487,7 +487,7 @@ function UpdateModal({ onClose, onAdd }) {
                 }}
                 className="mx-auto w-full max-w-[440px] rounded-[22px] bg-white shadow-[0_20px_60px_rgba(15,23,42,0.25)]"
             >
-                <div className="relative border-b border-[#0000000F] px-12 py-4 text-center">
+                <div className="relative border-b border-[#DDDDDD] px-12 py-4 text-center">
                     <h2 id="update-title" className="text-[17px] font-bold text-[#1E293B]">{t(`${u}.title`)}</h2>
                     <p className="mt-1 text-[11px] text-[#89949D]">{t(`${u}.subtitle`)}</p>
                     <button
@@ -610,7 +610,7 @@ function UpdateModal({ onClose, onAdd }) {
                     </div>
                 </div>
 
-                <div className="border-t border-[#0000000F] px-5 py-4">
+                <div className="border-t border-[#DDDDDD] px-5 py-4">
                     <button
                         type="submit"
                         className="flex h-12 w-full cursor-pointer items-center justify-center gap-2 rounded-xl bg-linear-to-l from-[#1A78BE] to-[#5BAEE4] text-[14px] font-semibold text-white shadow-[0_6px_16px_rgba(26,120,190,0.3)] btn-wipe ltr:bg-linear-to-r"
@@ -652,7 +652,7 @@ function Countdown({ start, days, onStart }) {
             <h2 className="text-[12px] font-bold text-[#1E293B]">{t(`${c}.title`)}</h2>
             <dl className="mt-3 grid grid-cols-3 gap-3">
                 {units.map(({ key, value }) => (
-                    <div key={key} className="rounded-xl border border-[#0000001A] bg-white py-3 text-center">
+                    <div key={key} className="rounded-xl border border-[#DDDDDD] bg-white py-3 text-center">
                         <dd className="text-[16px] font-bold text-[#3D8BC9] tabular-nums">{value}</dd>
                         <dt className="mt-1 text-[10px] text-[#89949D]">{t(`${c}.${key}`)}</dt>
                     </div>
@@ -760,7 +760,7 @@ function ProjectView({ work }) {
         </section>
     );
     const mapCard = (
-        <section className="relative h-[220px] overflow-hidden rounded-[20px] border border-[#0000001A] bg-[#E5ECF1]">
+        <section className="relative h-[220px] overflow-hidden rounded-[20px] border border-[#DDDDDD] bg-[#E5ECF1]">
             <iframe
                 title={t(`${d}.map`)}
                 src={`https://www.google.com/maps?q=${encodeURIComponent(place)}&t=k&z=15&output=embed`}

@@ -70,7 +70,7 @@ function ActionsMenu({ anchor, user, name, onAction, onClose }) {
             role="menu"
             aria-label={t("usersPage.menu.open", { name })}
             style={{ top: rect.bottom + 6, left: Math.max(8, Math.min(rect.left - 4, window.innerWidth - 150)) }}
-            className="fixed z-50 w-[142px] rounded-xl border border-[#0000000D] bg-white p-1.5 shadow-[0_10px_30px_rgba(35,74,100,0.18)]"
+            className="fixed z-50 w-[142px] rounded-xl border border-[#DDDDDD] bg-white p-1.5 shadow-[0_10px_30px_rgba(35,74,100,0.18)]"
         >
             {items.map(({ key, icon: Icon }) => (
                 <button key={key} type="button" role="menuitem" onClick={() => onAction(key)} className={item}>
@@ -78,7 +78,7 @@ function ActionsMenu({ anchor, user, name, onAction, onClose }) {
                     {t(`usersPage.menu.${key}`)}
                 </button>
             ))}
-            <hr className="my-1 border-[#0000000F]" />
+            <hr className="my-1 border-[#DDDDDD]" />
             <button
                 type="button"
                 role="menuitem"
@@ -544,7 +544,7 @@ export default function AdminUsers() {
             )}
 
             {/* الجدول (أو رسالة الخطأ لو ما في اتصال) */}
-            <section className="overflow-hidden rounded-[20px] border border-[#0000000D] bg-white shadow-[0_4px_24px_rgba(35,74,100,0.08)]">
+            <section className="overflow-hidden rounded-[20px] border border-[#DDDDDD] bg-white shadow-[0_4px_24px_rgba(35,74,100,0.08)]">
                 {!online ? (
                     <LoadError tab={tab} retrying={retrying} onRetry={retry} />
                 ) : rows.length === 0 ? (
@@ -554,7 +554,7 @@ export default function AdminUsers() {
                 <div className="overflow-x-auto">
                     <table className="w-full min-w-[820px] text-[12px]">
                         <thead>
-                            <tr className="border-b border-[#0000002E] text-[13px] text-[#4B9AD2]">
+                            <tr className="border-b border-[#DDDDDD] text-[13px] text-[#4B9AD2]">
                                 <th className="px-4 pb-4 pt-6 text-start font-bold first:ps-6">{t(`usersPage.columns.name.${tab}`)}</th>
                                 {columns.map((c) => (
                                     <th key={c} className="px-3 pb-4 pt-6 text-center font-bold">{t(`usersPage.columns.${c}`)}</th>

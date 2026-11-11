@@ -21,9 +21,9 @@ const BASE = "/dashboard/institution";
 const DESC_MAX = 1000;
 const CATEGORIES = ["construction", "maintenance", "electrical", "plumbing", "supply", "furnishing", "other"];
 
-const card = "rounded-[20px] border border-[#0000000D] bg-white shadow-[0_4px_24px_rgba(35,74,100,0.08)]";
+const card = "rounded-[20px] border border-[#DDDDDD] bg-white shadow-[0_4px_24px_rgba(35,74,100,0.08)]";
 const field =
-    "h-11 w-full rounded-xl border border-[#DDE3E8] bg-white shadow-[0_1px_2px_rgba(16,24,40,0.04)] text-[13px] text-[#414141] outline-none placeholder:text-[#89949D] focus:border-[#4B9AD2] focus:ring-1 focus:ring-[#4B9AD2] aria-[invalid=true]:border-red-400";
+    "h-11 w-full rounded-xl border border-[#DDDDDD] bg-white shadow-[0_1px_2px_rgba(16,24,40,0.04)] text-[13px] text-[#414141] outline-none placeholder:text-[#89949D] focus:border-[#4B9AD2] focus:ring-1 focus:ring-[#4B9AD2] aria-[invalid=true]:border-red-400";
 const label = "mb-1.5 block text-[12px] font-bold text-[#22455E]";
 const iconEnd = "pointer-events-none absolute end-3.5 top-1/2 -translate-y-1/2 text-[#6F7B85]";
 
@@ -97,7 +97,7 @@ function ServicesSelect({ id, value, onChange, invalid }) {
                 <ul
                     role="listbox"
                     aria-multiselectable="true"
-                    className="absolute inset-x-0 top-full z-20 mt-1.5 max-h-60 overflow-y-auto rounded-xl border border-[#DDE3E8] bg-white p-1.5 shadow-[0_10px_30px_rgba(35,74,100,0.14)]"
+                    className="absolute inset-x-0 top-full z-20 mt-1.5 max-h-60 overflow-y-auto rounded-xl border border-[#DDDDDD] bg-white p-1.5 shadow-[0_10px_30px_rgba(35,74,100,0.14)]"
                 >
                     {services.loading ? (
                         <li className="px-3 py-2 text-[12px] text-[#89949D]">{t("createTender.loading")}</li>
@@ -112,7 +112,7 @@ function ServicesSelect({ id, value, onChange, invalid }) {
                                         onClick={() => toggle(v)}
                                         className={`flex w-full cursor-pointer items-center gap-2.5 rounded-lg px-3 py-2 text-start text-[13px] transition-colors hover:bg-[#F2F8FD] ${on ? "text-[#286292]" : "text-[#414141]"}`}
                                     >
-                                        <span className={`flex h-4 w-4 shrink-0 items-center justify-center rounded border ${on ? "border-[#4B9AD2] bg-[#4B9AD2] text-white" : "border-[#C9D3DB]"}`}>
+                                        <span className={`flex h-4 w-4 shrink-0 items-center justify-center rounded border ${on ? "border-[#4B9AD2] bg-[#4B9AD2] text-white" : "border-[#DDDDDD]"}`}>
                                             {on && <Check size={11} strokeWidth={3} />}
                                         </span>
                                         {o.label}
@@ -473,7 +473,7 @@ export default function InstitutionCreateTender() {
                         type="button"
                         onClick={locateOnMap}
                         disabled={mapStatus === "locating"}
-                        className="inline-flex h-11 shrink-0 cursor-pointer items-center justify-center gap-2 rounded-xl border border-[#D9DEE3] px-5 text-[12px] font-bold text-[#22455E] shadow-[0_1px_2px_rgba(16,24,40,0.04)] transition-colors hover:border-[#4B9AD2] hover:text-[#4B9AD2] disabled:cursor-wait disabled:opacity-60"
+                        className="inline-flex h-11 shrink-0 cursor-pointer items-center justify-center gap-2 rounded-xl border border-[#DDDDDD] px-5 text-[12px] font-bold text-[#22455E] shadow-[0_1px_2px_rgba(16,24,40,0.04)] transition-colors hover:border-[#4B9AD2] hover:text-[#4B9AD2] disabled:cursor-wait disabled:opacity-60"
                     >
                         <MapIcon size={16} className="text-[#286292]" />
                         {mapStatus === "locating" ? t("createTender.locating") : t("createTender.locate")}
@@ -499,7 +499,7 @@ export default function InstitutionCreateTender() {
                         <Search size={17} strokeWidth={1.7} className={iconEnd} />
                     </div>
                     {/* معاينة الخريطة (Google Maps embed — ما بيحتاج مفتاح) */}
-                    <div className="h-[120px] w-full shrink-0 overflow-hidden rounded-2xl border border-[#DCE3E8] bg-[#E5ECF1] md:h-[80px] md:w-[190px]">
+                    <div className="h-[120px] w-full shrink-0 overflow-hidden rounded-2xl border border-[#DDDDDD] bg-[#E5ECF1] md:h-[80px] md:w-[190px]">
                         {mapPlace ? (
                             <iframe
                                 title={t("createTender.mapPreview")}
@@ -546,7 +546,8 @@ export default function InstitutionCreateTender() {
                 )}
             </section>
 
-            <div className="flex flex-wrap gap-3">
+            {/* الأزرار على جهة النهاية (يسار بالعربي) */}
+            <div className="flex flex-wrap justify-end gap-3">
                 <button
                     type="submit"
                     className="inline-flex h-11 min-w-[180px] cursor-pointer items-center justify-center rounded-xl bg-[#4B9AD2] px-6 text-[14px] font-semibold text-white btn-wipe"

@@ -6,7 +6,7 @@ import { VERIFICATIONS, VERIFICATION_STATUS_STYLES } from "./AdminVerification";
 
 const BASE = "/dashboard/admin";
 
-const card = "rounded-[18px] border border-[#0000000D] bg-white shadow-[0_4px_20px_rgba(35,74,100,0.07)]";
+const card = "rounded-[18px] border border-[#DDDDDD] bg-white shadow-[0_4px_20px_rgba(35,74,100,0.07)]";
 
 // ⚠️ تفاصيل تجريبية (المستندات، بيانات التسجيل، السجل) لحد ما يجهز endpoint طلب التوثيق
 // url: رابط الملف من السيرفر (فاضي بالتجريبي فالمعاينة والتحميل معطّلين)
@@ -643,7 +643,7 @@ export default function AdminVerificationReview() {
 
                         <p className="mb-3 mt-6 text-[13px] text-[#141415]">{t(`${rv}.previewOf`, { name: docName(previewKey) })}</p>
                         {/* المعاينة — لما ييجي رابط الملف من السيرفر بنعرضه هون (صورة أو PDF) */}
-                        <div className="flex h-[90px] items-center justify-center rounded-xl border-2 border-dashed border-[#D5DAE0] bg-[#F2F3F5] text-[11px] text-[#575757]">
+                        <div className="flex h-[90px] items-center justify-center rounded-xl border-2 border-dashed border-[#DDDDDD] bg-[#F2F3F5] text-[11px] text-[#575757]">
                             {t(`${rv}.openFull`)}
                         </div>
                     </section>

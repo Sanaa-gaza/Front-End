@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { ChevronsLeft, ChevronsRight, LogOut, Menu, Plus, Search, X } from "lucide-react";
+import { ArrowLeft, ChevronsLeft, ChevronsRight, House, LogOut, Menu, Plus, Search, X } from "lucide-react";
 import useLangDir from "../../hooks/useLangDir";
 import { getMe, logout } from "../../api/endpoints";
 import { clearAuth, getStoredUser } from "../../api/session";
@@ -71,6 +71,8 @@ export default function DashboardLayout({
     const [collapsed, setCollapsed] = useState(false);
     const [mobileOpen, setMobileOpen] = useState(false);
     const [loggingOut, setLoggingOut] = useState(false);
+    // حركة زر "العودة إلى الموقع" قبل الانتقال
+    const [leavingSite, setLeavingSite] = useState(false);
     const [lastPath, setLastPath] = useState(pathname);
 
     // قائمة الجوال بتتسكر لحالها لما تتغير الصفحة
@@ -178,7 +180,7 @@ export default function DashboardLayout({
     };
 
     return (
-        <div className="flex min-h-dvh bg-[#F7FAFD]">
+        <div className="flex min-h-dvh bg-white">
             {!hideSidebar && (
             <>
             {/* القائمة الجانبية على الشاشات الكبيرة */}
@@ -208,7 +210,7 @@ export default function DashboardLayout({
 
             <div className="flex min-w-0 flex-1 flex-col">
                 {/* الشريط العلوي */}
-                <header className="sticky top-0 z-30 flex h-[68px] items-center justify-between gap-4 border-b border-[#0000000D] bg-white px-4 sm:px-6">
+                <header className="sticky top-0 z-30 flex h-[68px] items-center justify-between gap-4 border-b border-[#DDDDDD] bg-white px-4 sm:px-6">
                     <div className="flex min-w-0 items-center gap-3">
                         {!hideSidebar && (
                         <button
@@ -291,7 +293,29 @@ export default function DashboardLayout({
                     </div>
                 </header>
 
-                <main className="flex-1 px-4 py-6 sm:px-6 lg:px-8">{children}</main>
+                <main className="flex-1 px-4 py-6 sm:px-6 lg:px-8">
+                    {/* العودة للموقع (الصفحة الرئيسية) — بكل صفحات لوحات التحكم، على جهة النهاية (يسار بالعربي) */}
+                    <div className="mx-auto mb-5 flex max-w-[1100px] justify-end">
+                        {/* back-site (index.css): السهم بيتحرك عند المرور، وعند الضغط بينطلق ويرجع قبل الانتقال */}
+                        <Link
+                            to="/"
+                            onClick={(e) => {
+                                if (e.metaKey || e.ctrlKey || e.shiftKey || leavingSite) return;
+                                e.preventDefault();
+                                setLeavingSite(true);
+                                setTimeout(() => navigate("/"), 600);
+                            }}
+                            className={`back-site inline-flex h-9 items-center gap-2 rounded-full border border-[#C7E0F1] bg-white pe-3.5 ps-1.5 text-[12px] font-semibold text-[#3D8BC9] transition-colors hover:border-[#4B9AD2] hover:bg-[#F3F8FD] ${leavingSite ? "is-leaving" : ""}`}
+                        >
+                            <span className="back-site-home relative z-[1] flex h-6 w-6 items-center justify-center rounded-full bg-[#E3EFFA]">
+                                <House size={13} />
+                            </span>
+                            <span className="relative z-[1]">{t("backToSite")}</span>
+                            <ArrowLeft size={14} className="back-site-arrow relative z-[1] ltr:rotate-180" />
+                        </Link>
+                    </div>
+                    {children}
+                </main>
             </div>
         </div>
     );

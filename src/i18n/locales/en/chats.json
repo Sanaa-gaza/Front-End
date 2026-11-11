@@ -18,7 +18,10 @@
         "c1": {
             "name": "Khaled Yousef",
             "preview": "Sure, I'll do it as soon as I arrive",
-            "m1": "I'll finish my work soon"
+            "m1": "I'll finish my work soon",
+            "m2": "Hi, about the mixer replacement request, when can you come?",
+            "m3": "Hello, I can come today in the afternoon",
+            "m4": "Great, the address is Beit Lahia, Abdulaziz St."
         },
         "c2": {
             "name": "Rami Hasan",
@@ -40,5 +43,22 @@
             "name": "Ahmad Nasser",
             "preview": "I sent you the work photos"
         }
-    }
+    },
+    "subtitle": "Talk to craftsmen and institutions about your requests and projects",
+    "unreadTotal": "{{count}} unread messages",
+    "types": {
+        "craftsman": "Craftsman",
+        "institution": "Institution"
+    },
+    "online": "Online",
+    "lastSeen": "Last seen an hour ago",
+    "today": "Today",
+    "yesterday": "Yesterday",
+    "attach": "Attach a file",
+    "quickTitle": "Start with a quick message or write your own",
+    "quickReplies": [
+        "Hi, I'd like to ask about your services",
+        "Are you available this week?",
+        "Please send me a price quote"
+    ]
 }

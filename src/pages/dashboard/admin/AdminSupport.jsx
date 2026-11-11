@@ -71,7 +71,7 @@ function ActionsMenu({ anchor, ticket, label, onAction, onClose }) {
             role="menu"
             aria-label={label}
             style={{ top: rect.bottom + 6, left: Math.max(8, Math.min(rect.left - 4, window.innerWidth - 170)) }}
-            className="fixed z-50 w-[160px] rounded-xl border border-[#0000000D] bg-white p-1.5 shadow-[0_10px_30px_rgba(35,74,100,0.18)]"
+            className="fixed z-50 w-[160px] rounded-xl border border-[#DDDDDD] bg-white p-1.5 shadow-[0_10px_30px_rgba(35,74,100,0.18)]"
         >
             {items.map(({ key, icon: Icon }) => (
                 <button
@@ -153,7 +153,7 @@ function SupportReplyModal({ title, sender, type, onSend, onClose }) {
                     <p className="mt-1 text-[9px] text-[#575757]">{t(`${m}.type`)}: {type}</p>
                 </div>
 
-                <hr className="my-5 border-[#0000001A]" />
+                <hr className="my-5 border-[#DDDDDD]" />
 
                 <label htmlFor="support-subject" className="mb-3 block text-[12px] text-[#575757]">{t(`${m}.subject`)}</label>
                 <input
@@ -328,7 +328,7 @@ export default function AdminSupport() {
             )}
 
             {/* الجدول */}
-            <section className="overflow-hidden rounded-[20px] border border-[#0000000D] bg-white shadow-[0_4px_24px_rgba(35,74,100,0.08)]">
+            <section className="overflow-hidden rounded-[20px] border border-[#DDDDDD] bg-white shadow-[0_4px_24px_rgba(35,74,100,0.08)]">
                 {rows.length === 0 ? (
                     <div className="flex flex-col items-center px-6 py-14 text-center">
                         <span className="flex h-16 w-16 items-center justify-center rounded-full bg-[#EEF5FC] text-[#4B9AD2]">
@@ -343,7 +343,7 @@ export default function AdminSupport() {
                     <div className="overflow-x-auto">
                         <table className="w-full min-w-[860px] text-[12px]">
                             <thead>
-                                <tr className="border-b border-[#0000002E] text-[13px] text-[#4B9AD2]">
+                                <tr className="border-b border-[#DDDDDD] text-[13px] text-[#4B9AD2]">
                                     <th className="px-4 pb-4 pt-6 ps-6 text-start font-bold">{t(`${sp}.columns.subject`)}</th>
                                     <th className={th}>{t(`${sp}.columns.sender`)}</th>
                                     <th className={th}>{t(`${sp}.columns.type`)}</th>

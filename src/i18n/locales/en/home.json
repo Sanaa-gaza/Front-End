@@ -184,5 +184,11 @@
             "Ask me about any service",
             "Got a problem at home?"
         ]
+    },
+    "account": {
+        "title": "My account",
+        "dashboard": "Dashboard",
+        "logout": "Log out",
+        "notifications": "Notifications"
     }
 }

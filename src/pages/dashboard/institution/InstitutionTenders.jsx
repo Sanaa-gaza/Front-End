@@ -9,7 +9,7 @@ import { TENDERS } from "./tendersData";
 const BASE = "/dashboard/institution";
 
 // ترتيب التبويبات زي التصميم
-const TABS = ["all", "open", "executing", "submitting", "completed", "cancelled", "draft"];
+const TABS = ["all", "open", "executing", "completed", "cancelled", "draft"];
 
 const STATUS_STYLES = {
     open: "bg-[#DDF6E3] text-[#2EAF4E]",
@@ -73,7 +73,7 @@ function CancelModal({ title, onClose, onConfirm }) {
                     <button
                         type="button"
                         onClick={onClose}
-                        className="h-11 flex-1 cursor-pointer rounded-xl border border-[#D9DEE3] text-[14px] font-semibold text-[#575757] transition-colors hover:bg-[#F5F8FA]"
+                        className="h-11 flex-1 cursor-pointer rounded-xl border border-[#DDDDDD] text-[14px] font-semibold text-[#575757] transition-colors hover:bg-[#F5F8FA]"
                     >
                         {t("tendersPage.cancelModal.back")}
                     </button>
@@ -135,7 +135,7 @@ export default function InstitutionTenders() {
             )}
 
             {/* الجدول */}
-            <section className="overflow-hidden rounded-[20px] border border-[#0000000D] bg-white shadow-[0_4px_24px_rgba(35,74,100,0.08)]">
+            <section className="overflow-hidden rounded-[20px] border border-[#DDDDDD] bg-white shadow-[0_4px_24px_rgba(35,74,100,0.08)]">
                 <div className="overflow-x-auto">
                     <table className="w-full min-w-[760px] text-[13px]">
                         <thead>

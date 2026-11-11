@@ -126,7 +126,7 @@ export default function ProjectChat() {
     };
 
     return (
-        <section className="rounded-[20px] border border-[#0000000D] bg-white p-5 shadow-[0_4px_24px_rgba(35,74,100,0.08)] sm:p-6">
+        <section className="rounded-[20px] border border-[#DDDDDD] bg-white p-5 shadow-[0_4px_24px_rgba(35,74,100,0.08)] sm:p-6">
             <div className="flex items-start justify-between gap-4">
                 <div className="flex items-start gap-3">
                     <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#EAF3FB] text-[#286292]">
@@ -223,7 +223,7 @@ export default function ProjectChat() {
                             className="absolute end-[-22px] top-[calc(100%+22px)] z-30 w-[140px] rounded-xl bg-white px-1.5 py-1 shadow-[0_6px_18px_rgba(0,0,0,0.16)]"
                         >
                             {ATTACH.map((opt, i) => (
-                                <li key={opt.key} className={i > 0 ? "border-t border-dashed border-[#D5D9DD]" : ""}>
+                                <li key={opt.key} className={i > 0 ? "border-t border-dashed border-[#DDDDDD]" : ""}>
                                     <button
                                         type="button"
                                         role="menuitem"

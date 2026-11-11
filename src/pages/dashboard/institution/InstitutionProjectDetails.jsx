@@ -18,7 +18,7 @@ import { DocumentsStack, PhotoLibrary, UserBadge } from "../../../components/das
 
 const BASE = "/dashboard/institution";
 
-const card = "rounded-[20px] border border-[#0000000D] bg-white shadow-[0_4px_24px_rgba(35,74,100,0.08)]";
+const card = "rounded-[20px] border border-[#DDDDDD] bg-white shadow-[0_4px_24px_rgba(35,74,100,0.08)]";
 
 const STATUS_STYLES = {
     executing: "bg-[#DDF6E3] text-[#2EAF4E]",

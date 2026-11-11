@@ -16,7 +16,7 @@ const CHATS = [
 
 const TYPES = ["all", "craftsman", "team", "contractor", "institution", "customer"];
 
-const panel = "rounded-[22px] border border-[#0000000D] border-t-2 border-t-[#9CC9EA] bg-white shadow-[0_4px_20px_rgba(35,74,100,0.08)]";
+const panel = "rounded-[22px] border border-[#DDDDDD] border-t-2 border-t-[#9CC9EA] bg-white shadow-[0_4px_20px_rgba(35,74,100,0.08)]";
 
 /** المحادثات: قائمة على جنب (بحث + فلتر نوع الحساب) والمحادثة المختارة جنبها */
 export default function AdminChats() {
@@ -109,7 +109,7 @@ export default function AdminChats() {
                     </div>
                 </div>
 
-                <ul className="mt-4 min-h-0 flex-1 divide-y divide-[#0000000F] overflow-y-auto px-1">
+                <ul className="mt-4 min-h-0 flex-1 divide-y divide-[#DDDDDD] overflow-y-auto px-1">
                     {chats.map((x) => {
                         const n = name(x.id);
                         const active = x.id === selectedId;

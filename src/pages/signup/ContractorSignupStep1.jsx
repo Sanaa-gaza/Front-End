@@ -45,7 +45,7 @@ export default function ContractorSignupStep1() {
         const newErrors = {
             quadName: getRequiredError(quadName, "quadNameRequired"),
             idNumber: getRequiredError(idNumber, "idNumberRequired")
-                || (/^d{9}$/.test(idNumber.trim()) ? "" : "signupCommon:idNumberInvalid"),
+                || (/^\d{9}$/.test(idNumber.trim()) ? "" : "signupCommon:idNumberInvalid"),
             phone: getPhoneError(phone),
             email: getEmailError(email),
             password: getPasswordError(password),
@@ -126,7 +126,14 @@ export default function ContractorSignupStep1() {
                                         placeholder={t("idNumberPlaceholder")}
                                         inputProps={{ inputMode: "numeric", maxLength: 9 }}
                                         value={idNumber}
-                                        onChange={(e) => { setIdNumber(e.target.value); clearError("idNumber"); }}
+                                        // أرقام بس (بنشيل المسافات والحروف وبنحوّل الأرقام العربية ٠-٩)
+                                        onChange={(e) => {
+                                            const digits = e.target.value
+                                                .replace(/[٠-٩]/g, (d) => String(d.charCodeAt(0) - 0x0660))
+                                                .replace(/\D/g, "");
+                                            setIdNumber(digits);
+                                            clearError("idNumber");
+                                        }}
                                         error={tf(errors.idNumber)}
                                         accentColor="#4B9AD2"
                                     />

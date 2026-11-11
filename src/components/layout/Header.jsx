@@ -1,7 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { Menu, X } from "lucide-react";
+import { Bell, ChevronDown, Languages, LayoutDashboard, LogOut, Menu, UserRound, X } from "lucide-react";
+import { logout } from "../../api/endpoints";
+import { clearAuth, getStoredUser, getToken, homePathForRole } from "../../api/session";
 
 // scroll: يمرر لقسم بالصفحة الرئيسية، path: يفتح صفحة ثانية
 const NAV_ITEMS = [
@@ -15,11 +17,101 @@ const NAV_ITEMS = [
     { key: "contact", path: "/contact" },
 ];
 
+/** زر "حسابي" للمستخدم المسجّل + قائمة (لوحة التحكم / اللغة / تسجيل الخروج) */
+function AccountMenu({ user, onLogout }) {
+    const navigate = useNavigate();
+    const { t, i18n } = useTranslation("home");
+    const [open, setOpen] = useState(false);
+    const ref = useRef(null);
+
+    // Escape أو الضغط برا القائمة بيسكرها
+    useEffect(() => {
+        if (!open) return undefined;
+        const onDown = (e) => !ref.current?.contains(e.target) && setOpen(false);
+        const onKey = (e) => e.key === "Escape" && setOpen(false);
+        document.addEventListener("mousedown", onDown);
+        window.addEventListener("keydown", onKey);
+        return () => {
+            document.removeEventListener("mousedown", onDown);
+            window.removeEventListener("keydown", onKey);
+        };
+    }, [open]);
+
+    const item = "flex w-full cursor-pointer items-center gap-2.5 rounded-lg px-3 py-2.5 text-start text-[13px] transition-colors";
+
+    return (
+        <div ref={ref} className="relative">
+            <button
+                type="button"
+                onClick={() => setOpen((o) => !o)}
+                aria-haspopup="menu"
+                aria-expanded={open}
+                className="flex h-10 cursor-pointer items-center gap-2 rounded-full bg-[#EEF5FC] pe-3 ps-1.5 transition-colors hover:bg-[#E3EFFA]"
+            >
+                <span className="flex h-7 w-7 items-center justify-center rounded-full bg-[#3D8BC9] text-white">
+                    <UserRound size={15} />
+                </span>
+                {/* اسم صاحب الحساب، ولو مش محفوظ "حسابي" */}
+                <span className="max-w-[130px] truncate text-[13px] font-medium text-[#1E293B]">{user?.full_name?.trim() || t("account.title")}</span>
+                <ChevronDown size={14} className={`text-[#89949D] transition-transform ${open ? "rotate-180" : ""}`} />
+            </button>
+
+            {open && (
+                <div role="menu" className="absolute end-0 top-full mt-2 w-56 rounded-2xl border border-[#0000000D] bg-white p-1.5 shadow-[0_14px_36px_rgba(35,74,100,0.16)]">
+                    {user?.full_name && (
+                        <p className="truncate border-b border-[#0000000F] px-3 pb-2.5 pt-1.5 text-[12px] font-semibold text-[#1E293B]">{user.full_name}</p>
+                    )}
+                    <button
+                        type="button"
+                        role="menuitem"
+                        onClick={() => navigate(homePathForRole(user?.role))}
+                        className={`${item} text-[#1E293B] hover:bg-[#F3F8FD]`}
+                    >
+                        <LayoutDashboard size={16} className="text-[#4B9AD2]" />
+                        {t("account.dashboard")}
+                    </button>
+                    <button
+                        type="button"
+                        role="menuitem"
+                        onClick={() => {
+                            i18n.changeLanguage(i18n.language === "ar" ? "en" : "ar");
+                            setOpen(false);
+                        }}
+                        className={`${item} text-[#1E293B] hover:bg-[#F3F8FD]`}
+                    >
+                        <Languages size={16} className="text-[#4B9AD2]" />
+                        {i18n.language === "ar" ? "English" : "العربية"}
+                    </button>
+                    <button type="button" role="menuitem" onClick={onLogout} className={`${item} text-[#D64545] hover:bg-[#FFF6F6]`}>
+                        <LogOut size={16} className="rtl:rotate-180" />
+                        {t("account.logout")}
+                    </button>
+                </div>
+            )}
+        </div>
+    );
+}
+
 export default function Header() {
     const navigate = useNavigate();
     const { pathname } = useLocation();
     const { t, i18n } = useTranslation("home");
     const [menuOpen, setMenuOpen] = useState(false);
+    // المستخدم المسجّل دخول: بيظهرله الجرس و"حسابي" بدل الدخول وإنشاء الحساب
+    const [user, setUser] = useState(() => (getToken() ? getStoredUser() || {} : null));
+    const dashboardPath = homePathForRole(user?.role);
+
+    const signOut = async () => {
+        setMenuOpen(false);
+        try {
+            await logout();
+        } catch {
+            // حتى لو السيرفر ما رد، بنطلع من الحساب محلياً
+        }
+        clearAuth();
+        setUser(null);
+        navigate("/");
+    };
     // القسم الظاهر حالياً بالصفحة الرئيسية (home أو services) عشان نعلّم رابطه active
     const [activeSection, setActiveSection] = useState("home");
 
@@ -111,31 +203,50 @@ export default function Header() {
                 </nav>
 
                 <div className="flex shrink-0 items-center gap-2 sm:gap-3">
+                    {user ? (
+                        <>
+                            {/* ⚠️ النقطة الحمرا ثابتة لحد ما يصير في endpoint لعدد الإشعارات — الجرس بيفتح لوحة التحكم */}
+                            <button
+                                type="button"
+                                onClick={() => navigate(dashboardPath)}
+                                aria-label={t("account.notifications")}
+                                className="relative flex h-9 w-9 cursor-pointer items-center justify-center rounded-full text-[#4B9AD2] transition-colors hover:bg-[#EEF5FC]"
+                            >
+                                <Bell size={18} />
+                                <span className="absolute end-1.5 top-1.5 h-2 w-2 rounded-full border border-white bg-[#E5484D]" />
+                            </button>
+                            <div className="hidden sm:block">
+                                <AccountMenu user={user} onLogout={signOut} />
+                            </div>
+                        </>
+                    ) : (
+                        <>
+                            <button
+                                type="button"
+                                onClick={toggleLang}
+                                aria-label="Language"
+                                className="flex h-9 w-9 items-center justify-center rounded-full border border-[#4B9AD2] text-[11px] font-bold text-[#4B9AD2] cursor-pointer btn-wipe btn-wipe-outline"
+                            >
+                                {i18n.language === "ar" ? "EN" : "AR"}
+                            </button>
 
-                    <button
-                        type="button"
-                        onClick={toggleLang}
-                        aria-label="Language"
-                        className="flex h-9 w-9 items-center justify-center rounded-full border border-[#4B9AD2] text-[11px] font-bold text-[#4B9AD2] cursor-pointer btn-wipe btn-wipe-outline"
-                    >
-                        {i18n.language === "ar" ? "EN" : "AR"}
-                    </button>
+                            <button
+                                type="button"
+                                onClick={() => navigate("/login")}
+                                className="hidden sm:inline-flex h-10 items-center rounded-lg bg-[#4B9AD2] px-5 text-sm font-medium text-white cursor-pointer btn-wipe"
+                            >
+                                {t("login")}
+                            </button>
 
-                    <button
-                        type="button"
-                        onClick={() => navigate("/login")}
-                        className="hidden sm:inline-flex h-10 items-center rounded-lg bg-[#4B9AD2] px-5 text-sm font-medium text-white cursor-pointer btn-wipe"
-                    >
-                        {t("login")}
-                    </button>
-
-                    <button
-                        type="button"
-                        onClick={() => navigate("/get-started")}
-                        className="hidden sm:inline-flex h-10 items-center rounded-lg border border-[#4B9AD2] px-5 text-sm font-medium text-[#4B9AD2] cursor-pointer btn-wipe btn-wipe-outline"
-                    >
-                        {t("createAccount")}
-                    </button>
+                            <button
+                                type="button"
+                                onClick={() => navigate("/get-started")}
+                                className="hidden sm:inline-flex h-10 items-center rounded-lg border border-[#4B9AD2] px-5 text-sm font-medium text-[#4B9AD2] cursor-pointer btn-wipe btn-wipe-outline"
+                            >
+                                {t("createAccount")}
+                            </button>
+                        </>
+                    )}
 
                     <button
                         type="button"
@@ -196,20 +307,51 @@ export default function Header() {
                 </nav>
 
                 <div className="flex flex-col gap-3 border-t border-[#0000000F] p-4">
-                    <button
-                        type="button"
-                        onClick={() => goToPage("/login")}
-                        className="inline-flex h-11 items-center justify-center rounded-lg bg-[#4B9AD2] px-5 text-sm font-medium text-white cursor-pointer btn-wipe"
-                    >
-                        {t("login")}
-                    </button>
-                    <button
-                        type="button"
-                        onClick={() => goToPage("/get-started")}
-                        className="inline-flex h-11 items-center justify-center rounded-lg border border-[#4B9AD2] px-5 text-sm font-medium text-[#4B9AD2] cursor-pointer btn-wipe btn-wipe-outline"
-                    >
-                        {t("createAccount")}
-                    </button>
+                    {user ? (
+                        <>
+                            <button
+                                type="button"
+                                onClick={() => goToPage(dashboardPath)}
+                                className="inline-flex h-11 items-center justify-center gap-2 rounded-lg bg-[#4B9AD2] px-5 text-sm font-medium text-white cursor-pointer btn-wipe"
+                            >
+                                <LayoutDashboard size={16} />
+                                {t("account.dashboard")}
+                            </button>
+                            <button
+                                type="button"
+                                onClick={toggleLang}
+                                className="inline-flex h-11 items-center justify-center gap-2 rounded-lg border border-[#4B9AD2] px-5 text-sm font-medium text-[#4B9AD2] cursor-pointer btn-wipe btn-wipe-outline"
+                            >
+                                <Languages size={16} />
+                                {i18n.language === "ar" ? "English" : "العربية"}
+                            </button>
+                            <button
+                                type="button"
+                                onClick={signOut}
+                                className="inline-flex h-11 items-center justify-center gap-2 rounded-lg border border-[#E8A5AB] px-5 text-sm font-medium text-[#D64545] cursor-pointer transition-colors hover:bg-[#FFF6F6]"
+                            >
+                                <LogOut size={16} className="rtl:rotate-180" />
+                                {t("account.logout")}
+                            </button>
+                        </>
+                    ) : (
+                        <>
+                            <button
+                                type="button"
+                                onClick={() => goToPage("/login")}
+                                className="inline-flex h-11 items-center justify-center rounded-lg bg-[#4B9AD2] px-5 text-sm font-medium text-white cursor-pointer btn-wipe"
+                            >
+                                {t("login")}
+                            </button>
+                            <button
+                                type="button"
+                                onClick={() => goToPage("/get-started")}
+                                className="inline-flex h-11 items-center justify-center rounded-lg border border-[#4B9AD2] px-5 text-sm font-medium text-[#4B9AD2] cursor-pointer btn-wipe btn-wipe-outline"
+                            >
+                                {t("createAccount")}
+                            </button>
+                        </>
+                    )}
                 </div>
             </aside>
         </div>

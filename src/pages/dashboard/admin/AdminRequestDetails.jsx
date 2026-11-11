@@ -8,7 +8,7 @@ import { USERS } from "./AdminUsers";
 
 const BASE = "/dashboard/admin";
 
-const card = "rounded-[18px] border border-[#0000000D] bg-white shadow-[0_4px_20px_rgba(35,74,100,0.07)]";
+const card = "rounded-[18px] border border-[#DDDDDD] bg-white shadow-[0_4px_20px_rgba(35,74,100,0.07)]";
 
 /** صفحة تفاصيل الطلب بلوحة الأدمن (/dashboard/admin/requests/:requestId) */
 export default function AdminRequestDetails() {
@@ -129,7 +129,7 @@ export default function AdminRequestDetails() {
                         <button
                             type="button"
                             onClick={() => setRejecting(false)}
-                            className="h-9 cursor-pointer rounded-lg border border-[#0000001A] bg-white px-4 text-[12px] font-medium text-[#575757] hover:bg-[#F5F6F8]"
+                            className="h-9 cursor-pointer rounded-lg border border-[#DDDDDD] bg-white px-4 text-[12px] font-medium text-[#575757] hover:bg-[#F5F6F8]"
                         >
                             {t(`${d}.cancel`)}
                         </button>

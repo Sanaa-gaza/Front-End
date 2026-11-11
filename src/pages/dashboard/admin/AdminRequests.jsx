@@ -47,7 +47,7 @@ function ActionsMenu({ anchor, request, label, onAction, onClose }) {
             role="menu"
             aria-label={label}
             style={{ top: rect.bottom + 6, left: Math.max(8, Math.min(rect.left - 4, window.innerWidth - 170)) }}
-            className="fixed z-50 w-[160px] rounded-xl border border-[#0000000D] bg-white p-1.5 shadow-[0_10px_30px_rgba(35,74,100,0.18)]"
+            className="fixed z-50 w-[160px] rounded-xl border border-[#DDDDDD] bg-white p-1.5 shadow-[0_10px_30px_rgba(35,74,100,0.18)]"
         >
             {items.map(({ key, icon: Icon }) => (
                 <button key={key} type="button" role="menuitem" onClick={() => onAction(key)} className={item}>
@@ -57,7 +57,7 @@ function ActionsMenu({ anchor, request, label, onAction, onClose }) {
             ))}
             {!finished && (
                 <>
-                    <hr className="my-1 border-[#0000000F]" />
+                    <hr className="my-1 border-[#DDDDDD]" />
                     <button type="button" role="menuitem" onClick={() => onAction("reject")} className={`${item} text-[#D64545] hover:bg-[#FFF3F3]`}>
                         <Ban size={15} className="shrink-0 text-[#D64545]" />
                         {t("requestsPage.menu.reject")}
@@ -341,7 +341,7 @@ export default function AdminRequests() {
                         <button
                             type="button"
                             onClick={() => setRejecting(null)}
-                            className="h-9 cursor-pointer rounded-lg border border-[#0000001A] bg-white px-4 text-[12px] font-medium text-[#575757] hover:bg-[#F5F6F8]"
+                            className="h-9 cursor-pointer rounded-lg border border-[#DDDDDD] bg-white px-4 text-[12px] font-medium text-[#575757] hover:bg-[#F5F6F8]"
                         >
                             {t("requestsPage.cancel")}
                         </button>
@@ -350,7 +350,7 @@ export default function AdminRequests() {
             )}
 
             {/* الجدول */}
-            <section className="overflow-hidden rounded-[20px] border border-[#0000000D] bg-white shadow-[0_4px_24px_rgba(35,74,100,0.08)]">
+            <section className="overflow-hidden rounded-[20px] border border-[#DDDDDD] bg-white shadow-[0_4px_24px_rgba(35,74,100,0.08)]">
                 {rows.length === 0 ? (
                     <div className="flex flex-col items-center px-6 py-14 text-center">
                         <span className="flex h-16 w-16 items-center justify-center rounded-full bg-[#EEF5FC] text-[#4B9AD2]">
@@ -365,7 +365,7 @@ export default function AdminRequests() {
                     <div className="overflow-x-auto">
                         <table className="w-full min-w-[860px] text-[12px]">
                             <thead>
-                                <tr className="border-b border-[#0000002E] text-[13px] text-[#4B9AD2]">
+                                <tr className="border-b border-[#DDDDDD] text-[13px] text-[#4B9AD2]">
                                     <th className="px-4 pb-4 pt-6 ps-6 text-start font-bold">{t("requestsPage.columns.request")}</th>
                                     <th className={th}>{t("requestsPage.columns.client")}</th>
                                     <th className={th}>{t("requestsPage.columns.area")}</th>

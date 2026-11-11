@@ -367,6 +367,112 @@ section[id] {
   transform: scaleX(1);
 }
 
+/* زر "العودة إلى الموقع" بلوحات التحكم:
+   المرور → السهم بيتحرك لقدام والبيت بيكبر شوي
+   الضغط (is-leaving) → خلفية زرقا بتعبّي الزر، السهم بينطلق برا ويرجع من الجهة الثانية، والبيت بينط */
+.back-site {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.back-site::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  border-radius: inherit;
+  background: #4b9ad2;
+  transform: scaleX(0);
+  /* التعبئة بتمشي بنفس اتجاه السهم (من اليمين لليسار بالعربي) */
+  transform-origin: right;
+  transition: transform 0.45s cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+[dir="ltr"] .back-site::before {
+  transform-origin: left;
+}
+
+.back-site-arrow {
+  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.back-site-home {
+  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), background-color 0.3s ease, color 0.3s ease;
+}
+
+.back-site:hover .back-site-arrow {
+  transform: translateX(-5px);
+}
+
+.back-site:hover .back-site-home {
+  transform: scale(1.12) rotate(-8deg);
+}
+
+.back-site.is-leaving {
+  color: #ffffff;
+  border-color: #4b9ad2;
+  transition: color 0.3s ease 0.1s, border-color 0.3s ease;
+}
+
+.back-site.is-leaving::before {
+  transform: scaleX(1);
+}
+
+.back-site.is-leaving .back-site-home {
+  background-color: rgba(255, 255, 255, 0.25);
+  animation: back-site-hop 0.55s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.back-site.is-leaving .back-site-arrow {
+  animation: back-site-dash 0.6s cubic-bezier(0.65, 0, 0.35, 1) forwards;
+}
+
+/* السهم بينطلق لقدام ويختفي، وبيرجع من وراه لمكانه */
+@keyframes back-site-dash {
+  0% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  45% {
+    transform: translateX(-26px);
+    opacity: 0;
+  }
+  46% {
+    transform: translateX(18px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes back-site-hop {
+  0%,
+  100% {
+    transform: translateY(0) scale(1);
+  }
+  40% {
+    transform: translateY(-4px) scale(1.15);
+  }
+  70% {
+    transform: translateY(1px) scale(0.95);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .back-site::before,
+  .back-site-arrow,
+  .back-site-home {
+    transition: none;
+  }
+  .back-site.is-leaving .back-site-arrow,
+  .back-site.is-leaving .back-site-home {
+    animation: none;
+  }
+}
+
 /* ظهور تدريجي للأقسام أثناء التمرير */
 .rv {
   opacity: 0;

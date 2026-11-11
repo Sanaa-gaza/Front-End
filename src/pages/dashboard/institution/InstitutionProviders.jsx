@@ -133,7 +133,7 @@ export default function InstitutionProviders() {
                     setSubmitted(query);
                     setPage(1);
                 }}
-                className="flex flex-col gap-3 rounded-[20px] border border-[#0000000D] bg-white p-4 shadow-[0_4px_24px_rgba(35,74,100,0.08)] md:flex-row md:items-center"
+                className="flex flex-col gap-3 rounded-[20px] border border-[#DDDDDD] bg-white p-4 shadow-[0_4px_24px_rgba(35,74,100,0.08)] md:flex-row md:items-center"
             >
                 <div className="relative min-w-0 md:flex-[1.4]">
                     <Search size={16} className="pointer-events-none absolute start-3 top-1/2 -translate-y-1/2 text-[#4B9AD2]" />

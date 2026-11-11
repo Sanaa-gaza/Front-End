@@ -72,11 +72,11 @@ export default function InstitutionOffers() {
             />
 
             {/* جدول العروض */}
-            <section className="overflow-hidden rounded-[20px] border border-[#0000000D] bg-white shadow-[0_4px_24px_rgba(35,74,100,0.08)]">
+            <section className="overflow-hidden rounded-[20px] border border-[#DDDDDD] bg-white shadow-[0_4px_24px_rgba(35,74,100,0.08)]">
                 <div className="overflow-x-auto">
                     <table className="w-full min-w-[760px] text-[13px]">
                         <thead>
-                            <tr className="border-b border-[#0000002E] text-[13px] text-[#4B9AD2]">
+                            <tr className="border-b border-[#DDDDDD] text-[13px] text-[#4B9AD2]">
                                 {COLUMNS.map((c) => (
                                     <th key={c} className="px-4 pb-4 pt-6 text-center font-medium first:ps-5 first:text-start">
                                         {t(`offersPage.columns.${c}`)}
@@ -87,7 +87,7 @@ export default function InstitutionOffers() {
                                 </th>
                             </tr>
                         </thead>
-                        <tbody className="divide-y divide-[#0000002E]">
+                        <tbody className="divide-y divide-[#DDDDDD]">
                             {rows.map((o) => {
                                 const s = `offersPage.sample.${o.id}`;
                                 return (

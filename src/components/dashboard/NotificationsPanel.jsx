@@ -97,9 +97,9 @@ export default function NotificationsPanel({ notifications = [], onRead, tabs = 
                 <div
                     role="dialog"
                     aria-label={t("notificationsPanel.title")}
-                    className={`fixed inset-x-3 top-[76px] z-50 flex max-h-[calc(100vh-96px)] flex-col overflow-hidden rounded-[20px] border border-[#0000000D] bg-white shadow-[0_18px_50px_rgba(35,74,100,0.18)] sm:absolute sm:inset-x-auto sm:end-0 sm:top-full sm:mt-3 ${compact ? "sm:w-[480px]" : "sm:w-[540px]"}`}
+                    className={`fixed inset-x-3 top-[76px] z-50 flex max-h-[calc(100vh-96px)] flex-col overflow-hidden rounded-[20px] border border-[#DDDDDD] bg-white shadow-[0_18px_50px_rgba(35,74,100,0.18)] sm:absolute sm:inset-x-auto sm:end-0 sm:top-full sm:mt-3 ${compact ? "sm:w-[480px]" : "sm:w-[540px]"}`}
                 >
-                    <div className={`flex items-center justify-between gap-3 px-5 py-4 ${compact ? "" : "border-b border-[#0000000D]"}`}>
+                    <div className={`flex items-center justify-between gap-3 px-5 py-4 ${compact ? "" : "border-b border-[#DDDDDD]"}`}>
                         <h2 className={`flex items-center gap-2.5 ${compact ? "text-[15px] font-bold text-[#141415]" : "text-[17px] font-medium text-[#414141]"}`}>
                             {t("notificationsPanel.title")}
                             {!compact && (
@@ -129,7 +129,7 @@ export default function NotificationsPanel({ notifications = [], onRead, tabs = 
                         </div>
                     </div>
 
-                    <div className={`flex flex-wrap gap-2 px-5 ${compact ? "pb-3" : "border-b border-[#0000000D] py-3.5"}`} role="tablist">
+                    <div className={`flex flex-wrap gap-2 px-5 ${compact ? "pb-3" : "border-b border-[#DDDDDD] py-3.5"}`} role="tablist">
                         {tabs.map((key) => {
                             const active = tab === key;
                             const count = countFor(key);
@@ -143,8 +143,8 @@ export default function NotificationsPanel({ notifications = [], onRead, tabs = 
                                     className={`flex cursor-pointer items-center justify-center gap-1.5 whitespace-nowrap rounded-full border px-3 transition-colors ${compact ? "h-9 px-4 text-[12px]" : "h-9 flex-auto text-[12px]"} ${active
                                         ? "border-[#4B9AD2] bg-[#4B9AD2] text-white shadow-[0_4px_12px_rgba(75,154,210,0.25)]"
                                         : compact
-                                            ? "border-[#DDE3E8] bg-white text-[#414141] hover:border-[#8EC0E4]"
-                                            : "border-[#E3E9EE] bg-[#F5F8FA] text-[#575757] hover:border-[#8EC0E4]"
+                                            ? "border-[#DDDDDD] bg-white text-[#414141] hover:border-[#8EC0E4]"
+                                            : "border-[#DDDDDD] bg-[#F5F8FA] text-[#575757] hover:border-[#8EC0E4]"
                                         }`}
                                 >
                                     {t(`notificationsPanel.tabs.${key}`)}
@@ -172,7 +172,7 @@ export default function NotificationsPanel({ notifications = [], onRead, tabs = 
                                                 <button
                                                     type="button"
                                                     onClick={() => openItem(n)}
-                                                    className={`flex w-full cursor-pointer items-start gap-3 rounded-2xl border p-4 text-start transition-colors hover:border-[#8EC0E4] ${n.read ? "border-[#DDE3E8] bg-white" : "border-[#CFE3F3] bg-[#EEF5FC]"
+                                                    className={`flex w-full cursor-pointer items-start gap-3 rounded-2xl border p-4 text-start transition-colors hover:border-[#8EC0E4] ${n.read ? "border-[#DDDDDD] bg-white" : "border-[#CFE3F3] bg-[#EEF5FC]"
                                                         }`}
                                                 >
                                                     <span className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full ${style}`}>
@@ -193,7 +193,7 @@ export default function NotificationsPanel({ notifications = [], onRead, tabs = 
                                             <button
                                                 type="button"
                                                 onClick={() => openItem(n)}
-                                                className={`flex w-full cursor-pointer items-center gap-3 rounded-2xl border px-3.5 py-3 text-start transition-colors hover:border-[#8EC0E4] ${n.read ? "border-[#0000000D] bg-white" : "border-[#DCEAF8] bg-[#F7FBFE]"
+                                                className={`flex w-full cursor-pointer items-center gap-3 rounded-2xl border px-3.5 py-3 text-start transition-colors hover:border-[#8EC0E4] ${n.read ? "border-[#DDDDDD] bg-white" : "border-[#DCEAF8] bg-[#F7FBFE]"
                                                     }`}
                                             >
                                                 <span className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${style}`}>

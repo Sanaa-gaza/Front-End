@@ -57,7 +57,7 @@ const SECTIONS = [
 const EXPERIENCE = ["lt1", "1_2", "2_5", "5_10", "gt10"];
 const PHOTO_MAX = 5 * 1024 * 1024;
 
-const card = "rounded-[18px] border border-[#0000000D] bg-white shadow-[0_4px_20px_rgba(35,74,100,0.07)]";
+const card = "rounded-[18px] border border-[#DDDDDD] bg-white shadow-[0_4px_20px_rgba(35,74,100,0.07)]";
 const input =
     "h-10 w-full rounded-xl border border-[#BFD9EC] bg-white px-4 text-[12px] text-[#141415] outline-none transition-colors placeholder:text-[#89949D] focus:border-[#4B9AD2] focus:ring-1 focus:ring-[#4B9AD2]";
 const label = "mb-2.5 block text-[11px] font-bold text-[#141415]";
@@ -458,7 +458,7 @@ function WorkModal({ work, initialFiles = [], governorateId, onSave, onClose }) 
                 onSubmit={submit}
                 className="flex max-h-[92vh] w-full max-w-[440px] flex-col overflow-hidden rounded-[22px] bg-white shadow-[0_24px_60px_rgba(20,20,21,0.25)]"
             >
-                <h2 id="work-modal-title" className="border-b border-[#0000000F] px-6 py-4 text-center text-[16px] font-bold text-[#141415]">
+                <h2 id="work-modal-title" className="border-b border-[#DDDDDD] px-6 py-4 text-center text-[16px] font-bold text-[#141415]">
                     {work ? t(`${w}.editTitle`) : t(`${w}.addTitle`)}
                 </h2>
 
@@ -583,7 +583,7 @@ function WorkModal({ work, initialFiles = [], governorateId, onSave, onClose }) 
                     />
                 </div>
 
-                <div className="flex gap-3 border-t border-[#0000000F] px-4 py-4">
+                <div className="flex gap-3 border-t border-[#DDDDDD] px-4 py-4">
                     <button
                         type="button"
                         onClick={onClose}
@@ -635,7 +635,7 @@ function WorkMenu({ label: menuLabel, onEdit, onDelete }) {
                 <EllipsisVertical size={15} />
             </button>
             {open && (
-                <div role="menu" className="absolute end-0 top-full z-20 mt-1 w-[120px] rounded-xl border border-[#0000000D] bg-white p-1 shadow-[0_10px_30px_rgba(35,74,100,0.18)]">
+                <div role="menu" className="absolute end-0 top-full z-20 mt-1 w-[120px] rounded-xl border border-[#DDDDDD] bg-white p-1 shadow-[0_10px_30px_rgba(35,74,100,0.18)]">
                     <button type="button" role="menuitem" onClick={() => { setOpen(false); onEdit(); }} className={`${item} text-[#414141]`}>
                         <Pencil size={13} className="text-[#4B9AD2]" />
                         {t("profilePage.works.edit")}
@@ -721,7 +721,7 @@ function WorksSection({ governorateId }) {
                         <button
                             type="button"
                             onClick={() => setConfirmDelete(null)}
-                            className="h-9 cursor-pointer rounded-lg border border-[#0000001A] bg-white px-4 text-[12px] font-medium text-[#575757] hover:bg-[#F5F6F8]"
+                            className="h-9 cursor-pointer rounded-lg border border-[#DDDDDD] bg-white px-4 text-[12px] font-medium text-[#575757] hover:bg-[#F5F6F8]"
                         >
                             {t(`${ws}.modal.cancel`)}
                         </button>
@@ -881,7 +881,7 @@ function SavedSection() {
                         const org = text(x.id, "org");
                         const closed = x.status === "closed";
                         return (
-                            <li key={x.id} className="rounded-2xl border border-[#0000000F] bg-white p-4 shadow-[0_2px_10px_rgba(35,74,100,0.05)]">
+                            <li key={x.id} className="rounded-2xl border border-[#DDDDDD] bg-white p-4 shadow-[0_2px_10px_rgba(35,74,100,0.05)]">
                                 <div className="flex items-start justify-between gap-3">
                                     <div className="flex min-w-0 items-center gap-3">
                                         <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border-2 border-[#EAF3FB] bg-white text-[13px] font-bold text-[#4B9AD2]">
@@ -913,7 +913,7 @@ function SavedSection() {
                                     ))}
                                 </dl>
 
-                                <div className="mt-3 flex items-center justify-end gap-2 border-t border-[#0000000A] pt-3">
+                                <div className="mt-3 flex items-center justify-end gap-2 border-t border-[#DDDDDD] pt-3">
                                     <button
                                         type="button"
                                         onClick={() => unsave(x)}
@@ -1047,7 +1047,7 @@ function NotificationSettings() {
     const group = (titleKey, items) => (
         <div>
             <h3 className="mb-2.5 text-[11px] font-semibold text-[#575757]">{t(`${ns}.${titleKey}`)}</h3>
-            <ul className="divide-y divide-[#0000000F] rounded-2xl border border-[#0000000F] px-3">
+            <ul className="divide-y divide-[#DDDDDD] rounded-2xl border border-[#DDDDDD] px-3">
                 {items.map(({ key, icon: Icon, locked }) => {
                     const base = `${ns}.items.${key}`;
                     return (
@@ -1212,7 +1212,7 @@ function PersonalInfo({ profile, onProfileChange }) {
     return (
         <section className={`${card} px-4 py-3 sm:px-5`}>
             {flash && <p role="status" className="mb-2 mt-2 rounded-lg border border-[#BFEBCD] bg-[#E8F8EE] px-4 py-2.5 text-[12px] text-[#2E9E5B]">{flash}</p>}
-            <ul className="divide-y divide-[#0000000F]">
+            <ul className="divide-y divide-[#DDDDDD]">
                 {rows.map(({ key, icon: Icon, value, ltr, action }) => (
                     <li key={key} className="flex items-start gap-3 py-4">
                         <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[#EAF3FB] text-[#4B9AD2]">
@@ -1237,7 +1237,7 @@ function PersonalInfo({ profile, onProfileChange }) {
                                             type="button"
                                             onClick={() => setEditing(null)}
                                             disabled={saving}
-                                            className="h-8 cursor-pointer rounded-lg border border-[#0000001A] bg-white px-4 text-[11px] font-medium text-[#575757] hover:bg-[#F5F6F8]"
+                                            className="h-8 cursor-pointer rounded-lg border border-[#DDDDDD] bg-white px-4 text-[11px] font-medium text-[#575757] hover:bg-[#F5F6F8]"
                                         >
                                             {t("profilePage.edit.cancel")}
                                         </button>
@@ -1261,7 +1261,7 @@ function PersonalInfo({ profile, onProfileChange }) {
                     </li>
                 ))}
             </ul>
-            <p className="border-t border-[#0000000F] pb-1 pt-2.5 text-[9px] text-[#575757]">{t(`${pi}.nameNote`)}</p>
+            <p className="border-t border-[#DDDDDD] pb-1 pt-2.5 text-[9px] text-[#575757]">{t(`${pi}.nameNote`)}</p>
         </section>
     );
 }

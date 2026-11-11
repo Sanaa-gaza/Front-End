@@ -28,7 +28,7 @@ const RESULTS = [
     { id: "s5", serviceId: 4, rating: 4.6, number: "320-2026-3", closeDate: "2026-11-02", distance: 14, budget: [6000, 7200] },
 ];
 
-const box = "rounded-[20px] border border-[#0000000F] bg-white";
+const box = "rounded-[20px] border border-[#DDDDDD] bg-white";
 // فلتر التقييم: "top" = ترتيب من الأعلى تقييماً، والأرقام = "من X فما فوق"
 const RATINGS = ["top", 4.5, 4, 3.5, 3];
 const field =
@@ -189,7 +189,7 @@ export default function CraftsmanSearch() {
                         onClick={openAdvanced}
                         aria-label={t("searchPage.filters")}
                         title={t("searchPage.filters")}
-                        className="flex h-11 w-11 shrink-0 cursor-pointer items-center justify-center rounded-xl border border-[#0000001A] bg-white text-[#475569] transition-colors hover:border-[#8EC0E4] hover:text-[#4B9AD2]"
+                        className="flex h-11 w-11 shrink-0 cursor-pointer items-center justify-center rounded-xl border border-[#DDDDDD] bg-white text-[#475569] transition-colors hover:border-[#8EC0E4] hover:text-[#4B9AD2]"
                     >
                         <SlidersHorizontal size={17} />
                     </button>
@@ -285,7 +285,7 @@ export default function CraftsmanSearch() {
                                 </dl>
                                 )}
 
-                                <div className="mt-5 flex items-center justify-end gap-2 border-t border-[#0000000F] pt-4">
+                                <div className="mt-5 flex items-center justify-end gap-2 border-t border-[#DDDDDD] pt-4">
                                     {applied[r.id] ? (
                                         <span className="inline-flex h-10 items-center justify-center gap-1.5 rounded-xl bg-[#DDF6E3] px-6 text-[13px] font-semibold text-[#2EAF4E]">
                                             <Check size={15} />

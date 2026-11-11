@@ -55,7 +55,7 @@ export default function InstitutionProjects() {
                     return (
                         <li
                             key={p.id}
-                            className="rounded-[20px] border border-[#0000000D] bg-white px-5 py-4 shadow-[0_4px_24px_rgba(35,74,100,0.06)] sm:px-6"
+                            className="rounded-[20px] border border-[#DDDDDD] bg-white px-5 py-4 shadow-[0_4px_24px_rgba(35,74,100,0.06)] sm:px-6"
                         >
                             <div className="flex items-start justify-between gap-3">
                                 <div className="min-w-0">

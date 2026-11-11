@@ -14,7 +14,7 @@ import { parseApiError } from "../../../api/errors";
 
 const TABS = ["general", "notifications", "security"];
 
-const card = "rounded-[20px] border border-[#0000000D] bg-white p-5 shadow-[0_4px_24px_rgba(35,74,100,0.06)] sm:p-6";
+const card = "rounded-[20px] border border-[#DDDDDD] bg-white p-5 shadow-[0_4px_24px_rgba(35,74,100,0.06)] sm:p-6";
 const label = "mb-1.5 block text-[12px] text-[#575757]";
 const input =
     "h-11 w-full rounded-xl border border-[#8EC0E4] bg-white px-4 text-[13px] text-[#414141] outline-none transition-colors focus:border-[#4B9AD2] focus:ring-1 focus:ring-[#4B9AD2]";
@@ -232,7 +232,7 @@ function GeneralSettings() {
                     {/* الصورة الشخصية للمؤسسة */}
                     <div className="flex items-center gap-4">
                         <div className="relative shrink-0">
-                            <div className="flex h-20 w-20 items-center justify-center overflow-hidden rounded-full border border-[#0000001A] bg-[#F5F6F8] ring-4 ring-[#E4EFFA]">
+                            <div className="flex h-20 w-20 items-center justify-center overflow-hidden rounded-full border border-[#DDDDDD] bg-[#F5F6F8] ring-4 ring-[#E4EFFA]">
                                 {photoSrc ? (
                                     <img src={photoSrc} alt={t("settingsPage.info.photo")} className="h-full w-full object-cover" />
                                 ) : (
@@ -382,7 +382,7 @@ function GeneralSettings() {
 
 // ==================== تبويب الإشعارات والخصوصية ====================
 
-const prefsCard = "rounded-[20px] border border-[#0000000D] bg-white px-5 pb-2 pt-5 shadow-[0_4px_24px_rgba(35,74,100,0.06)] sm:px-6";
+const prefsCard = "rounded-[20px] border border-[#DDDDDD] bg-white px-5 pb-2 pt-5 shadow-[0_4px_24px_rgba(35,74,100,0.06)] sm:px-6";
 
 const SECTIONS = [
     { key: "notifications", items: ["newTenders", "offerReplies", "messages", "deadlines", "email"] },
@@ -456,10 +456,10 @@ function PreferencesSettings() {
         <div className="flex flex-col gap-6">
             {SECTIONS.map((section) => (
                 <section key={section.key} className={prefsCard}>
-                    <h2 className="border-b border-[#0000001A] pb-4 text-[16px] font-bold text-[#22455E]">
+                    <h2 className="border-b border-[#DDDDDD] pb-4 text-[16px] font-bold text-[#22455E]">
                         {t(`preferencesPage.${section.key}.title`)}
                     </h2>
-                    <ul className="divide-y divide-[#0000000F]">
+                    <ul className="divide-y divide-[#DDDDDD]">
                         {section.items.map((item) => {
                             const base = `preferencesPage.${section.key}.${item}`;
                             return (
@@ -725,7 +725,7 @@ function DeleteAccountCard() {
                             type="button"
                             onClick={cancel}
                             disabled={deleting}
-                            className="h-10 cursor-pointer rounded-lg border border-[#0000001A] bg-white px-5 text-[13px] font-medium text-[#575757] transition-colors hover:bg-[#F5F6F8]"
+                            className="h-10 cursor-pointer rounded-lg border border-[#DDDDDD] bg-white px-5 text-[13px] font-medium text-[#575757] transition-colors hover:bg-[#F5F6F8]"
                         >
                             {t("securityPage.delete.cancel")}
                         </button>

@@ -90,7 +90,7 @@ export default function DateField({ id, value, onChange, min, placeholder, inval
                 aria-haspopup="dialog"
                 aria-expanded={open}
                 aria-invalid={invalid}
-                className={`flex h-11 w-full cursor-pointer items-center gap-2.5 rounded-xl border bg-white pe-10 ps-4 shadow-[0_1px_2px_rgba(16,24,40,0.04)] text-start text-[13px] outline-none transition-colors focus:ring-1 focus:ring-[#4B9AD2] ${invalid ? "border-red-400" : open ? "border-[#4B9AD2]" : "border-[#DDE3E8]"
+                className={`flex h-11 w-full cursor-pointer items-center gap-2.5 rounded-xl border bg-white pe-10 ps-4 shadow-[0_1px_2px_rgba(16,24,40,0.04)] text-start text-[13px] outline-none transition-colors focus:ring-1 focus:ring-[#4B9AD2] ${invalid ? "border-red-400" : open ? "border-[#4B9AD2]" : "border-[#DDDDDD]"
                     } ${value ? "text-[#414141]" : "text-[#89949D]"}`}
             >
                 <span className="flex-1 truncate">{text}</span>
@@ -118,7 +118,7 @@ export default function DateField({ id, value, onChange, min, placeholder, inval
                 <div
                     role="dialog"
                     aria-label={placeholder}
-                    className="absolute start-0 top-full z-40 mt-2 w-[290px] rounded-2xl border border-[#0000000D] bg-white p-4 shadow-[0_18px_50px_rgba(35,74,100,0.18)]"
+                    className="absolute start-0 top-full z-40 mt-2 w-[290px] rounded-2xl border border-[#DDDDDD] bg-white p-4 shadow-[0_18px_50px_rgba(35,74,100,0.18)]"
                 >
                     {/* اختيارات سريعة */}
                     <div className="flex gap-1.5">

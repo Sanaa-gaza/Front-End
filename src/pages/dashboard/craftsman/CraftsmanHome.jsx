@@ -33,9 +33,9 @@ const JOBS = [
 // ⚠️ أرقام ما إلها بيانات بالباك إند لسا (الأرباح، مهلة الرد، آخر نشاط)
 const SAMPLE = { earningsToday: 11, earningsMonth: 2340, nearestDeadlineHours: 18 };
 
-const card = "rounded-[20px] border border-[#0000000D] bg-white shadow-[0_4px_24px_rgba(35,74,100,0.08)]";
+const card = "rounded-[20px] border border-[#DDDDDD] bg-white shadow-[0_4px_24px_rgba(35,74,100,0.08)]";
 // بوكس بإطار خفيف بدون ظل (البحث وبطاقات فرص العمل)
-const box = "rounded-[20px] border border-[#0000000F] bg-white";
+const box = "rounded-[20px] border border-[#DDDDDD] bg-white";
 const field =
     "h-11 w-full rounded-xl border border-[#8EC0E4] bg-white text-[12px] text-[#414141] outline-none transition-colors focus:border-[#4B9AD2] focus:ring-1 focus:ring-[#4B9AD2]";
 
@@ -106,7 +106,7 @@ function SideCard({ availability }) {
             </div>
             {availability.note && <p role="status" className="mt-2 text-[11px] text-[#9A6B00]">{availability.note}</p>}
 
-            <hr className="my-6 border-[#0000001A]" />
+            <hr className="my-6 border-[#DDDDDD]" />
 
             <h2 className="text-[14px] font-bold text-[#141415]">{t("portfolio.title")}</h2>
             <p className="mt-1.5 text-[10px] leading-[1.8] text-[#575757]">{t("portfolio.desc")}</p>
@@ -345,7 +345,7 @@ export default function CraftsmanHome({ profile, availability }) {
                                             </span>
                                         </div>
 
-                                        <div className="mt-4 flex items-end justify-between gap-3 border-t border-[#0000000F] pt-3">
+                                        <div className="mt-4 flex items-end justify-between gap-3 border-t border-[#DDDDDD] pt-3">
                                             <div>
                                                 <p className="text-[12px] text-[#575757]">{t("jobs.budget")}</p>
                                                 <p className="mt-1 text-[14px] font-bold text-[#141415] tabular-nums">

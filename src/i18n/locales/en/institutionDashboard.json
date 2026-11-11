@@ -695,7 +695,6 @@
         "empty": "No matching correspondence",
         "selectHint": "Select a message to view its details",
         "reply": "Official reply",
-        "forward": "Forward to staff",
         "ref": "Reference",
         "from": "From",
         "to": "To",
@@ -771,45 +770,19 @@
             "subjectRequired": "Subject is required",
             "bodyRequired": "Write the reply",
             "sent": "The reply was sent and added to Sent.",
-            "replyType": "Official reply",
-            "forwardTitle": "Forward to staff",
-            "forwardSend": "Forward",
-            "forwardSubjectDefault": "Fwd: {{title}}",
-            "forwardType": "Forwarded to staff",
-            "forwarded": "The message was forwarded to staff and added to Sent."
-        },
-        "forwardModal": {
-            "title": "Forward to employee",
-            "employee": "Employee",
-            "employeePlaceholder": "Choose an employee",
-            "employeeRequired": "Choose an employee",
-            "notes": "Notes",
-            "notesPlaceholder": "Write a note",
-            "submit": "Forward to employee",
-            "close": "Close",
-            "forwarded": "The message was forwarded to {{name}} and added to Sent.",
-            "employees": {
-                "e1": "Eng. Samer Al-Haddad — Projects engineer",
-                "e2": "Rana Khalil — Finance",
-                "e3": "Ahmad Yousef — Procurement",
-                "e4": "Laila Mansour — Legal affairs"
-            }
+            "replyType": "Official reply"
         }
     },
     "tenderDetails": {
         "back": "Back to tenders",
         "category": "Category: {{category}}",
         "published": "Published: {{date}}",
-        "chooseWinner": "Choose the winning offer",
         "close": "Close tender",
         "closeConfirm": "Do you want to close this tender? It will not receive new offers after closing.",
         "confirmClose": "Confirm closing",
         "cancel": "Cancel",
         "closed": "The tender was closed and will not receive new offers.",
         "closedBadge": "Closed",
-        "awardConfirm": "Award this tender as the winning offer? Receiving offers will stop and the tender moves to execution.",
-        "confirmAward": "Confirm selection",
-        "awarded": "The winning offer has been selected and the tender moved to execution & delivery.",
         "awardedBadge": "Winner selected",
         "stagesTitle": "Tender stages and workflow status",
         "stages": {
@@ -846,14 +819,10 @@
             "published": "Published on",
             "deadline": "Submission deadline",
             "remaining": "Time left",
-            "duration": "Expected duration",
-            "contract": "Contract type"
+            "duration": "Expected duration"
         },
         "remainingHours": "{{count}} hours left",
         "durationDays": "{{count}} working days",
-        "contracts": {
-            "lumpSum": "Lump Sum"
-        },
         "genericDesc": "{{title}} in {{area}}. The full scope of work will appear once the tender data is available from the server.",
         "notFound": "Tender not found",
         "sample": {
@@ -869,7 +838,8 @@
                     "The work also includes modern water and thermal insulation for balconies and cornices, rewiring the exterior electrical cables, and installing an architectural LED lighting system to highlight the building's appearance according to the attached technical drawings."
                 ]
             }
-        }
+        },
+        "chooseOffer": "Choose offer"
     },
     "notifications": {
         "sample": {

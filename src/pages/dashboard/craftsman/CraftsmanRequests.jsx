@@ -38,7 +38,7 @@ function acceptedState(t, request) {
 
 const REJECT_REASONS = ["price", "far", "unavailable", "outOfScope"];
 
-const card = "rounded-[20px] border border-[#0000000D] bg-white shadow-[0_4px_24px_rgba(35,74,100,0.08)]";
+const card = "rounded-[20px] border border-[#DDDDDD] bg-white shadow-[0_4px_24px_rgba(35,74,100,0.08)]";
 const textarea =
     "w-full resize-none rounded-xl border border-[#8EC0E4] bg-white px-4 py-3 text-[13px] text-[#414141] outline-none placeholder:text-[#89949D] focus:border-[#4B9AD2] focus:ring-1 focus:ring-[#4B9AD2]";
 
@@ -110,7 +110,7 @@ function RequestModal({ id, title, request, subtitle, confirmLabel, onClose, onS
                     {children}
                 </div>
 
-                <div className="flex gap-3 border-t border-[#0000000F] px-6 py-4">
+                <div className="flex gap-3 border-t border-[#DDDDDD] px-6 py-4">
                     <button
                         type="submit"
                         className="h-11 flex-1 cursor-pointer rounded-xl bg-[#4B9AD2] text-[15px] font-semibold text-white btn-wipe"
@@ -202,7 +202,7 @@ function RequestCard({ request, onDetails, onReject }) {
         request.reason && [t(`${rp}.rejectModal.reasons.${request.reason}`), request.rejectNotes].filter(Boolean).join(" — ");
 
     return (
-        <li className="rounded-[18px] border border-[#0000000D] border-t-2 border-t-[#9CC9EA] bg-white px-4 py-4 shadow-[0_4px_18px_rgba(35,74,100,0.07)] sm:px-5">
+        <li className="rounded-[18px] border border-[#DDDDDD] border-t-2 border-t-[#9CC9EA] bg-white px-4 py-4 shadow-[0_4px_18px_rgba(35,74,100,0.07)] sm:px-5">
             <h2 className="text-[16px] font-bold text-[#141415]">{t(`${s}.title`)}</h2>
 
             <div className="mt-3 flex items-center gap-2.5">
@@ -258,7 +258,7 @@ function RequestCard({ request, onDetails, onReject }) {
                 </p>
             )}
 
-            <div className="mt-3 flex flex-row-reverse flex-wrap gap-3 border-t border-[#0000000A] pt-3">
+            <div className="mt-3 flex flex-row-reverse flex-wrap gap-3 border-t border-[#DDDDDD] pt-3">
                 <button
                     type="button"
                     onClick={() => onDetails(request)}
@@ -294,7 +294,7 @@ export function CraftsmanRequestDetails() {
     const request = state?.request || REQUESTS.find((x) => x.id === requestId);
     const rp = "requestsPage";
     const d = "currentPage.details";
-    const box = "rounded-[20px] border border-[#0000001A] bg-white";
+    const box = "rounded-[20px] border border-[#DDDDDD] bg-white";
 
     if (!request) {
         return (
@@ -382,7 +382,7 @@ export function CraftsmanRequestDetails() {
                     </section>
 
                     {/* الخريطة (Google Maps embed — ما بيحتاج مفتاح) */}
-                    <section className="relative h-[200px] overflow-hidden rounded-[20px] border border-[#0000001A] bg-[#E5ECF1]">
+                    <section className="relative h-[200px] overflow-hidden rounded-[20px] border border-[#DDDDDD] bg-[#E5ECF1]">
                         <iframe
                             title={t(`${d}.map`)}
                             src={`https://www.google.com/maps?q=${encodeURIComponent(area)}&t=k&z=15&output=embed`}
@@ -484,7 +484,7 @@ function OffersView({ counterOffers }) {
                             onClick={() => setFilter(key)}
                             className={`h-10 cursor-pointer rounded-full px-5 text-[11px] font-semibold transition-colors ${active
                                 ? "min-w-[60px] bg-[#4B9AD2] text-white shadow-[0_4px_12px_rgba(75,154,210,0.3)]"
-                                : "border border-[#E3E7EB] bg-white text-[#4B9AD2] hover:border-[#BFDCF1]"
+                                : "border border-[#DDDDDD] bg-white text-[#4B9AD2] hover:border-[#BFDCF1]"
                                 }`}
                         >
                             {t(`${of}.filters.${key}`)}
@@ -499,7 +499,7 @@ function OffersView({ counterOffers }) {
                         const { box, icon: Icon } = OFFER_STYLES[o.status];
                         const accepted = o.status === "accepted";
                         return (
-                            <li key={o.id} className="rounded-[18px] border border-[#0000000D] border-t-2 border-t-[#9CC9EA] bg-white px-4 py-4 shadow-[0_4px_18px_rgba(35,74,100,0.07)] sm:px-5">
+                            <li key={o.id} className="rounded-[18px] border border-[#DDDDDD] border-t-2 border-t-[#9CC9EA] bg-white px-4 py-4 shadow-[0_4px_18px_rgba(35,74,100,0.07)] sm:px-5">
                                 <div className="flex items-start justify-between gap-3">
                                     <div className="flex min-w-0 items-center gap-2.5">
                                         <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border-2 border-[#EAF3FB] bg-white text-[12px] font-bold text-[#4B9AD2]">
@@ -639,7 +639,7 @@ export default function CraftsmanRequests() {
                                 }}
                                 className={`flex h-10 cursor-pointer items-center gap-1.5 rounded-full px-4 text-[11px] font-semibold transition-colors ${active
                                     ? "bg-[#4B9AD2] text-white shadow-[0_4px_12px_rgba(75,154,210,0.3)]"
-                                    : "border border-[#E3E7EB] bg-white text-[#4B9AD2] hover:border-[#BFDCF1]"
+                                    : "border border-[#DDDDDD] bg-white text-[#4B9AD2] hover:border-[#BFDCF1]"
                                     }`}
                             >
                                 {t(`${rp}.page.filters.${key}`)}

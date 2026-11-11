@@ -37,10 +37,10 @@ const STATUS = {
     scheduled: { badge: "bg-[#E6F9EC] text-[#03C03C]", bar: "border-[#A5FFC9] bg-[#A5FFC9]/25 text-[#03C03C]", icon: CircleCheck },
     awaitingPayment: { badge: "bg-[#FFEFB0]/60 text-[#A86A4E]", bar: "border-[#FFEFB0] bg-[#FFEFB0]/45 text-[#A86A4E]", icon: Clock },
     awaitingConfirm: { badge: "bg-[#C7E0F1]/50 text-[#4B9AD2]", bar: "border-[#C7E0F1] bg-[#C7E0F1]/35 text-[#4B9AD2]", icon: Clock },
-    cancelled: { badge: "bg-[#F4F4F4] text-[#919191]", bar: "border-[#E4E4E4] bg-[#F4F4F4] text-[#919191]", icon: CircleX },
+    cancelled: { badge: "bg-[#F4F4F4] text-[#919191]", bar: "border-[#DDDDDD] bg-[#F4F4F4] text-[#919191]", icon: CircleX },
 };
 
-const box = "rounded-[20px] border border-[#0000001A] bg-white";
+const box = "rounded-[20px] border border-[#DDDDDD] bg-white";
 
 /** بطاقة عمل: صاحب الطلب + العنوان + شارة الحالة، وتحتها شريط الحالة */
 function WorkCard({ work }) {
@@ -143,7 +143,7 @@ export default function CraftsmanCurrent() {
                     onChange={(e) => setQuery(e.target.value)}
                     placeholder={t("currentPage.search")}
                     aria-label={t("currentPage.search")}
-                    className="h-12 w-full rounded-2xl border border-[#0000001A] bg-white pe-4 ps-11 text-[13px] text-[#414141] outline-none transition-colors placeholder:text-[#A9B3BB] focus:border-[#4B9AD2] focus:ring-1 focus:ring-[#4B9AD2] [&::-webkit-search-cancel-button]:hidden"
+                    className="h-12 w-full rounded-2xl border border-[#DDDDDD] bg-white pe-4 ps-11 text-[13px] text-[#414141] outline-none transition-colors placeholder:text-[#A9B3BB] focus:border-[#4B9AD2] focus:ring-1 focus:ring-[#4B9AD2] [&::-webkit-search-cancel-button]:hidden"
                 />
             </div>
 
@@ -162,7 +162,7 @@ export default function CraftsmanCurrent() {
                             }}
                             className={`h-9 min-w-[56px] cursor-pointer rounded-full border px-4 text-[12px] transition-colors ${active
                                 ? "min-w-[72px] border-[#4B9AD2] bg-[#4B9AD2] font-semibold text-white"
-                                : "border-[#0000001A] bg-white text-[#475569] hover:border-[#8EC0E4] hover:text-[#4B9AD2]"
+                                : "border-[#DDDDDD] bg-white text-[#475569] hover:border-[#8EC0E4] hover:text-[#4B9AD2]"
                                 }`}
                         >
                             {t(`currentPage.filters.${key}`)}

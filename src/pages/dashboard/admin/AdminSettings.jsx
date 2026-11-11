@@ -11,7 +11,7 @@ import { cleanPhone, getEmailError, getPhoneError, passwordRequirements } from "
 const TABS = ["profile", "security", "notifications"];
 const PREFS = ["requests", "support", "verification", "tenders", "email"];
 
-const card = "rounded-[20px] border border-[#0000000D] bg-white p-5 shadow-[0_4px_24px_rgba(35,74,100,0.08)] sm:p-6";
+const card = "rounded-[20px] border border-[#DDDDDD] bg-white p-5 shadow-[0_4px_24px_rgba(35,74,100,0.08)] sm:p-6";
 const input =
     "h-10 w-full rounded-lg border border-[#BFD9EC] bg-white px-3 text-[12px] text-[#141415] outline-none transition-colors focus:border-[#4B9AD2] focus:ring-1 focus:ring-[#4B9AD2] disabled:bg-[#F5F6F8] disabled:text-[#89949D]";
 const label = "mb-2.5 block text-[12px] text-[#575757]";
@@ -313,7 +313,7 @@ function NotificationPrefs() {
 
     return (
         <section className={`${card} sm:py-3`}>
-            <ul className="divide-y divide-[#0000000F]">
+            <ul className="divide-y divide-[#DDDDDD]">
                 {PREFS.map((key) => {
                     const base = `settingsPage.prefs.${key}`;
                     const desc = t(`${base}.desc`);

@@ -160,7 +160,7 @@ export default function AdminVerification() {
             </div>
 
             {/* الجدول */}
-            <section className="overflow-hidden rounded-[20px] border border-[#0000000D] bg-white shadow-[0_4px_24px_rgba(35,74,100,0.08)]">
+            <section className="overflow-hidden rounded-[20px] border border-[#DDDDDD] bg-white shadow-[0_4px_24px_rgba(35,74,100,0.08)]">
                 {rows.length === 0 ? (
                     <div className="flex flex-col items-center px-6 py-14 text-center">
                         <span className="flex h-16 w-16 items-center justify-center rounded-full bg-[#EEF5FC] text-[#4B9AD2]">
@@ -175,7 +175,7 @@ export default function AdminVerification() {
                     <div className="overflow-x-auto">
                         <table className="w-full min-w-[860px] text-[12px]">
                             <thead>
-                                <tr className="border-b border-[#0000002E] text-[13px] text-[#4B9AD2]">
+                                <tr className="border-b border-[#DDDDDD] text-[13px] text-[#4B9AD2]">
                                     <th className={th}>{t(`${v}.columns.account`)}</th>
                                     <th className={th}>{t(`${v}.columns.type`)}</th>
                                     <th className={th}>{t(`${v}.columns.field`)}</th>
@@ -188,7 +188,7 @@ export default function AdminVerification() {
                                     </th>
                                 </tr>
                             </thead>
-                            <tbody className="divide-y divide-[#0000000F]">
+                            <tbody className="divide-y divide-[#DDDDDD]">
                                 {rows.map((x) => {
                                     const n = name(x.id);
                                     return (

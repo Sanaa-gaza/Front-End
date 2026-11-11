@@ -108,10 +108,10 @@ export default function TopbarSearch({ sections, items }) {
             {open && (
                 <div
                     id="topbar-search-results"
-                    className="absolute end-0 top-full z-50 mt-2 w-[460px] max-w-[calc(100vw-2rem)] overflow-hidden rounded-[20px] border border-[#0000000D] bg-white shadow-[0_18px_50px_rgba(35,74,100,0.18)]"
+                    className="absolute end-0 top-full z-50 mt-2 w-[460px] max-w-[calc(100vw-2rem)] overflow-hidden rounded-[20px] border border-[#DDDDDD] bg-white shadow-[0_18px_50px_rgba(35,74,100,0.18)]"
                 >
                     {/* فلتر الأقسام */}
-                    <div className="flex flex-wrap gap-1.5 border-b border-[#0000000D] px-4 py-3" role="tablist">
+                    <div className="flex flex-wrap gap-1.5 border-b border-[#DDDDDD] px-4 py-3" role="tablist">
                         {[{ key: "all", label: t("searchBox.all") }, ...sections].map(({ key, label }) => {
                             const active = filter === key;
                             const count = key === "all" ? null : countFor(key);
@@ -127,7 +127,7 @@ export default function TopbarSearch({ sections, items }) {
                                     }}
                                     className={`flex h-7 cursor-pointer items-center gap-1 rounded-full border px-3 text-[11px] transition-colors ${active
                                         ? "border-[#4B9AD2] bg-[#4B9AD2] text-white"
-                                        : "border-[#E3E9EE] bg-[#F5F8FA] text-[#575757] hover:border-[#8EC0E4]"
+                                        : "border-[#DDDDDD] bg-[#F5F8FA] text-[#575757] hover:border-[#8EC0E4]"
                                         }`}
                                 >
                                     {label}

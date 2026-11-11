@@ -88,8 +88,8 @@ export default function AdminNotifications() {
             </div>
 
             {/* القائمة */}
-            <section className="rounded-[20px] border border-[#0000000D] border-t-2 border-t-[#9CC9EA] bg-white p-5 shadow-[0_4px_24px_rgba(35,74,100,0.08)]">
-                <div className="mx-1 flex items-center justify-between gap-3 border-b border-[#0000002E] pb-4">
+            <section className="rounded-[20px] border border-[#DDDDDD] border-t-2 border-t-[#9CC9EA] bg-white p-5 shadow-[0_4px_24px_rgba(35,74,100,0.08)]">
+                <div className="mx-1 flex items-center justify-between gap-3 border-b border-[#DDDDDD] pb-4">
                     <h1 className="text-[17px] font-bold text-[#141415]">{t(`${np}.title`)}</h1>
                     {unreadCount > 0 && (
                         <button
@@ -112,7 +112,7 @@ export default function AdminNotifications() {
                                         type="button"
                                         onClick={() => open(n)}
                                         className={`flex w-full cursor-pointer items-start justify-between gap-3 rounded-xl border px-4 py-4 text-start transition-colors ${n.read
-                                            ? "border-[#0000000A] bg-[#F7F8FA] hover:border-[#BFDCF1]"
+                                            ? "border-[#DDDDDD] bg-[#F7F8FA] hover:border-[#BFDCF1]"
                                             : "border-[#BFDCF1] bg-[#EEF5FC] hover:border-[#8EC0E4]"
                                             }`}
                                     >

@@ -43,5 +43,6 @@
         "empty": "No matching results.",
         "showAll": "Show all ({{count}})",
         "clear": "Clear search"
-    }
+    },
+    "backToSite": "Back to site"
 }

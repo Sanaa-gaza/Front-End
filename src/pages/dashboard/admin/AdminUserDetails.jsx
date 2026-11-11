@@ -6,7 +6,7 @@ import { STATUS_STYLES, SuspendModal, VERIFICATION_STYLES, findUser } from "./Ad
 
 const BASE = "/dashboard/admin";
 
-const card = "rounded-[18px] border border-[#0000000D] bg-white shadow-[0_4px_20px_rgba(35,74,100,0.07)]";
+const card = "rounded-[18px] border border-[#DDDDDD] bg-white shadow-[0_4px_20px_rgba(35,74,100,0.07)]";
 
 // ⚠️ تفاصيل إضافية تجريبية (التواريخ، الطلبات المسندة، سجل الحالة) لحد ما يجهز endpoint تفاصيل المستخدم
 const MEMBER_SINCE = "2026-03-10";
@@ -232,7 +232,7 @@ export default function AdminUserDetails() {
                             <h2 className="text-[14px] font-bold text-[#141415]">{t(`${d}.latestTitle`)}</h2>
                             <Link to={`${BASE}/requests`} className="text-[11px] text-[#4B9AD2] hover:underline">{t(`${d}.viewAll`)}</Link>
                         </div>
-                        <ul className="mt-3 divide-y divide-[#0000000F] border-t border-[#0000000F]">
+                        <ul className="mt-3 divide-y divide-[#DDDDDD] border-t border-[#DDDDDD]">
                             {REQUESTS.map((id) => {
                                 const r = `${d}.requests.${id}`;
                                 const st = t(`${r}.status`);

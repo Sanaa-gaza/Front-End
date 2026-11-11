@@ -32,14 +32,15 @@ const STATS = [
     { key: "completed", value: 4.5, icon: Star },
 ];
 
+// tenderId: رقمها بـ tendersData عشان الضغط يفتح صفحة تفاصيل المناقصة
 const TENDERS = [
-    { key: "t1", offers: 12, status: "open", progress: 78, highlighted: true },
-    { key: "t2", offers: 12, status: "submitting", progress: 28 },
-    { key: "t3", offers: 12, status: "submitting", progress: 28 },
+    { key: "t1", tenderId: "r1", offers: 12, status: "open", progress: 78, highlighted: true },
+    { key: "t2", tenderId: "r2", offers: 12, status: "submitting", progress: 28 },
+    { key: "t3", tenderId: "r3", offers: 12, status: "submitting", progress: 28 },
 ];
 
 const ACTIONS = [
-    { key: "unanswered", to: `${BASE}/tenders` },
+    { key: "unanswered", to: `${BASE}/messages` },
     { key: "unrated", to: `${BASE}/projects` },
     { key: "draft", to: `${BASE}/tenders` },
 ];
@@ -49,7 +50,7 @@ const STATUS_STYLES = {
     submitting: "bg-[#CFE3F3] text-[#4B9AD2]",
 };
 
-const card = "rounded-[20px] border border-[#0000000D] bg-white shadow-[0_4px_24px_rgba(35,74,100,0.08)]";
+const card = "rounded-[20px] border border-[#DDDDDD] bg-white shadow-[0_4px_24px_rgba(35,74,100,0.08)]";
 
 /**
  * حالة توثيق المؤسسة من GET /profile (pending | approved | rejected).
@@ -80,15 +81,15 @@ export default function InstitutionHome() {
             {/* الإحصائيات */}
             <section className="grid grid-cols-2 gap-4 lg:grid-cols-4 lg:gap-6">
                 {STATS.map(({ key, value, icon: Icon, symbol }) => (
-                    <div key={key} className="rounded-[28px] border border-[#0000001A] bg-white px-6 py-6">
-                        <p className="flex items-center gap-2.5 text-[13px] text-[#414141]">
+                    <div key={key} className="rounded-[28px] border border-[#DDDDDD] bg-white px-6 py-6">
+                        <p className="flex items-center gap-2.5 text-[13px] text-[#747474]">
                             {t(`stats.${key}.title`)}
                             <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#EAF3FB] text-[#4B9AD2]">
                                 {Icon ? <Icon size={13} strokeWidth={1.8} /> : <span className="text-[13px] font-bold leading-none">{symbol}</span>}
                             </span>
                         </p>
                         <p className="mt-4 text-[26px] font-bold leading-none text-[#22455E] tabular-nums">{value}</p>
-                        <p className="mt-4 text-[12px] text-[#575757]">{t(`stats.${key}.desc`)}</p>
+                        <p className="mt-4 text-[12px] text-[#747474]">{t(`stats.${key}.desc`)}</p>
                     </div>
                 ))}
             </section>
@@ -123,13 +124,14 @@ export default function InstitutionHome() {
                     <h2 className="mb-5 text-[17px] font-bold text-[#4B9AD2]">{t("tenders.title")}</h2>
                     <ul className="flex flex-col gap-4">
                         {TENDERS.map((tender) => (
-                            <li
-                                key={tender.key}
-                                className={`rounded-2xl border px-5 pb-5 pt-4 ${tender.highlighted
-                                    ? "border-[#BFDCF1] bg-[#EAF3FB]"
-                                    : "border-[#0000000F] bg-[#F7F8FA]"
-                                    }`}
-                            >
+                            <li key={tender.key}>
+                                <Link
+                                    to={`${BASE}/tenders/${tender.tenderId}`}
+                                    className={`block rounded-2xl border px-5 pb-5 pt-4 transition-colors hover:border-[#8EC0E4] ${tender.highlighted
+                                        ? "border-[#BFDCF1] bg-[#EAF3FB]"
+                                        : "border-[#DDDDDD] bg-[#F7F8FA] hover:bg-[#F3F8FD]"
+                                        }`}
+                                >
                                 <div className="flex items-start justify-between gap-3">
                                     <div className="min-w-0">
                                         <h3 className="text-[16px] font-semibold leading-[1.6] text-[#414141]">
@@ -159,6 +161,7 @@ export default function InstitutionHome() {
                                         />
                                     </div>
                                 </div>
+                                </Link>
                             </li>
                         ))}
                     </ul>
@@ -170,7 +173,7 @@ export default function InstitutionHome() {
                     <p className="mt-1.5 text-[12px] text-[#38749E]">
                         {t("actions.subtitle", { count: ACTIONS.length })}
                     </p>
-                    <ul className="mt-5 divide-y divide-[#0000000F] border-t border-[#00000033]">
+                    <ul className="mt-5 divide-y divide-[#DDDDDD] border-t border-[#DDDDDD]">
                         {ACTIONS.map((a) => (
                             <li key={a.key}>
                                 <Link to={a.to} className="group flex items-center gap-4 py-6">

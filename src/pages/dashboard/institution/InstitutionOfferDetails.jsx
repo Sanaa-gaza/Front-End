@@ -22,7 +22,7 @@ import { APPLICANTS, OFFERS } from "./offersData";
 
 const BASE = "/dashboard/institution";
 
-const card = "rounded-[20px] border border-[#0000000D] bg-white shadow-[0_4px_24px_rgba(35,74,100,0.08)]";
+const card = "rounded-[20px] border border-[#DDDDDD] bg-white shadow-[0_4px_24px_rgba(35,74,100,0.08)]";
 
 // مميزات صاحب العرض (الشرائح تحت البطاقة الرئيسية)
 const FEATURES = [
@@ -189,11 +189,11 @@ export default function InstitutionOfferDetails() {
                 </div>
 
                 {/* المميزات */}
-                <ul className="mt-12 grid grid-cols-2 gap-3 border-t border-[#0000000F] pt-4 sm:grid-cols-3 lg:grid-cols-5 lg:gap-5">
+                <ul className="mt-12 grid grid-cols-2 gap-3 border-t border-[#DDDDDD] pt-4 sm:grid-cols-3 lg:grid-cols-5 lg:gap-5">
                     {FEATURES.map(({ key, icon: Icon, filled }) => (
                         <li
                             key={key}
-                            className="flex h-[31px] items-center justify-center gap-1.5 rounded-xl border border-[#0000000D] bg-[#F7F9FB] px-3 text-[11px] text-[#475569]"
+                            className="flex h-[31px] items-center justify-center gap-1.5 rounded-xl border border-[#DDDDDD] bg-[#F7F9FB] px-3 text-[11px] text-[#475569]"
                         >
                             <Icon size={12} className="shrink-0 text-[#448BBD]" fill={filled ? "currentColor" : "none"} stroke={filled ? "white" : "currentColor"} />
                             {t(`offerDetails.features.${key}`)}
@@ -232,7 +232,7 @@ export default function InstitutionOfferDetails() {
                     return (
                         <article
                             key={a.id}
-                            className={`flex flex-col gap-5 rounded-[20px] border bg-white p-5 sm:mx-6 sm:p-6 lg:flex-row lg:justify-between ${isAccepted ? "border-[#BFEBCD]" : "border-[#0000000F]"}`}
+                            className={`flex flex-col gap-5 rounded-[20px] border bg-white p-5 sm:mx-6 sm:p-6 lg:flex-row lg:justify-between ${isAccepted ? "border-[#BFEBCD]" : "border-[#DDDDDD]"}`}
                         >
                             {/* معلومات المتقدم */}
                             <div className="min-w-0 flex-1">

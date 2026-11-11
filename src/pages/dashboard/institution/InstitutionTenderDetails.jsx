@@ -7,17 +7,17 @@ import { TENDERS } from "./tendersData";
 const BASE = "/dashboard/institution";
 
 // ===== بيانات تجريبية =====
-// تفاصيل إضافية لكل مناقصة (الرقم، المدة، نوع التعاقد...). لما يجهز الباك إند، بتيجي من GET /tenders/{id}
+// تفاصيل إضافية لكل مناقصة (الرقم، المدة...). لما يجهز الباك إند، بتيجي من GET /tenders/{id}
 const DETAILS = {
-    r1: { number: "TND-2024-089", remainingHours: 26, durationDays: 30, contract: "lumpSum" },
+    r1: { number: "TND-2024-089", remainingHours: 26, durationDays: 30 },
 };
-const DEFAULT_DETAILS = { remainingHours: 48, durationDays: 20, contract: "lumpSum" };
+const DEFAULT_DETAILS = { remainingHours: 48, durationDays: 20 };
 
 // المرحلة الحالية حسب حالة المناقصة (رقم المرحلة من 0 لـ 4، و5 = كل المراحل مكتملة)
 const STAGE_BY_STATUS = { draft: 0, open: 1, submitting: 1, cancelled: 1, executing: 4, completed: 5 };
 const STAGES = ["publish", "receive", "compare", "select", "deliver"];
 
-const card = "rounded-[20px] border border-[#0000000D] bg-white shadow-[0_4px_24px_rgba(35,74,100,0.08)]";
+const card = "rounded-[20px] border border-[#DDDDDD] bg-white shadow-[0_4px_24px_rgba(35,74,100,0.08)]";
 
 /** مراحل المناقصة: مكتملة (أخضر) / حالية (أزرق) / قادمة (رمادي) */
 function Stepper({ current, labels }) {
@@ -70,12 +70,11 @@ export default function InstitutionTenderDetails() {
     const { t } = useTranslation("institutionDashboard");
     const { tenderId } = useParams();
     const tender = TENDERS.find((x) => x.id === tenderId);
-    // التأكيد المفتوح: "" | "close" | "award"
-    const [confirming, setConfirming] = useState("");
+    // تأكيد الإغلاق مفتوح؟
+    const [confirming, setConfirming] = useState(false);
     const [closed, setClosed] = useState(tender?.status === "cancelled");
-    // ⚠️ اختيار العرض الفائز بالصفحة بس لحد ما يصير في endpoint
-    const [awarded, setAwarded] = useState(tender?.status === "executing" || tender?.status === "completed");
-    const [justAwarded, setJustAwarded] = useState(false);
+    // المناقصة اللي انرست (قيد التنفيذ أو مكتملة) — اختيار العرض نفسه بيصير من صفحة العروض
+    const awarded = tender?.status === "executing" || tender?.status === "completed";
 
     if (!tender) {
         return (
@@ -129,7 +128,6 @@ export default function InstitutionTenderDetails() {
             chip: receiving,
         },
         { key: "duration", value: t("tenderDetails.durationDays", { count: details.durationDays }) },
-        { key: "contract", value: t(`tenderDetails.contracts.${details.contract}`) },
     ];
 
     return (
@@ -188,19 +186,18 @@ export default function InstitutionTenderDetails() {
                             {t("tenderDetails.awardedBadge")}
                         </span>
                     ) : (
-                        <button
-                            type="button"
-                            onClick={() => setConfirming("award")}
-                            className="inline-flex h-9 cursor-pointer items-center gap-1.5 rounded-lg bg-[#4B9AD2] px-4 text-[12px] font-medium text-white btn-wipe"
+                        <Link
+                            to={`${BASE}/offers`}
+                            className="inline-flex h-9 items-center gap-1.5 rounded-lg bg-[#4B9AD2] px-4 text-[12px] font-medium text-white btn-wipe"
                         >
                             <Check size={15} />
-                            {t("tenderDetails.chooseWinner")}
-                        </button>
+                            {t("tenderDetails.chooseOffer")}
+                        </Link>
                     )}
                     {!closed && !awarded && (
                         <button
                             type="button"
-                            onClick={() => setConfirming("close")}
+                            onClick={() => setConfirming(true)}
                             className="inline-flex h-9 cursor-pointer items-center rounded-lg border border-[#E8A5AB] px-4 text-[12px] font-medium text-[#D64545] transition-colors hover:bg-[#FFF6F6]"
                         >
                             {t("tenderDetails.close")}
@@ -209,49 +206,35 @@ export default function InstitutionTenderDetails() {
                 </div>
             </section>
 
-            {/* تأكيد الإغلاق / اختيار الفائز — ⚠️ بالصفحة بس لحد ما يصير في endpoint */}
+            {/* تأكيد الإغلاق — ⚠️ بالصفحة بس لحد ما يصير في endpoint */}
             {confirming && (
                 <div
                     role="alertdialog"
-                    className={`flex flex-col gap-3 rounded-xl border p-4 sm:flex-row sm:items-center sm:justify-between ${confirming === "award" ? "border-[#CFE3F3] bg-[#F3F9FE]" : "border-[#F3C4C4] bg-[#FFF6F6]"
-                        }`}
+                    className="flex flex-col gap-3 rounded-xl border border-[#F3C4C4] bg-[#FFF6F6] p-4 sm:flex-row sm:items-center sm:justify-between"
                 >
-                    <p className={`text-[13px] ${confirming === "award" ? "text-[#22455E]" : "text-[#A61B29]"}`}>
-                        {t(confirming === "award" ? "tenderDetails.awardConfirm" : "tenderDetails.closeConfirm")}
-                    </p>
+                    <p className="text-[13px] text-[#A61B29]">{t("tenderDetails.closeConfirm")}</p>
                     <div className="flex shrink-0 gap-2">
                         <button
                             type="button"
                             onClick={() => {
-                                if (confirming === "award") {
-                                    setAwarded(true);
-                                    setJustAwarded(true);
-                                } else {
-                                    setClosed(true);
-                                }
-                                setConfirming("");
+                                setClosed(true);
+                                setConfirming(false);
                             }}
-                            className={`h-9 cursor-pointer rounded-lg px-4 text-[12px] font-medium text-white transition-colors ${confirming === "award" ? "bg-[#4B9AD2] hover:bg-[#3C88BF]" : "bg-[#D64545] hover:bg-[#B83636]"
-                                }`}
+                            className="h-9 cursor-pointer rounded-lg bg-[#D64545] px-4 text-[12px] font-medium text-white transition-colors hover:bg-[#B83636]"
                         >
-                            {t(confirming === "award" ? "tenderDetails.confirmAward" : "tenderDetails.confirmClose")}
+                            {t("tenderDetails.confirmClose")}
                         </button>
                         <button
                             type="button"
-                            onClick={() => setConfirming("")}
-                            className="h-9 cursor-pointer rounded-lg border border-[#0000001A] bg-white px-4 text-[12px] font-medium text-[#575757] hover:bg-[#F5F6F8]"
+                            onClick={() => setConfirming(false)}
+                            className="h-9 cursor-pointer rounded-lg border border-[#DDDDDD] bg-white px-4 text-[12px] font-medium text-[#575757] hover:bg-[#F5F6F8]"
                         >
                             {t("tenderDetails.cancel")}
                         </button>
                     </div>
                 </div>
             )}
-            {justAwarded && (
-                <p role="status" className="rounded-lg border border-[#BFEBCD] bg-[#E8F8EE] px-4 py-3 text-[13px] text-[#2E9E5B]">
-                    {t("tenderDetails.awarded")}
-                </p>
-            )}
-            {closed && !justAwarded && tender.status !== "cancelled" && (
+            {closed && tender.status !== "cancelled" && (
                 <p role="status" className="rounded-lg border border-[#BFEBCD] bg-[#E8F8EE] px-4 py-3 text-[13px] text-[#2E9E5B]">
                     {t("tenderDetails.closed")}
                 </p>
@@ -271,7 +254,7 @@ export default function InstitutionTenderDetails() {
                 {/* بطاقة المعلومات */}
                 <section className={`${card} p-5`}>
                     <h2 className="text-[15px] font-bold text-[#22455E]">{t("tenderDetails.infoTitle")}</h2>
-                    <dl className="mt-3 divide-y divide-[#0000000F]">
+                    <dl className="mt-3 divide-y divide-[#DDDDDD]">
                         {infoRows.map((row) => (
                             <div key={row.key} className="flex items-center justify-between gap-3 py-3 text-[12px]">
                                 <dt className="text-[#89949D]">{t(`tenderDetails.info.${row.key}`)}</dt>

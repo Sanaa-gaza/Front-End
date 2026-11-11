@@ -5,7 +5,7 @@ import { Building2 } from "lucide-react";
 
 const BASE = "/dashboard/admin";
 
-const card = "rounded-[20px] border border-[#0000000D] bg-white shadow-[0_4px_24px_rgba(35,74,100,0.08)]";
+const card = "rounded-[20px] border border-[#DDDDDD] bg-white shadow-[0_4px_24px_rgba(35,74,100,0.08)]";
 
 // ===== بيانات تجريبية =====
 // الباك إند لسا ما فيه endpoints لإحصائيات الأدمن. لما تجهز، استبدلي هالبيانات بطلبات من src/api/endpoints.js
@@ -154,7 +154,7 @@ export default function AdminHome() {
                 <div className="flex min-w-0 flex-col gap-6">
                     {/* نمو المستخدمين */}
                     <section className={`${card} border-t-2 border-t-[#9CC9EA] px-3 pb-4 pt-5`}>
-                        <div className="border-b border-[#0000000A] px-2 pb-4">
+                        <div className="border-b border-[#DDDDDD] px-2 pb-4">
                             <h2 className="text-[19px] font-bold text-[#22303C]">{t("growth.title")}</h2>
                             <p className="mt-1 text-[10px] text-[#414141]">{t("growth.subtitle", { year: 2026 })}</p>
                         </div>
@@ -165,7 +165,7 @@ export default function AdminHome() {
 
                     {/* آخر الطلبات الواردة */}
                     <section className={`${card} border-t-2 border-t-[#9CC9EA] p-5`}>
-                        <div className="flex items-center justify-between gap-3 border-b border-[#0000000F] pb-4">
+                        <div className="flex items-center justify-between gap-3 border-b border-[#DDDDDD] pb-4">
                             <h2 className="text-[15px] font-bold text-[#141415]">{t("latest.title")}</h2>
                             <Link to={`${BASE}/requests`} className="text-[12px] text-[#4B9AD2] hover:underline">
                                 {t("latest.all")}
@@ -180,7 +180,7 @@ export default function AdminHome() {
                                             to={`${BASE}/requests`}
                                             className={`flex items-start justify-between gap-3 rounded-xl border px-4 py-3.5 transition-colors ${i === 0
                                                 ? "border-[#BFDCF1] bg-[#EEF5FC]"
-                                                : "border-[#0000000F] bg-[#F7F8FA] hover:border-[#BFDCF1]"
+                                                : "border-[#DDDDDD] bg-[#F7F8FA] hover:border-[#BFDCF1]"
                                                 }`}
                                         >
                                             <span className="min-w-0">
@@ -206,7 +206,7 @@ export default function AdminHome() {
                 <aside className={`${card} border-t-2 border-t-[#9CC9EA] p-4`}>
                     <h2 className="text-[13px] font-bold text-[#141415]">{t("actions.title")}</h2>
                     <p className="mt-1 text-[9px] text-[#89949D]">{t("actions.subtitle", { count: pending })}</p>
-                    <ul className="mt-3 divide-y divide-[#0000000F] border-t border-[#0000000F]">
+                    <ul className="mt-3 divide-y divide-[#DDDDDD] border-t border-[#DDDDDD]">
                         {ACTIONS.map((a) => (
                             <li key={a.key}>
                                 <Link to={a.to} className="flex items-center gap-2.5 py-4 hover:opacity-80">

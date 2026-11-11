@@ -20,17 +20,16 @@ const MESSAGES = [
 
 const PROJECTS = ["p1", "p2", "p3", "p4"];
 const TABS = ["inbox", "outbox", "archive"];
-const STATUSES = ["new", "reviewing", "read", "replied", "forwarded"];
+const STATUSES = ["new", "reviewing", "read", "replied"];
 
 const STATUS_STYLES = {
     new: "bg-[#DDF6E3] text-[#2EAF4E]",
     reviewing: "bg-[#FDEBD3] text-[#D9822B]",
     read: "bg-[#EEF0F2] text-[#6B7280]",
     replied: "bg-[#DCEBFA] text-[#4B9AD2]",
-    forwarded: "bg-[#EFE6FA] text-[#8A5CC2]",
 };
 
-const card = "rounded-[20px] border border-[#0000000D] bg-white shadow-[0_4px_24px_rgba(35,74,100,0.08)]";
+const card = "rounded-[20px] border border-[#DDDDDD] bg-white shadow-[0_4px_24px_rgba(35,74,100,0.08)]";
 const field =
     "h-11 w-full rounded-xl border border-[#8EC0E4] bg-white text-[12px] text-[#414141] outline-none transition-colors focus:border-[#4B9AD2] focus:ring-1 focus:ring-[#4B9AD2]";
 
@@ -88,7 +87,7 @@ function MessageDetails({ message, onAction }) {
                         <dd>{messageText(t, message, "type")}</dd>
                     </dl>
 
-                    <hr className="my-4 border-[#0000001A]" />
+                    <hr className="my-4 border-[#DDDDDD]" />
 
                     <p className="mb-2 text-[11px] text-[#89949D]">{t("messagesPage.text")}</p>
                     <p className="whitespace-pre-line rounded-xl border border-[#BFD9EC] px-4 py-3 text-[12px] leading-[1.9] text-[#414141]">
@@ -128,27 +127,16 @@ function MessageDetails({ message, onAction }) {
                 >
                     {t("messagesPage.reply")}
                 </button>
-                <button
-                    type="button"
-                    disabled={!message || outgoing}
-                    onClick={() => onAction(message, "forward")}
-                    className={`${btn} border border-[#4B9AD2] text-[#4B9AD2] btn-wipe btn-wipe-outline`}
-                >
-                    {t("messagesPage.forward")}
-                </button>
             </div>
         </section>
     );
 }
 
-/** نافذة "رد رسمي" و"تحويل للموظف" — نفس الشكل، mode: reply | forward */
-function ReplyModal({ message, mode, onClose, onSend }) {
+/** نافذة "رد رسمي" */
+function ReplyModal({ message, onClose, onSend }) {
     const { t } = useTranslation("institutionDashboard");
     const title = messageText(t, message, "title");
-    const isForward = mode === "forward";
-    const [subject, setSubject] = useState(() =>
-        t(isForward ? "messagesPage.replyModal.forwardSubjectDefault" : "messagesPage.replyModal.subjectDefault", { title })
-    );
+    const [subject, setSubject] = useState(() => t("messagesPage.replyModal.subjectDefault", { title }));
     const [body, setBody] = useState("");
     const [files, setFiles] = useState([]);
     const [errors, setErrors] = useState({});
@@ -205,7 +193,7 @@ function ReplyModal({ message, mode, onClose, onSend }) {
             >
                 <div className="overflow-y-auto p-6">
                     <h2 id="reply-title" className="text-[17px] font-bold text-[#22455E]">
-                        {isForward ? t("messagesPage.replyModal.forwardTitle") : t("messagesPage.replyModal.title")}
+                        {t("messagesPage.replyModal.title")}
                     </h2>
 
                     {/* ملخص المراسلة اللي بنرد عليها */}
@@ -220,7 +208,7 @@ function ReplyModal({ message, mode, onClose, onSend }) {
                         </p>
                     </div>
 
-                    <hr className="my-5 border-[#0000001A]" />
+                    <hr className="my-5 border-[#DDDDDD]" />
 
                     <label htmlFor="reply-subject" className="mb-1.5 block text-[12px] text-[#575757]">
                         {t("messagesPage.replyModal.subject")}
@@ -305,12 +293,12 @@ function ReplyModal({ message, mode, onClose, onSend }) {
                     )}
                 </div>
 
-                <div className="flex gap-3 border-t border-[#0000000F] px-6 py-4">
+                <div className="flex gap-3 border-t border-[#DDDDDD] px-6 py-4">
                     <button
                         type="submit"
                         className="h-11 flex-1 cursor-pointer rounded-xl bg-[#4B9AD2] text-[14px] font-semibold text-white btn-wipe"
                     >
-                        {isForward ? t("messagesPage.replyModal.forwardSend") : t("messagesPage.replyModal.send")}
+                        {t("messagesPage.replyModal.send")}
                     </button>
                     <button
                         type="button"
@@ -318,130 +306,6 @@ function ReplyModal({ message, mode, onClose, onSend }) {
                         className="h-11 flex-1 cursor-pointer rounded-xl border border-[#E8A5AB] text-[14px] font-semibold text-[#D64545] transition-colors hover:bg-[#FFF6F6]"
                     >
                         {t("messagesPage.replyModal.close")}
-                    </button>
-                </div>
-            </form>
-        </div>
-    );
-}
-
-// موظفو المؤسسة اللي ممكن تتحوّل لهم المراسلة (تجريبي — لما يجهز endpoint الموظفين بنجيبهم منه)
-const EMPLOYEES = ["e1", "e2", "e3", "e4"];
-
-/** نافذة "تحويل لموظف": ملخص المراسلة + اختيار الموظف + ملاحظات */
-function ForwardModal({ message, onClose, onSend }) {
-    const { t } = useTranslation("institutionDashboard");
-    const f = "messagesPage.forwardModal";
-    const [employee, setEmployee] = useState("");
-    const [notes, setNotes] = useState("");
-    const [error, setError] = useState("");
-    const selectRef = useRef(null);
-    const closeRef = useRef(onClose);
-    useEffect(() => {
-        closeRef.current = onClose;
-    }, [onClose]);
-
-    // مرة وحدة عند الفتح: Escape بيسكر النافذة، والصفحة اللي وراها ما بتتمرر
-    useEffect(() => {
-        const onKey = (e) => e.key === "Escape" && closeRef.current();
-        window.addEventListener("keydown", onKey);
-        document.body.style.overflow = "hidden";
-        selectRef.current?.focus();
-        return () => {
-            window.removeEventListener("keydown", onKey);
-            document.body.style.overflow = "";
-        };
-    }, []);
-
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        if (!employee) {
-            setError(t(`${f}.employeeRequired`));
-            selectRef.current?.focus();
-            return;
-        }
-        onSend({ employee: t(`${f}.employees.${employee}`), notes: notes.trim() });
-    };
-
-    const box = "w-full rounded-xl border bg-white text-[13px] text-[#414141] outline-none transition-colors focus:border-[#4B9AD2] focus:ring-1 focus:ring-[#4B9AD2]";
-
-    return (
-        <div
-            className="fixed inset-0 z-[60] flex items-center justify-center bg-[#141415]/40 p-4 backdrop-blur-[2px]"
-            onMouseDown={(e) => e.target === e.currentTarget && onClose()}
-        >
-            <form
-                role="dialog"
-                aria-modal="true"
-                aria-labelledby="forward-title"
-                onSubmit={handleSubmit}
-                noValidate
-                className="flex max-h-[92vh] w-full max-w-[412px] flex-col overflow-y-auto rounded-[22px] border-t-4 border-[#BFDCF1] bg-white px-6 pb-4 pt-7 shadow-[0_24px_60px_rgba(20,20,21,0.25)]"
-            >
-                <h2 id="forward-title" className="text-[16px] font-bold text-[#22455E]">{t(`${f}.title`)}</h2>
-
-                {/* ملخص المراسلة */}
-                <div className="mt-5 rounded-xl bg-[#EEF5FC] px-4 py-3">
-                    <p className="text-[9px] text-[#575757]">
-                        {t("messagesPage.replyModal.ref")} <bdi dir="ltr">{message.ref}</bdi>
-                    </p>
-                    <p className="mt-1 text-[11px] font-bold text-[#141415]">{messageText(t, message, "title")}</p>
-                </div>
-
-                <hr className="my-6 border-[#0000001A]" />
-
-                <label htmlFor="forward-employee" className="mb-3 block text-[13px] text-[#575757]">
-                    {t(`${f}.employee`)}
-                </label>
-                <div className="relative">
-                    <select
-                        id="forward-employee"
-                        ref={selectRef}
-                        value={employee}
-                        onChange={(e) => {
-                            setEmployee(e.target.value);
-                            setError("");
-                        }}
-                        aria-invalid={!!error}
-                        className={`${box} h-12 cursor-pointer appearance-none pe-10 ps-4 ${employee ? "" : "text-[#575757]"} ${error ? "border-red-400" : "border-[#BFD9EC]"
-                            }`}
-                    >
-                        <option value="" disabled>{t(`${f}.employeePlaceholder`)}</option>
-                        {EMPLOYEES.map((id) => (
-                            <option key={id} value={id} className="text-[#414141]">
-                                {t(`${f}.employees.${id}`)}
-                            </option>
-                        ))}
-                    </select>
-                    <ChevronDown size={18} className="pointer-events-none absolute end-4 top-1/2 -translate-y-1/2 text-[#4B9AD2]" />
-                </div>
-                {error && <p className="mt-1 text-[11px] text-red-500">{error}</p>}
-
-                <label htmlFor="forward-notes" className="mb-3 mt-6 block text-[13px] text-[#575757]">
-                    {t(`${f}.notes`)}
-                </label>
-                <textarea
-                    id="forward-notes"
-                    rows={5}
-                    value={notes}
-                    onChange={(e) => setNotes(e.target.value)}
-                    placeholder={t(`${f}.notesPlaceholder`)}
-                    className={`${box} resize-none border-[#BFD9EC] px-4 py-3 placeholder:text-[#414141]`}
-                />
-
-                <div className="-mx-2 mt-5 flex gap-3">
-                    <button
-                        type="submit"
-                        className="h-10 flex-1 cursor-pointer rounded-xl bg-[#4B9AD2] text-[14px] font-semibold text-white btn-wipe"
-                    >
-                        {t(`${f}.submit`)}
-                    </button>
-                    <button
-                        type="button"
-                        onClick={onClose}
-                        className="h-10 flex-1 cursor-pointer rounded-xl border border-[#F2B8BE] text-[14px] font-semibold text-[#D64545] transition-colors hover:bg-[#FFF6F6]"
-                    >
-                        {t(`${f}.close`)}
                     </button>
                 </div>
             </form>
@@ -457,7 +321,7 @@ export default function InstitutionMessages() {
     const [project, setProject] = useState("all");
     const [status, setStatus] = useState("all");
     const [selectedId, setSelectedId] = useState(null);
-    // { message, mode: "reply" | "forward" }
+    // نافذة الرد المفتوحة: { message }
     const [dialog, setDialog] = useState(null);
     const [flash, setFlash] = useState("");
 
@@ -484,14 +348,13 @@ export default function InstitutionMessages() {
     };
 
     const handleSend = ({ subject, body, files }) => {
-        const { message: original, mode } = dialog;
-        const isForward = mode === "forward";
+        const { message: original } = dialog;
         const today = new Date().toISOString().slice(0, 10);
         setSentReplies((list) => [
             {
                 id: `reply-${Date.now()}`,
                 box: "outbox",
-                status: isForward ? "forwarded" : "replied",
+                status: "replied",
                 project: original.project,
                 ref: `OUT-${today.slice(0, 4)}-${String(list.length + 11).padStart(3, "0")}`,
                 date: today,
@@ -500,41 +363,14 @@ export default function InstitutionMessages() {
                     title: subject,
                     body,
                     party: messageText(t, original, "party"),
-                    type: isForward ? t("messagesPage.replyModal.forwardType") : t("messagesPage.replyModal.replyType"),
+                    type: t("messagesPage.replyModal.replyType"),
                 },
             },
             ...list,
         ]);
-        if (!isForward) setStatusChanges((c) => ({ ...c, [original.id]: "replied" }));
+        setStatusChanges((c) => ({ ...c, [original.id]: "replied" }));
         setDialog(null);
-        setFlash(isForward ? t("messagesPage.replyModal.forwarded") : t("messagesPage.replyModal.sent"));
-    };
-
-    // التحويل لموظف: بينضاف للصادر بحالة "تم التحويل"، والطرف هو الموظف
-    const handleForward = ({ employee, notes }) => {
-        const original = dialog.message;
-        const today = new Date().toISOString().slice(0, 10);
-        setSentReplies((list) => [
-            {
-                id: `forward-${Date.now()}`,
-                box: "outbox",
-                status: "forwarded",
-                project: original.project,
-                ref: `OUT-${today.slice(0, 4)}-${String(list.length + 11).padStart(3, "0")}`,
-                date: today,
-                attachments: original.attachments,
-                custom: {
-                    title: t("messagesPage.replyModal.forwardSubjectDefault", { title: messageText(t, original, "title") }),
-                    body: notes || messageText(t, original, "body"),
-                    party: employee,
-                    type: t("messagesPage.replyModal.forwardType"),
-                },
-            },
-            ...list,
-        ]);
-        setStatusChanges((c) => ({ ...c, [original.id]: "forwarded" }));
-        setDialog(null);
-        setFlash(t("messagesPage.forwardModal.forwarded", { name: employee }));
+        setFlash(t("messagesPage.replyModal.sent"));
     };
 
     const counts = useMemo(() => {
@@ -629,7 +465,7 @@ export default function InstitutionMessages() {
                 <section className={`${card} p-5`}>
                     <h2 className="text-[16px] font-bold text-[#22455E]">{t("messagesPage.title")}</h2>
                     <p className="mt-1 text-[12px] text-[#89949D]">{t("messagesPage.subtitle")}</p>
-                    <hr className="my-4 border-[#0000001A]" />
+                    <hr className="my-4 border-[#DDDDDD]" />
 
                     {list.length ? (
                         <ul className="flex flex-col gap-3">
@@ -643,7 +479,7 @@ export default function InstitutionMessages() {
                                             aria-pressed={active}
                                             className={`w-full cursor-pointer rounded-2xl border p-4 text-start transition-colors ${active
                                                 ? "border-[#BFDCF1] bg-[#EAF3FB]"
-                                                : "border-[#0000000F] bg-[#F7F8FA] hover:border-[#BFDCF1]"
+                                                : "border-[#DDDDDD] bg-[#F7F8FA] hover:border-[#BFDCF1]"
                                                 }`}
                                         >
                                             <span className="flex items-start justify-between gap-3">
@@ -669,22 +505,13 @@ export default function InstitutionMessages() {
                     )}
                 </section>
 
-                <MessageDetails message={selected} onAction={(message, mode) => setDialog({ message, mode })} />
+                <MessageDetails message={selected} onAction={(message) => setDialog({ message })} />
             </div>
 
-            {dialog?.mode === "forward" && (
-                <ForwardModal
-                    key={`${dialog.message.id}-forward`}
-                    message={dialog.message}
-                    onClose={() => setDialog(null)}
-                    onSend={handleForward}
-                />
-            )}
-            {dialog?.mode === "reply" && (
+            {dialog && (
                 <ReplyModal
-                    key={`${dialog.message.id}-${dialog.mode}`}
+                    key={dialog.message.id}
                     message={dialog.message}
-                    mode={dialog.mode}
                     onClose={() => setDialog(null)}
                     onSend={handleSend}
                 />
