@@ -13,36 +13,40 @@ const DETAILS = {
 };
 const DEFAULT_DETAILS = { remainingHours: 48, durationDays: 20 };
 
-// المرحلة الحالية حسب حالة المناقصة (رقم المرحلة من 0 لـ 4، و5 = كل المراحل مكتملة)
-const STAGE_BY_STATUS = { draft: 0, open: 1, submitting: 1, cancelled: 1, executing: 4, completed: 5 };
-const STAGES = ["publish", "receive", "compare", "select", "deliver"];
+// المرحلة الحالية حسب حالة المناقصة (رقم المرحلة من 0 لـ 3، و4 = كل المراحل مكتملة)
+const STAGE_BY_STATUS = { draft: 0, open: 1, cancelled: 1, executing: 3, completed: 4 };
+const STAGES = ["publish", "compare", "select", "deliver"];
 
-const card = "rounded-[20px] border border-[#DDDDDD] bg-white shadow-[0_4px_24px_rgba(35,74,100,0.08)]";
+const card = "rounded-[20px] border border-[#DDDDDD] bg-white";
 
-/** مراحل المناقصة: مكتملة (أخضر) / حالية (أزرق) / قادمة (رمادي) */
+// أرقام المراحل كما بالتصميم (المرحلة 2 "استقبال العروض" اندمجت بمقارنة العروض)
+const STAGE_NUMBERS = [1, 3, 4, 5];
+
+/** مراحل المناقصة: مكتملة (أخضر #10B981) / حالية (أزرق #5DA5D5) / قادمة (رمادي فاتح #F1F5F9) */
 function Stepper({ current, labels }) {
     const { t } = useTranslation("institutionDashboard");
 
     return (
-        <ol className="relative flex items-start justify-between pt-1">
-            {/* الخط الواصل بين المراحل */}
-            <span aria-hidden="true" className="absolute inset-x-[10%] top-[17px] h-[2px] bg-[#E6EBF0] sm:top-[21px]" />
+        // كل مرحلة بعرض ثابت والمراحل موزعة للطرفين — أول وآخر مرحلة على بعد 12px من إطار الصندوق
+        <ol className="relative flex items-start justify-between">
+            {/* الخط الواصل: من نص أول دائرة لنص آخر دائرة (نص عرض المرحلة) */}
+            <span aria-hidden="true" className="absolute inset-x-[36px] top-[17px] h-[3px] rounded-full bg-[#F1F5F9] sm:inset-x-[65px]" />
             {STAGES.map((key, i) => {
                 const state = i < current ? "done" : i === current ? "current" : "upcoming";
                 return (
-                    <li key={key} className="relative z-10 flex flex-1 flex-col items-center text-center">
+                    <li key={key} className="relative z-10 flex w-[72px] flex-col items-center text-center sm:w-[130px]">
                         <span
-                            className={`flex h-8 w-8 items-center justify-center rounded-full text-[12px] font-bold sm:h-10 sm:w-10 sm:text-[13px] ${state === "done"
-                                ? "bg-[#2EAF4E] text-white"
+                            className={`flex h-9 w-9 items-center justify-center rounded-full text-[13px] font-bold ${state === "done"
+                                ? "bg-[#10B981] text-white ring-4 ring-[#10B981]/15"
                                 : state === "current"
-                                    ? "bg-[#4B9AD2] text-white ring-4 ring-[#CFE3F3]"
-                                    : "bg-[#EEF0F2] text-[#89949D]"
+                                    ? "bg-[#5DA5D5] text-white ring-4 ring-[#5DA5D5]/25"
+                                    : "border-2 border-white bg-[#F1F5F9] text-[#94A3B8] ring-1 ring-[#E2E8F0]"
                                 }`}
                         >
-                            {state === "done" ? <Check size={18} strokeWidth={3} /> : state === "current" ? <Clock size={18} /> : i + 1}
+                            {state === "done" ? <Check size={17} strokeWidth={3} /> : state === "current" ? <Clock size={17} /> : STAGE_NUMBERS[i]}
                         </span>
                         <span
-                            className={`mt-3 px-1 text-[11px] font-bold leading-[1.5] sm:text-[13px] ${state === "current" ? "text-[#4B9AD2]" : state === "done" ? "text-[#414141]" : "text-[#89949D]"
+                            className={`mt-3 px-1 text-[13px] font-bold leading-[1.5] ${state === "current" ? "text-[#5DA5D5]" : state === "done" ? "text-[#334155]" : "text-[#94A3B8]"
                                 }`}
                         >
                             {t(`tenderDetails.stages.${key}.title`)}
@@ -50,10 +54,10 @@ function Stepper({ current, labels }) {
                         {labels[key] && (
                             <span
                                 className={`mt-1 text-[10px] ${state === "done"
-                                    ? "text-[#2EAF4E]"
+                                    ? "text-[#10B981]"
                                     : state === "current"
-                                        ? "rounded-full bg-[#DCEBFA] px-2.5 py-0.5 text-[#4B9AD2]"
-                                        : "text-[#89949D]"
+                                        ? "rounded-full border border-[#5DA5D5]/30 bg-[#5DA5D5]/10 px-2.5 py-0.5 font-medium text-[#5DA5D5]"
+                                        : "text-[#CBD5E1]"
                                     }`}
                             >
                                 {labels[key]}
@@ -104,14 +108,20 @@ export default function InstitutionTenderDetails() {
         ? t(`${sample}.desc`, { returnObjects: true })
         : [t("tenderDetails.genericDesc", { title, area })];
 
-    // بعد اختيار الفائز: كل المراحل لحد "اختيار الحرفي" بتصير مكتملة والحالية "التنفيذ والتسليم"
+    // بعد الترسية: كل المراحل لحد "اختيار الحرفي" بتصير مكتملة والحالية "التنفيذ والتسليم"
     const baseStage = STAGE_BY_STATUS[tender.status] ?? 1;
-    const stage = awarded ? Math.max(baseStage, 4) : baseStage;
+    const stage = awarded ? Math.max(baseStage, 3) : baseStage;
     const receiving = stage === 1 && !closed;
     const stageLabels = {
         publish: stage > 0 && hasSample ? t("tenderDetails.doneOn", { date: t(`${sample}.publishedShort`) }) : "",
-        receive: receiving && hasSample ? t("tenderDetails.remaining", { time: t(`${sample}.remainingTime`) }) : "",
-        compare: hasSample ? t("tenderDetails.startsOn", { date: t(`${sample}.deadlineShort`) }) : "",
+        // أثناء استقبال العروض: الوقت المتبقي تحت "مقارنة العروض"
+        compare: receiving
+            ? hasSample
+                ? t("tenderDetails.remaining", { time: t(`${sample}.remainingTime`) })
+                : ""
+            : hasSample
+                ? t("tenderDetails.startsOn", { date: t(`${sample}.deadlineShort`) })
+                : "",
         select: t("tenderDetails.stages.select.note"),
         deliver: t("tenderDetails.stages.deliver.note"),
     };
@@ -134,15 +144,15 @@ export default function InstitutionTenderDetails() {
         <div className="mx-auto flex max-w-[1100px] flex-col gap-6">
             <Link
                 to={`${BASE}/tenders`}
-                className="inline-flex w-fit items-center gap-1 rounded-full bg-[#EAF3FB] px-3 py-1 text-[11px] font-medium text-[#38749E] transition-colors hover:bg-[#DCEBFA]"
+                className="inline-flex w-fit items-center gap-1 text-[12px] font-medium text-[#4B9AD2] hover:underline"
             >
                 <ChevronLeft size={13} className="rtl:rotate-180" />
                 {t("tenderDetails.back")}
             </Link>
 
             {/* مراحل المناقصة */}
-            <section className={`${card} p-5 sm:p-6`}>
-                <h2 className="mb-6 text-[12px] font-semibold text-[#89949D]">{t("tenderDetails.stagesTitle")}</h2>
+            <section className={`${card} px-3 py-5 sm:py-6`}>
+                <h2 className="mb-6 px-2 text-[12px] font-semibold text-[#94A3B8] sm:px-3">{t("tenderDetails.stagesTitle")}</h2>
                 <Stepper current={stage} labels={stageLabels} />
             </section>
 
@@ -166,7 +176,7 @@ export default function InstitutionTenderDetails() {
                             </span>
                         )}
                     </div>
-                    <h1 className="mt-3 text-[20px] font-bold text-[#414141]">{title}</h1>
+                    <h1 className="mt-3 text-[22px] font-bold text-[#22455E]">{title}</h1>
                     <p className="mt-2 flex flex-wrap items-center gap-x-5 gap-y-1 text-[11px] text-[#89949D]">
                         <span className="flex items-center gap-1">
                             <MapPin size={13} />
@@ -188,17 +198,17 @@ export default function InstitutionTenderDetails() {
                     ) : (
                         <Link
                             to={`${BASE}/offers`}
-                            className="inline-flex h-9 items-center gap-1.5 rounded-lg bg-[#4B9AD2] px-4 text-[12px] font-medium text-white btn-wipe"
+                            className="inline-flex h-11 items-center gap-1.5 rounded-xl bg-[#4B9AD2] px-6 text-[14px] font-semibold text-white btn-wipe"
                         >
-                            <Check size={15} />
-                            {t("tenderDetails.chooseOffer")}
+                            <Check size={16} />
+                            {t("tenderDetails.showOffers")}
                         </Link>
                     )}
                     {!closed && !awarded && (
                         <button
                             type="button"
                             onClick={() => setConfirming(true)}
-                            className="inline-flex h-9 cursor-pointer items-center rounded-lg border border-[#E8A5AB] px-4 text-[12px] font-medium text-[#D64545] transition-colors hover:bg-[#FFF6F6]"
+                            className="inline-flex h-11 cursor-pointer items-center rounded-xl border border-[#E8A5AB] px-6 text-[14px] font-medium text-[#D64545] transition-colors hover:bg-[#FFF6F6]"
                         >
                             {t("tenderDetails.close")}
                         </button>

@@ -164,12 +164,37 @@ export default function DashboardLayout({
                     ))}
                 </nav>
 
+                {/* العودة للموقع — back-site (index.css): السهم بيتحرك عند المرور، وعند الضغط بينطلق ويرجع قبل الانتقال */}
+                <div className="mt-6 border-t border-white/25 pt-4">
+                    <Link
+                        to="/"
+                        onClick={(e) => {
+                            if (e.metaKey || e.ctrlKey || e.shiftKey || leavingSite) return;
+                            e.preventDefault();
+                            setLeavingSite(true);
+                            setTimeout(() => navigate("/"), 600);
+                        }}
+                        title={compact ? t("backToSite") : undefined}
+                        className={`back-site back-site--sidebar flex items-center gap-3 rounded-xl py-2.5 text-[15px] font-medium text-white transition-colors hover:bg-white/15 ${compact ? "justify-center px-2" : "px-3"} ${leavingSite ? "is-leaving" : ""}`}
+                    >
+                        <span className="back-site-home relative z-[1] flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-white/20">
+                            <House size={15} strokeWidth={1.9} />
+                        </span>
+                        {!compact && (
+                            <>
+                                <span className="relative z-[1] flex-1 truncate">{t("backToSite")}</span>
+                                <ArrowLeft size={16} className="back-site-arrow relative z-[1] shrink-0 ltr:rotate-180" />
+                            </>
+                        )}
+                    </Link>
+                </div>
+
                 <button
                     type="button"
                     onClick={handleLogout}
                     disabled={loggingOut}
                     title={compact ? t("logout") : undefined}
-                    className={`mt-6 flex items-center gap-3 rounded-xl py-2.5 text-[15px] font-medium text-white transition-colors hover:bg-white/15 cursor-pointer disabled:opacity-60 ${compact ? "justify-center px-2" : "px-3"
+                    className={`mt-1.5 flex items-center gap-3 rounded-xl py-2.5 text-[15px] font-medium text-white transition-colors hover:bg-white/15 cursor-pointer disabled:opacity-60 ${compact ? "justify-center px-2" : "px-3"
                         }`}
                 >
                     <LogOut size={19} strokeWidth={1.9} className="shrink-0 rtl:rotate-180" />
@@ -293,29 +318,7 @@ export default function DashboardLayout({
                     </div>
                 </header>
 
-                <main className="flex-1 px-4 py-6 sm:px-6 lg:px-8">
-                    {/* العودة للموقع (الصفحة الرئيسية) — بكل صفحات لوحات التحكم، على جهة النهاية (يسار بالعربي) */}
-                    <div className="mx-auto mb-5 flex max-w-[1100px] justify-end">
-                        {/* back-site (index.css): السهم بيتحرك عند المرور، وعند الضغط بينطلق ويرجع قبل الانتقال */}
-                        <Link
-                            to="/"
-                            onClick={(e) => {
-                                if (e.metaKey || e.ctrlKey || e.shiftKey || leavingSite) return;
-                                e.preventDefault();
-                                setLeavingSite(true);
-                                setTimeout(() => navigate("/"), 600);
-                            }}
-                            className={`back-site inline-flex h-9 items-center gap-2 rounded-full border border-[#C7E0F1] bg-white pe-3.5 ps-1.5 text-[12px] font-semibold text-[#3D8BC9] transition-colors hover:border-[#4B9AD2] hover:bg-[#F3F8FD] ${leavingSite ? "is-leaving" : ""}`}
-                        >
-                            <span className="back-site-home relative z-[1] flex h-6 w-6 items-center justify-center rounded-full bg-[#E3EFFA]">
-                                <House size={13} />
-                            </span>
-                            <span className="relative z-[1]">{t("backToSite")}</span>
-                            <ArrowLeft size={14} className="back-site-arrow relative z-[1] ltr:rotate-180" />
-                        </Link>
-                    </div>
-                    {children}
-                </main>
+                <main className="flex-1 px-4 py-6 sm:px-6 lg:px-8">{children}</main>
             </div>
         </div>
     );

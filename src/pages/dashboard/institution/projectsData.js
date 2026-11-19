@@ -1,11 +1,12 @@
 // ===== بيانات تجريبية =====
 // الباك إند لسا ما فيه endpoints للمشاريع. لما تجهز، استبدلي PROJECTS بطلب من src/api/endpoints.js
 // النصوص (العنوان، المزوّد، الموقع، التواريخ...) بملف الترجمة: projectsPage.sample و projectDetails.sample
+// tasks: المهام المنجزة من الكل (نسبة الإنجاز بتنحسب منها) — deadline: موعد التسليم (null = بانتظار التحديث)
 export const PROJECTS = [
-    { id: "p1", status: "executing", progress: 75, value: 11200 },
-    { id: "p2", status: "completed", progress: 100, value: 11200 },
-    { id: "p3", status: "pending", progress: 75, value: 11200 },
-    { id: "p4", status: "executing", progress: 40, value: 8500 },
+    { id: "p1", status: "executing", progress: 75, value: 11200, tasks: { done: 15, total: 20 }, deadline: "2026-12-20" },
+    { id: "p2", status: "completed", progress: 100, value: 11200, tasks: { done: 20, total: 20 }, deadline: "2026-10-30" },
+    { id: "p3", status: "pending", progress: 35, value: 95000, tasks: { done: 7, total: 20 }, deadline: null },
+    { id: "p4", status: "executing", progress: 40, value: 8500, tasks: { done: 8, total: 20 }, deadline: "2027-01-15" },
 ];
 
 // مراحل المشروع بالترتيب

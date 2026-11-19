@@ -202,7 +202,13 @@
                 "provider": "Al-Noor Electric",
                 "time": "3 days"
             }
-        }
+        },
+        "progressLabel": "Completion",
+        "tasks": "{{done}} of {{total}} tasks",
+        "projectValue": "Project value",
+        "amount": "{{amount}} ILS",
+        "deadline": "Delivery date",
+        "awaitingUpdate": "Awaiting update"
     },
     "projectDetails": {
         "back": "Back to projects",
@@ -790,10 +796,6 @@
                 "title": "Tender published",
                 "note": ""
             },
-            "receive": {
-                "title": "Receiving offers",
-                "note": ""
-            },
             "compare": {
                 "title": "Comparing offers",
                 "note": ""
@@ -839,7 +841,7 @@
                 ]
             }
         },
-        "chooseOffer": "Choose offer"
+        "showOffers": "Show offers"
     },
     "notifications": {
         "sample": {
@@ -943,5 +945,344 @@
         "projects": "Projects",
         "messages": "Messages",
         "providers": "Providers"
+    },
+    "projectView": {
+        "back": "Back to projects",
+        "notFound": "This project was not found",
+        "subtitle": "Renovation & construction · Khan Younis, Gaza Strip",
+        "status": {
+            "awaitingStart": "Awaiting start",
+            "executing": "In progress"
+        },
+        "report": {
+            "title": "Weekly report awaiting review",
+            "desc": "The contractor sent a new progress report yesterday; review and approve it to continue the work.",
+            "review": "Review report",
+            "reviewed": "The weekly report was reviewed"
+        },
+        "stagesTitle": "Project stages and progress",
+        "currentStage": {
+            "start": "Current stage: execution start",
+            "executing": "Current stage: in progress"
+        },
+        "stages": {
+            "waiting": "Waiting",
+            "accepted": {
+                "title": "Offers accepted",
+                "note": "Oct 10"
+            },
+            "start": {
+                "title": "Execution start",
+                "note": "Team & site approval"
+            },
+            "executing": {
+                "title": "In progress",
+                "note": "Daily updates"
+            },
+            "delivery": {
+                "title": "Delivery",
+                "note": "Supervision & final handover"
+            }
+        },
+        "schedule": {
+            "title": "Proposed start date",
+            "edit": "Edit",
+            "save": "Save",
+            "cancel": "Cancel",
+            "requester": "Requested by",
+            "duration": "Project duration",
+            "delivery": "Expected delivery",
+            "days": "{{count}} days"
+        },
+        "request": {
+            "label": "New request from the provider",
+            "title": "Request to approve project start",
+            "desc": "{{provider}} uploaded the craftsmen team, work plan and required attachments on May 18, 09:30 AM.",
+            "view": "View request"
+        },
+        "checklist": {
+            "label": "Institution review",
+            "title": "Pre-execution checklist",
+            "desc": "Review what the craftsmen team sent and mark the verified items.",
+            "count": "{{done}} of {{total}} approved",
+            "verified": "Verified by the institution",
+            "pending": "Not completed yet",
+            "required": "Required",
+            "items": {
+                "team": "Verify the registered craftsmen team is present",
+                "site": "Approve the site handover report",
+                "plan": "Review the execution plan and timeline",
+                "materials": "Inspect materials and equipment on site",
+                "kickoff": "Document the kickoff meeting with the team"
+            }
+        },
+        "decision": {
+            "title": "Institution decision",
+            "desc": "Approving the start moves the project to \"In progress\" and lets the craftsmen post daily updates and progress.",
+            "approve": "Approve execution start",
+            "disabledHint": "Complete all checklist items first",
+            "request": "Request completion",
+            "sendRequest": "Send completion request",
+            "requestLabel": "Completion request notes",
+            "requestPlaceholder": "Write what the execution team needs to complete...",
+            "approved": "Execution start approved; the project moved to \"In progress\".",
+            "approvedNote": "Execution start approved",
+            "requested": "A completion request was sent to {{provider}}."
+        },
+        "updateModal": {
+            "eyebrow": "Institution follow-up",
+            "title": "Request execution update",
+            "subtitle": "Ask the contractor for the latest project progress and supporting documents.",
+            "close": "Close",
+            "project": "Project",
+            "to": "To:",
+            "recipient": "{{provider}} · Eng. Ahmad Al-Najjar, Project manager",
+            "itemsTitle": "What should the update include?",
+            "itemsDesc": "Select the information the institution needs to review progress.",
+            "selected": "{{count}} items selected",
+            "itemsRequired": "Select at least one item",
+            "items": {
+                "progress": "Current completion",
+                "done": "Completed work",
+                "photos": "Recent site photos",
+                "remaining": "Remaining work",
+                "risks": "Obstacles & risks",
+                "schedule": "Updated timeline"
+            },
+            "details": "Request details",
+            "detailsDefault": "Please send the latest completion rate, explain the completed and remaining work, and attach recent site photos.",
+            "required": "Write the request details",
+            "deadline": "Required response time",
+            "deadlines": {
+                "24h": "Within 24 hours",
+                "48h": "Within 48 hours",
+                "3d": "Within 3 days",
+                "week": "Within a week"
+            },
+            "priority": "Priority",
+            "priorities": {
+                "normal": "Normal",
+                "important": "Important",
+                "urgent": "Urgent"
+            },
+            "note": "The request reaches the contractor, and their reply appears in \"Execution reports\" for the institution to review.",
+            "send": "Send update request",
+            "cancel": "Cancel",
+            "sent": "The update request was sent to {{provider}}."
+        },
+        "requestUpdate": "Request execution update"
+    },
+    "startRequest": {
+        "back": "Back to project details",
+        "title": "Review execution start request",
+        "subtitle": "{{project}} · A tender by your institution · Request from the provider",
+        "receivedAt": "Request received",
+        "receivedDate": "May 18, 2025",
+        "receivedTime": "09:30 AM",
+        "steps": {
+            "received": {
+                "title": "Request received",
+                "note": "May 18, 09:30 AM"
+            },
+            "review": {
+                "title": "Your review",
+                "note": "Under your review"
+            },
+            "decision": {
+                "title": "Your decision",
+                "note": "Awaiting your decision"
+            }
+        },
+        "stats": {
+            "team": {
+                "label": "Execution team",
+                "value": "12 craftsmen",
+                "note": "All verified"
+            },
+            "start": {
+                "label": "Proposed start",
+                "value": "May 20, 2025",
+                "note": "Two days after the request"
+            },
+            "duration": {
+                "label": "Duration",
+                "value": "102 days",
+                "note": "Delivery Aug 30"
+            },
+            "files": {
+                "label": "Attachments",
+                "value": "5 files",
+                "note": "Requirements complete"
+            }
+        },
+        "review": {
+            "title": "Your review checklist",
+            "desc": "Review your project requirements before approving the start.",
+            "items": {
+                "team": "Team fits your project scope",
+                "schedule": "Schedule matches the project contract",
+                "equipment": "Equipment meets project requirements",
+                "safety": "Safety plan meets requirements"
+            }
+        },
+        "reviewer": {
+            "title": "Reviewer at your institution",
+            "change": "Change",
+            "role": "Projects manager · Your institution",
+            "deadline": "Decision deadline: 24 hours",
+            "people": {
+                "r1": "Eng. Mohammad Sulaiman",
+                "r2": "Farah Salem",
+                "r3": "Eng. Reem Al-Agha"
+            }
+        },
+        "decision": {
+            "title": "Your decision on starting the project",
+            "remaining": "{{count}} items left to review before approval.",
+            "remaining_one": "1 item left to review before approval.",
+            "remaining_two": "2 items left to review before approval.",
+            "ready": "Review complete; you can approve the start.",
+            "message": "Message the provider",
+            "request": "Request completion from the provider",
+            "approve": "Approve execution start",
+            "disabledHint": "Complete all review items first",
+            "sendRequest": "Send completion request",
+            "requestLabel": "Completion request notes",
+            "requestPlaceholder": "Write what the provider needs to complete...",
+            "requested": "A completion request was sent to {{provider}}."
+        },
+        "info": {
+            "title": "Incoming request details",
+            "complete": "Complete",
+            "items": {
+                "representative": {
+                    "label": "Provider representative",
+                    "value": "Eng. Ahmad Al-Najjar",
+                    "note": "Execution team supervisor"
+                },
+                "provider": {
+                    "label": "Service provider",
+                    "value": "{{provider}}",
+                    "note": "Contractor · applied to your project"
+                },
+                "arrival": {
+                    "label": "Site arrival",
+                    "value": "May 20, 08:00 AM",
+                    "note": "30 minutes before work starts"
+                },
+                "contact": {
+                    "label": "Team supervisor contact",
+                    "value": "+970 59 123 4567",
+                    "note": "Available during working hours"
+                }
+            },
+            "messageTitle": "Message from the provider",
+            "message": "We confirm the craftsmen team and equipment are ready to start per the approved schedule. The internal safety meeting was held and the scope was reviewed with all team members."
+        },
+        "team": {
+            "title": "Execution team for your project",
+            "files": "Team files",
+            "cols": {
+                "name": "Name",
+                "specialty": "Specialty",
+                "experience": "Experience",
+                "verification": "Verification"
+            },
+            "years": "{{count}} years",
+            "verified": "Verified",
+            "more": "Show the rest of the team ({{count}})",
+            "less": "Hide the rest of the team",
+            "members": {
+                "t1": {
+                    "name": "Ahmad Al-Najjar",
+                    "role": "Execution supervisor"
+                },
+                "t2": {
+                    "name": "Omar Hamdan",
+                    "role": "Electrician"
+                },
+                "t3": {
+                    "name": "Mohammad Salem",
+                    "role": "Construction & finishing"
+                },
+                "t4": {
+                    "name": "Khaled Yousef",
+                    "role": "Waterproofing"
+                },
+                "t5": {
+                    "name": "Yousef Atallah",
+                    "role": "Plumbing"
+                },
+                "t6": {
+                    "name": "Sami Abu Shaban",
+                    "role": "Tiling"
+                },
+                "t7": {
+                    "name": "Rami Hasan",
+                    "role": "Painting"
+                },
+                "t8": {
+                    "name": "Nader Issa",
+                    "role": "Assistant"
+                },
+                "t9": {
+                    "name": "Ibrahim Shaheen",
+                    "role": "Carpentry"
+                },
+                "t10": {
+                    "name": "Mahmoud Odeh",
+                    "role": "Metalwork"
+                },
+                "t11": {
+                    "name": "Alaa Al-Kahlout",
+                    "role": "Assistant"
+                },
+                "t12": {
+                    "name": "Basel Darwish",
+                    "role": "Sanitary installations"
+                }
+            }
+        },
+        "plan": {
+            "title": "Execution plan submitted for review",
+            "badge": "Per contract",
+            "items": {
+                "day": {
+                    "when": "Day one",
+                    "title": "Site handover & safety meeting",
+                    "date": "May 20, 2025"
+                },
+                "week": {
+                    "when": "Week one",
+                    "title": "Site preparation & preliminary works",
+                    "date": "May 20–27"
+                },
+                "phase": {
+                    "when": "Phase one",
+                    "title": "Start of construction works",
+                    "date": "May 28, 2025"
+                }
+            }
+        },
+        "files": {
+            "title": "Provider attachments & declarations",
+            "complete": "{{count}}/{{total}} complete",
+            "verified": "File verified",
+            "items": {
+                "f1": "Execution plan & timeline.pdf",
+                "f2": "Craftsmen team list.pdf",
+                "f3": "Safety & risk management plan.pdf",
+                "f4": "Equipment & materials list.pdf",
+                "f5": "Preparatory meeting minutes.pdf"
+            },
+            "declarationTitle": "Provider declaration",
+            "declaration": "The provider declared the team data is correct and committed to the safety plan, timeline and contract terms."
+        },
+        "note": {
+            "title": "Note for the team",
+            "placeholder": "Add an internal note for the team ..",
+            "save": "Save note",
+            "saved": "The internal note was saved."
+        }
     }
 }

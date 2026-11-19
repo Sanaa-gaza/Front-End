@@ -12,6 +12,7 @@ import InstitutionTenderDetails from "./InstitutionTenderDetails";
 import InstitutionCreateTender from "./InstitutionCreateTender";
 import InstitutionProjects from "./InstitutionProjects";
 import InstitutionProjectDetails from "./InstitutionProjectDetails";
+import InstitutionStartRequest from "./InstitutionStartRequest";
 import InstitutionSettings from "./InstitutionSettings";
 import InstitutionProviders from "./InstitutionProviders";
 import InstitutionProviderProfile from "./InstitutionProviderProfile";
@@ -155,6 +156,7 @@ export default function InstitutionDashboard() {
                     <Route path="offers/:offerId" element={<InstitutionOfferDetails />} />
                     <Route path="projects" element={<InstitutionProjects />} />
                     <Route path="projects/:projectId" element={<InstitutionProjectDetails />} />
+                    <Route path="projects/:projectId/start-request" element={<InstitutionStartRequest />} />
                     <Route path="messages" element={<InstitutionMessages />} />
                     {/* بتفتح من "بدء محادثة" بالملف المهني لمزوّد الخدمة */}
                     <Route path="chats" element={<InstitutionChats />} />

@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { ChevronLeft, Hourglass } from "lucide-react";
+import { CalendarDays, ChevronLeft } from "lucide-react";
 import StatusTabs from "../../../components/dashboard/StatusTabs";
 import SearchField from "../../../components/dashboard/SearchField";
 import { PROJECTS } from "./projectsData";
@@ -17,7 +17,8 @@ const STATUS_STYLES = {
 };
 
 export default function InstitutionProjects() {
-    const { t } = useTranslation("institutionDashboard");
+    const { t, i18n } = useTranslation("institutionDashboard");
+    const locale = `${i18n.language}-u-nu-latn`;
     const [tab, setTab] = useState("all");
     const [query, setQuery] = useState("");
 
@@ -52,51 +53,76 @@ export default function InstitutionProjects() {
                 {projects.map((p) => {
                     const s = `projectsPage.sample.${p.id}`;
                     const completed = p.status === "completed";
+                    // نسبة الإنجاز من المهام المنجزة
+                    const percent = Math.round((p.tasks.done / p.tasks.total) * 100);
                     return (
-                        <li
-                            key={p.id}
-                            className="rounded-[20px] border border-[#DDDDDD] bg-white px-5 py-4 shadow-[0_4px_24px_rgba(35,74,100,0.06)] sm:px-6"
-                        >
-                            <div className="flex items-start justify-between gap-3">
+                        <li key={p.id} className="rounded-[20px] border border-[#DDDDDD] bg-white p-5 sm:p-6">
+                            <div className="flex items-start justify-between gap-4">
                                 <div className="min-w-0">
-                                    <h3 className="text-[16px] font-semibold text-[#414141]">{t(`${s}.title`)}</h3>
-                                    <p className="mt-2 flex items-center gap-2 text-[11px] text-[#89949D]">
+                                    <h3 className="text-[19px] font-bold leading-[1.5] text-[#22455E]">{t(`${s}.title`)}</h3>
+                                    <p className="mt-1.5 flex items-center gap-2 text-[12px] text-[#38749E]">
                                         <span className="h-4 w-4 shrink-0 rounded-full bg-[#D9DDE1]" aria-hidden="true" />
                                         {t(`${s}.provider`)}
                                     </p>
                                 </div>
+                                {/* الحالة: أكبر وبعيدة عن حافة البطاقة */}
                                 <span
-                                    className={`shrink-0 whitespace-nowrap rounded-full px-2.5 py-0.5 text-[10px] font-medium ${STATUS_STYLES[p.status]}`}
+                                    className={`mt-1 shrink-0 whitespace-nowrap rounded-full px-4 py-1.5 text-[12px] font-semibold ${STATUS_STYLES[p.status]}`}
                                 >
                                     {t(`projectsPage.status.${p.status}`)}
                                 </span>
                             </div>
 
-                            <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-3">
-                                <span className="flex shrink-0 items-center gap-1 text-[11px] font-medium text-[#4B9AD2]">
-                                    {!completed && <Hourglass size={12} />}
-                                    {completed
-                                        ? t("projectsPage.done")
-                                        : t("projectsPage.remaining", { time: t(`${s}.time`) })}
-                                </span>
-                                <div className="h-[3px] min-w-[120px] flex-1 overflow-hidden rounded-full bg-[#CFE3F3]">
+                            {/* نسبة الإنجاز جنب الخط — موعد التسليم تحت الخط (يمين) */}
+                            <div className="mt-5">
+                                <div className="flex items-center gap-3">
+                                    <span className="flex shrink-0 items-center gap-1.5 text-[13px]">
+                                        <span className="text-[#286292]">{t("projectsPage.progressLabel")}</span>
+                                        <span className="font-bold text-[#4B9AD2] tabular-nums">{percent}%</span>
+                                    </span>
                                     <div
-                                        className="h-full rounded-full bg-[#4B9AD2]"
-                                        style={{ width: `${p.progress}%` }}
-                                    />
+                                        className="h-2 flex-1 overflow-hidden rounded-full bg-[#E3E9EE]"
+                                        role="progressbar"
+                                        aria-valuenow={percent}
+                                        aria-valuemin={0}
+                                        aria-valuemax={100}
+                                        aria-label={t("projectsPage.progressLabel")}
+                                    >
+                                        <div className="h-full rounded-full bg-[#4B9AD2]" style={{ width: `${percent}%` }} />
+                                    </div>
+                                </div>
+                                <div className="mt-6 flex text-[12px]">
+                                    <span className="flex items-center gap-1.5 text-[#38749E]">
+                                        <CalendarDays size={15} strokeWidth={1.8} />
+                                        {t("projectsPage.deadline")}:
+                                        <span className="font-semibold text-[#22455E] tabular-nums">
+                                            {p.deadline
+                                                ? new Date(p.deadline).toLocaleDateString(locale, { day: "numeric", month: "long", year: "numeric" })
+                                                : t("projectsPage.awaitingUpdate")}
+                                        </span>
+                                    </span>
+                                </div>
+                            </div>
+
+                            {/* قيمة المشروع + فتح */}
+                            <div className="mt-5 flex flex-wrap items-center justify-between gap-4 border-t border-[#DDDDDD] pt-4">
+                                <div>
+                                    <p className="text-[12px] text-[#38749E]">{t("projectsPage.projectValue")}</p>
+                                    <p className="mt-2 text-[22px] font-bold leading-none text-[#22455E] tabular-nums">
+                                        {t("projectsPage.amount", { amount: p.value.toLocaleString("en-US") })}
+                                    </p>
                                 </div>
                                 <Link
                                     to={`${BASE}/projects/${p.id}`}
-                                    className="inline-flex h-8 shrink-0 items-center gap-1 rounded-full bg-[#4B9AD2] px-4 text-[12px] font-medium text-white btn-wipe"
+                                    className="inline-flex h-11 min-w-[120px] shrink-0 items-center justify-center rounded-xl bg-[#4B9AD2] px-8 text-[16px] font-semibold text-white btn-wipe"
                                 >
-                                    {completed ? t("projectsPage.review") : t("projectsPage.open")}
-                                    <ChevronLeft size={14} className="ltr:rotate-180" />
+                                    {/* الكلمة بنص الزر تماماً، والسهم لزق بآخرها بدون ما يزيحها */}
+                                    <span className="relative">
+                                        {completed ? t("projectsPage.review") : t("projectsPage.open")}
+                                        <ChevronLeft size={16} className="absolute start-full top-1/2 ms-1 -translate-y-1/2 ltr:rotate-180" />
+                                    </span>
                                 </Link>
                             </div>
-
-                            <p className="mt-4 text-[11px] text-[#4B9AD2]">
-                                {t("projectsPage.value", { amount: p.value.toLocaleString("en-US") })}
-                            </p>
                         </li>
                     );
                 })}
