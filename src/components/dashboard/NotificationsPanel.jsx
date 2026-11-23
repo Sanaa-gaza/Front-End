@@ -84,7 +84,7 @@ export default function NotificationsPanel({ notifications = [], onRead, tabs = 
                 aria-label={t("notifications")}
                 aria-expanded={open}
                 aria-haspopup="dialog"
-                className={`relative flex h-9 w-9 cursor-pointer items-center justify-center rounded-full border ${open ? "border-[#4B9AD2] bg-[#4B9AD2] text-white" : "border-[#C7E0F1] text-[#4B9AD2] btn-wipe btn-wipe-outline"
+                className={`relative flex h-9 w-9 cursor-pointer items-center justify-center rounded-full border ${open ? "z-[51] border-[#4B9AD2] bg-[#4B9AD2] text-white" : "border-[#C7E0F1] text-[#4B9AD2] btn-wipe btn-wipe-outline"
                     }`}
             >
                 <Bell size={17} />
@@ -92,6 +92,15 @@ export default function NotificationsPanel({ notifications = [], onRead, tabs = 
                     <span className="absolute -end-0.5 -top-0.5 h-2.5 w-2.5 rounded-full border-2 border-white bg-[#D64545]" />
                 )}
             </button>
+
+            {/* تعتيم الشاشة خلف القائمة — الضغط عليه بيسكرها */}
+            {open && (
+                <div
+                    aria-hidden="true"
+                    onMouseDown={() => setOpen(false)}
+                    className="dim-backdrop fixed inset-0 z-40 bg-[#0F172A]/40"
+                />
+            )}
 
             {open && (
                 <div

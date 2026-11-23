@@ -189,7 +189,7 @@ export function ChatBox() {
                     <div className="flex items-center gap-2 border-b border-[#DDDDDD] p-3">
                         <div className="relative flex-1">
                             <Search size={15} className="pointer-events-none absolute start-3 top-1/2 -translate-y-1/2 text-[#A9B3BB]" />
-                            <input
+                            <input name="search"
                                 type="search"
                                 value={query}
                                 onChange={(e) => setQuery(e.target.value)}
@@ -308,7 +308,7 @@ export function ChatBox() {
                                 >
                                     <Paperclip size={18} />
                                 </button>
-                                <input
+                                <input name="attachments"
                                     ref={fileRef}
                                     type="file"
                                     className="hidden"
@@ -318,7 +318,7 @@ export function ChatBox() {
                                         e.target.value = "";
                                     }}
                                 />
-                                <input
+                                <input name="message"
                                     value={draft}
                                     onChange={(e) => setDraft(e.target.value)}
                                     aria-label={t("placeholder")}

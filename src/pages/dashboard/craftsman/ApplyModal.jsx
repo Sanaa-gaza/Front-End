@@ -110,7 +110,7 @@ export default function ApplyModal({ job, onClose, onSend }) {
                 <label htmlFor="apply-price" className="mb-1.5 mt-3 block text-[11px] text-[#575757]">
                     {t("jobs.modal.price")}
                 </label>
-                <input
+                <input name="price"
                     id="apply-price"
                     ref={priceRef}
                     type="number"
@@ -126,7 +126,7 @@ export default function ApplyModal({ job, onClose, onSend }) {
                 <label htmlFor="apply-duration" className="mb-1.5 mt-4 block text-[11px] text-[#575757]">
                     {t("jobs.modal.duration")}
                 </label>
-                <input
+                <input name="duration"
                     id="apply-duration"
                     value={form.duration}
                     onChange={update("duration")}
@@ -138,7 +138,7 @@ export default function ApplyModal({ job, onClose, onSend }) {
                 <label htmlFor="apply-notes" className="mb-1.5 mt-4 block text-[11px] text-[#575757]">
                     {t("jobs.modal.notes")}
                 </label>
-                <textarea
+                <textarea name="notes"
                     id="apply-notes"
                     rows={4}
                     value={form.notes}

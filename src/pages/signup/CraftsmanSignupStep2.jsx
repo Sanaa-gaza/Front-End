@@ -184,7 +184,7 @@ export default function CraftsmanSignupStep2() {
                                         >
                                             <i className="fa-solid fa-plus text-[18px]"></i>
                                         </label>
-                                        <input type="file" id="avatarInput" accept="image/jpeg,image/png" className="hidden" onChange={handleAvatarChange} />
+                                        <input name="avatar" type="file" id="avatarInput" accept="image/jpeg,image/png" className="hidden" onChange={handleAvatarChange} />
                                     </div>
                                     <p className="text-[#89949D] text-sm">{t("addPhoto")}</p>
                                     <p className={`text-red-500 text-xs mt-1 ${errors.avatar ? "" : "hidden"}`}>{te(errors.avatar)}</p>
@@ -219,7 +219,7 @@ export default function CraftsmanSignupStep2() {
 
                                 {craft === OTHER_CRAFT && (
                                     <div className="relative mb-4 -mt-2">
-                                        <input
+                                        <input name="other_craft"
                                             type="text"
                                             value={otherCraft}
                                             onChange={(e) => { setOtherCraft(e.target.value); clearError("craft"); }}
@@ -237,7 +237,7 @@ export default function CraftsmanSignupStep2() {
                                     <label htmlFor="bio" className="block text-xs font-semibold text-slate-700 mb-1.5">
                                         {t("bioLabel")}
                                     </label>
-                                    <textarea
+                                    <textarea name="bio"
                                         id="bio"
                                         rows={6}
                                         value={bio}
@@ -250,7 +250,7 @@ export default function CraftsmanSignupStep2() {
                                 </div>
 
                                 <div className="flex items-center gap-2 mb-6 ">
-                                    <input
+                                    <input name="agree_terms"
                                         id="agreeTerms"
                                         type="checkbox"
                                         checked={agreeTerms}

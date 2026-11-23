@@ -113,7 +113,7 @@ export default function ContractorSignupStep2() {
                                     <label htmlFor="bio" className="block text-xs font-semibold text-slate-700 mb-1.5">
                                         {t("bioLabel")}
                                     </label>
-                                    <textarea
+                                    <textarea name="bio"
                                         id="bio"
                                         rows={6}
                                         value={bio}

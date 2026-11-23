@@ -157,7 +157,7 @@ export default function LoginForm({
 
                                 <div className="flex items-center justify-between">
                                     <div className="flex items-center justify-end gap-2 mb-2">
-                                        <input
+                                        <input name="remember_me"
                                             id="rememberMe"
                                             type="checkbox"
                                             checked={rememberMe}

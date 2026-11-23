@@ -279,7 +279,7 @@ function HeroSection() {
                     >
                         <div className="relative min-w-0 flex-1 basis-full sm:basis-auto">
                             <Search size={16} strokeWidth={2} className="pointer-events-none absolute start-4 top-1/2 -translate-y-1/2 text-[#38749E]" />
-                            <input
+                            <input name="search"
                                 type="text"
                                 value={query}
                                 onChange={(e) => setQuery(e.target.value)}
@@ -290,7 +290,7 @@ function HeroSection() {
 
                         <div className="relative w-[46%] shrink-0 sm:w-[207px]">
                             <LayoutGrid size={16} strokeWidth={1.7} className="pointer-events-none absolute start-4 top-1/2 -translate-y-1/2 text-[#4B9AD2]" />
-                            <select
+                            <select name="service_id"
                                 value={service}
                                 onChange={(e) => setService(e.target.value)}
                                 className={`h-[42px] w-full cursor-pointer appearance-none rounded-xl border border-[#4B9AD2] bg-white pe-10 ps-10 text-[13px] outline-none focus:ring-1 focus:ring-[#4B9AD2] ${service ? "text-[#141415]" : "text-[#575757]"

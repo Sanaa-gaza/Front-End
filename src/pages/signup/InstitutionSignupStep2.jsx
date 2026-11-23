@@ -145,7 +145,7 @@ export default function InstitutionSignupStep2() {
                                     <label htmlFor="bio" className="block text-xs font-semibold text-slate-700 mb-1.5">
                                         {t("bioLabel")}
                                     </label>
-                                    <textarea
+                                    <textarea name="bio"
                                         id="bio"
                                         rows={6}
                                         value={bio}
@@ -158,7 +158,7 @@ export default function InstitutionSignupStep2() {
                                 </div>
 
                                 <div className="flex items-center gap-2 mb-6">
-                                    <input
+                                    <input name="agree_terms"
                                         id="agreeTerms"
                                         type="checkbox"
                                         checked={agreeTerms}

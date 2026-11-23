@@ -45,7 +45,7 @@ export default function AdminNotifications() {
             {/* فلتر التصنيف */}
             <div className="relative">
                 <LayoutGrid size={15} className="pointer-events-none absolute start-4 top-1/2 -translate-y-1/2 text-[#4B9AD2]" />
-                <select
+                <select name="category"
                     value={category}
                     onChange={(e) => setCategory(e.target.value)}
                     aria-label={t(`${np}.category`)}

@@ -29,7 +29,7 @@ export default function DropzoneField({ id, label, hint, icon = "fa-regular fa-i
                 <i className={`${icon} text-[#4B9AD2] text-[18px]`}></i>
                 <span className="text-sm text-[#89949D]">{file ? file.name : dropHint}</span>
             </label>
-            <input type="file" id={id} accept={accept} className="hidden" onChange={onChange} />
+            <input name={id} type="file" id={id} accept={accept} className="hidden" onChange={onChange} />
             <p className={`text-red-500 text-xs mt-1 text-start ${error ? "" : "hidden"}`}>{error}</p>
         </div>
     );

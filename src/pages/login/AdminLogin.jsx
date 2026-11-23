@@ -110,7 +110,7 @@ export default function AdminLogin() {
 
                         <div className="-mt-2 flex items-center justify-between">
                             <label htmlFor="rememberMe" className="flex cursor-pointer items-center gap-1.5 text-[12px] text-[#777777]">
-                                <input
+                                <input name="remember_me"
                                     id="rememberMe"
                                     type="checkbox"
                                     checked={rememberMe}

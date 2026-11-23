@@ -16,11 +16,12 @@ const field =
     "h-11 w-full rounded-xl border border-[#8EC0E4] bg-white text-[12px] text-[#414141] outline-none transition-colors focus:border-[#4B9AD2] focus:ring-1 focus:ring-[#4B9AD2]";
 
 /** قائمة منسدلة بأيقونة مربعات بالبداية وسهم بالنهاية */
-function FilterSelect({ value, onChange, label, children }) {
+function FilterSelect({ value, onChange, label, name, children }) {
     return (
         <div className="relative min-w-0 flex-1">
             <LayoutGrid size={15} className="pointer-events-none absolute start-3 top-1/2 -translate-y-1/2 text-[#4B9AD2]" />
             <select
+                name={name}
                 value={value}
                 onChange={(e) => onChange(e.target.value)}
                 aria-label={label}
@@ -137,7 +138,7 @@ export default function InstitutionProviders() {
             >
                 <div className="relative min-w-0 md:flex-[1.4]">
                     <Search size={16} className="pointer-events-none absolute start-3 top-1/2 -translate-y-1/2 text-[#4B9AD2]" />
-                    <input
+                    <input name="search"
                         type="search"
                         value={query}
                         onChange={(e) => setQuery(e.target.value)}
@@ -147,7 +148,7 @@ export default function InstitutionProviders() {
                     />
                 </div>
 
-                <FilterSelect value={type} onChange={filter(setType)} label={t("providersPage.allTypes")}>
+                <FilterSelect name="type" value={type} onChange={filter(setType)} label={t("providersPage.allTypes")}>
                     <option value="all">{t("providersPage.allTypes")}</option>
                     {TYPES.map((k) => (
                         <option key={k} value={k} className="font-bold">
@@ -156,7 +157,7 @@ export default function InstitutionProviders() {
                     ))}
                 </FilterSelect>
 
-                <FilterSelect value={serviceId} onChange={filter(setServiceId)} label={t("providersPage.serviceType")}>
+                <FilterSelect name="service_id" value={serviceId} onChange={filter(setServiceId)} label={t("providersPage.serviceType")}>
                     <option value="all">{t("providersPage.serviceType")}</option>
                     {services.options.map((o) => (
                         <option key={o.value} value={o.value} className="font-bold">
@@ -165,7 +166,7 @@ export default function InstitutionProviders() {
                     ))}
                 </FilterSelect>
 
-                <FilterSelect value={rating} onChange={filter(setRating)} label={t("providersPage.rating")}>
+                <FilterSelect name="rating" value={rating} onChange={filter(setRating)} label={t("providersPage.rating")}>
                     <option value="all">{t("providersPage.rating")}</option>
                     {RATING_OPTIONS.map((r) => (
                         <option key={r} value={r} className="font-bold">

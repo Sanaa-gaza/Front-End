@@ -99,7 +99,7 @@ export default function ResetPassword() {
                                 {t("newPassword")}
                             </label>
                             <div className="relative">
-                                <input
+                                <input name="password"
                                     id="newPassword"
                                     type={showPassword ? "text" : "password"}
                                     value={password}
@@ -126,7 +126,7 @@ export default function ResetPassword() {
                                 {t("signupCommon:confirmPassword")}
                             </label>
                             <div className="relative">
-                                <input
+                                <input name="confirm_password"
                                     id="confirmPassword"
                                     type={showConfirmPassword ? "text" : "password"}
                                     value={confirmPassword}

@@ -156,7 +156,7 @@ function SupportReplyModal({ title, sender, type, onSend, onClose }) {
                 <hr className="my-5 border-[#DDDDDD]" />
 
                 <label htmlFor="support-subject" className="mb-3 block text-[12px] text-[#575757]">{t(`${m}.subject`)}</label>
-                <input
+                <input name="subject"
                     id="support-subject"
                     value={subject}
                     onChange={(e) => {
@@ -170,7 +170,7 @@ function SupportReplyModal({ title, sender, type, onSend, onClose }) {
                 {errors.subject && <p className="mt-1 text-[11px] text-red-500">{errors.subject}</p>}
 
                 <label htmlFor="support-body" className="mb-3 mt-5 block text-[12px] text-[#575757]">{t(`${m}.body`)}</label>
-                <textarea
+                <textarea name="body"
                     id="support-body"
                     ref={bodyRef}
                     rows={5}
@@ -254,7 +254,7 @@ export default function AdminSupport() {
             <div className="flex flex-col gap-3 md:flex-row">
                 <label className="relative block min-w-0 flex-1">
                     <Search size={16} className="pointer-events-none absolute start-4 top-1/2 -translate-y-1/2 text-[#4B9AD2]" />
-                    <input
+                    <input name="search"
                         type="search"
                         value={query}
                         onChange={(e) => setQuery(e.target.value)}
@@ -275,7 +275,7 @@ export default function AdminSupport() {
                 </label>
                 <div className="relative md:w-[270px]">
                     <LayoutGrid size={15} className="pointer-events-none absolute start-4 top-1/2 -translate-y-1/2 text-[#4B9AD2]" />
-                    <select
+                    <select name="type"
                         value={type}
                         onChange={(e) => setType(e.target.value)}
                         aria-label={t(`${sp}.type`)}

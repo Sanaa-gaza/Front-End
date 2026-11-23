@@ -129,7 +129,7 @@ function SideCard({ availability }) {
                 <ImagePlus size={20} strokeWidth={1.6} />
                 {t("portfolio.drop")}
             </label>
-            <input
+            <input name="portfolio"
                 id="portfolio-input"
                 type="file"
                 accept="image/jpeg,image/png"
@@ -281,7 +281,7 @@ export default function CraftsmanHome({ profile, availability }) {
                     >
                         <div className="relative min-w-0 flex-1">
                             <Search size={16} className="pointer-events-none absolute start-3 top-1/2 -translate-y-1/2 text-[#4B9AD2]" />
-                            <input
+                            <input name="location"
                                 type="search"
                                 value={location}
                                 onChange={(e) => setLocation(e.target.value)}
@@ -292,7 +292,7 @@ export default function CraftsmanHome({ profile, availability }) {
                         </div>
                         <div className="relative min-w-0 sm:w-[170px]">
                             <LayoutGrid size={15} className="pointer-events-none absolute start-3 top-1/2 -translate-y-1/2 text-[#4B9AD2]" />
-                            <select
+                            <select name="service_id"
                                 value={serviceId}
                                 onChange={(e) => setServiceId(e.target.value)}
                                 aria-label={t("jobs.serviceType")}

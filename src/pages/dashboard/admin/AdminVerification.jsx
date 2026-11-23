@@ -44,10 +44,11 @@ const field =
     "h-11 w-full rounded-xl border border-[#8EC0E4] bg-white text-[12px] text-[#414141] outline-none transition-colors focus:border-[#4B9AD2] focus:ring-1 focus:ring-[#4B9AD2]";
 
 /** قائمة فلتر بنص "العنوان: القيمة" */
-function FilterSelect({ value, onChange, label, children }) {
+function FilterSelect({ value, onChange, label, name, children }) {
     return (
         <div className="relative md:w-[190px]">
             <select
+                name={name}
                 value={value}
                 onChange={(e) => onChange(e.target.value)}
                 aria-label={label}
@@ -101,7 +102,7 @@ export default function AdminVerification() {
             <div className="flex flex-col gap-3 md:flex-row">
                 <label className="relative block min-w-0 flex-1">
                     <Search size={16} className="pointer-events-none absolute start-4 top-1/2 -translate-y-1/2 text-[#4B9AD2]" />
-                    <input
+                    <input name="search"
                         type="search"
                         value={query}
                         onChange={(e) => setQuery(e.target.value)}
@@ -120,13 +121,13 @@ export default function AdminVerification() {
                         </button>
                     )}
                 </label>
-                <FilterSelect value={type} onChange={setType} label={t(`${v}.typeFilter`, { value: "" })}>
+                <FilterSelect name="type" value={type} onChange={setType} label={t(`${v}.typeFilter`, { value: "" })}>
                     <option value="all">{t(`${v}.typeFilter`, { value: t(`${v}.all`) })}</option>
                     {TYPES.map((k) => (
                         <option key={k} value={k}>{t(`${v}.typeFilter`, { value: t(`${v}.types.${k}`) })}</option>
                     ))}
                 </FilterSelect>
-                <FilterSelect value={area} onChange={setArea} label={t(`${v}.areaFilter`, { value: "" })}>
+                <FilterSelect name="area" value={area} onChange={setArea} label={t(`${v}.areaFilter`, { value: "" })}>
                     <option value="all">{t(`${v}.areaFilter`, { value: t(`${v}.all`) })}</option>
                     {areas.map((a) => (
                         <option key={a} value={a}>{t(`${v}.areaFilter`, { value: a })}</option>

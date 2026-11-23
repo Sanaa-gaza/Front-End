@@ -117,7 +117,7 @@ function DoneModal({ institution, onClose, onConfirm }) {
                             {t(`${d}.summary`)}
                             <span className="ms-0.5 text-red-500">*</span>
                         </label>
-                        <textarea
+                        <textarea name="summary"
                             id="done-summary"
                             rows={4}
                             value={summary}
@@ -182,7 +182,7 @@ function DoneModal({ institution, onClose, onConfirm }) {
                                 </li>
                             )}
                         </ul>
-                        <input
+                        <input name="photos"
                             ref={fileRef}
                             type="file"
                             accept="image/*"
@@ -266,7 +266,7 @@ function Chat({ initial }) {
                 className="flex items-center gap-2 p-3"
             >
                 <div className="relative flex-1">
-                    <input
+                    <input name="message"
                         value={draft}
                         onChange={(e) => setDraft(e.target.value)}
                         placeholder={t(`${d}.chatPlaceholder`)}
@@ -282,7 +282,7 @@ function Chat({ initial }) {
                     >
                         <Plus size={17} />
                     </button>
-                    <input
+                    <input name="photos"
                         ref={fileRef}
                         type="file"
                         accept="image/*"
@@ -511,7 +511,7 @@ function UpdateModal({ onClose, onAdd }) {
                             <span className="text-[11px] text-[#89949D]">{t(`${u}.titleHint`)}</span>
                         </div>
                         <div className="relative">
-                            <input
+                            <input name="title"
                                 id="update-title-input"
                                 value={title}
                                 onChange={(e) => {
@@ -535,7 +535,7 @@ function UpdateModal({ onClose, onAdd }) {
                             </label>
                             <span className="text-[11px] text-[#89949D]">{t(`${u}.detailsHint`)}</span>
                         </div>
-                        <textarea
+                        <textarea name="message"
                             id="update-text"
                             rows={4}
                             value={text}
@@ -595,7 +595,7 @@ function UpdateModal({ onClose, onAdd }) {
                                 </li>
                             )}
                         </ul>
-                        <input
+                        <input name="photos"
                             ref={fileRef}
                             type="file"
                             accept="image/*"

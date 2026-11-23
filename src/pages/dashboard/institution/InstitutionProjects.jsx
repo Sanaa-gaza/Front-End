@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import { CalendarDays, ChevronLeft } from "lucide-react";
 import StatusTabs from "../../../components/dashboard/StatusTabs";
 import SearchField from "../../../components/dashboard/SearchField";
-import { PROJECTS } from "./projectsData";
+import { allProjects, projectProvider, projectTitle } from "./projectsData";
 
 const BASE = "/dashboard/institution";
 
@@ -22,36 +22,38 @@ export default function InstitutionProjects() {
     const [tab, setTab] = useState("all");
     const [query, setQuery] = useState("");
 
+    // المشاريع التجريبية + اللي انضافت من قبول العروض
+    const list = useMemo(() => allProjects(), []);
     const counts = useMemo(() => {
-        const c = { all: PROJECTS.length };
-        PROJECTS.forEach((p) => {
+        const c = { all: list.length };
+        list.forEach((p) => {
             c[p.status] = (c[p.status] || 0) + 1;
         });
         return c;
-    }, []);
+    }, [list]);
 
     const projects = useMemo(() => {
         const q = query.trim().toLowerCase();
-        return PROJECTS.filter((p) => {
+        return list.filter((p) => {
             if (tab !== "all" && p.status !== tab) return false;
             if (!q) return true;
-            return t(`projectsPage.sample.${p.id}.title`).toLowerCase().includes(q);
+            return projectTitle(p, t).toLowerCase().includes(q);
         });
-    }, [tab, query, t]);
+    }, [list, tab, query, t]);
 
     return (
         <div className="mx-auto flex max-w-[1100px] flex-col gap-5">
+            {/* البحث أول شي بالصفحة، وتحته تبويبات الحالة */}
+            <SearchField value={query} onChange={setQuery} placeholder={t("projectsPage.search")} />
+
             <StatusTabs
                 tabs={TABS.map((key) => ({ key, label: t(`projectsPage.tabs.${key}`), count: counts[key] || 0 }))}
                 value={tab}
                 onChange={setTab}
             />
 
-            <SearchField value={query} onChange={setQuery} placeholder={t("projectsPage.search")} />
-
             <ul className="flex flex-col gap-4">
                 {projects.map((p) => {
-                    const s = `projectsPage.sample.${p.id}`;
                     const completed = p.status === "completed";
                     // نسبة الإنجاز من المهام المنجزة
                     const percent = Math.round((p.tasks.done / p.tasks.total) * 100);
@@ -59,10 +61,10 @@ export default function InstitutionProjects() {
                         <li key={p.id} className="rounded-[20px] border border-[#DDDDDD] bg-white p-5 sm:p-6">
                             <div className="flex items-start justify-between gap-4">
                                 <div className="min-w-0">
-                                    <h3 className="text-[19px] font-bold leading-[1.5] text-[#22455E]">{t(`${s}.title`)}</h3>
+                                    <h3 className="text-[19px] font-bold leading-[1.5] text-[#22455E]">{projectTitle(p, t)}</h3>
                                     <p className="mt-1.5 flex items-center gap-2 text-[12px] text-[#38749E]">
                                         <span className="h-4 w-4 shrink-0 rounded-full bg-[#D9DDE1]" aria-hidden="true" />
-                                        {t(`${s}.provider`)}
+                                        {projectProvider(p, t)}
                                     </p>
                                 </div>
                                 {/* الحالة: أكبر وبعيدة عن حافة البطاقة */}

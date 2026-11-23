@@ -241,7 +241,7 @@ export default function VerificationCode() {
                             <form onSubmit={handleSubmit} noValidate>
                                 <div className="flex items-center justify-center gap-2.5 mb-2" dir="ltr">
                                     {otp.map((digit, index) => (
-                                        <input
+                                        <input name={`digit_${index + 1}`}
                                             key={index}
                                             ref={(el) => (inputsRef.current[index] = el)}
                                             type="text"

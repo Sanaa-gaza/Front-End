@@ -46,7 +46,7 @@ export default function InstitutionOffers() {
             <section className="flex flex-col gap-4 sm:flex-row sm:items-center">
                 <label className="relative block flex-1">
                     <Search size={16} className="pointer-events-none absolute start-4 top-1/2 -translate-y-1/2 text-[#4B9AD2]" />
-                    <input
+                    <input name="search"
                         type="search"
                         value={query}
                         onChange={(e) => setQuery(e.target.value)}

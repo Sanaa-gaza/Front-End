@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
+﻿import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { CircleAlert, Hourglass, Star } from "lucide-react";
+import { CalendarDays, ChevronLeft, CircleAlert, MapPin, Star } from "lucide-react";
 import { getProfile } from "../../../api/endpoints";
 
 const BASE = "/dashboard/institution";
@@ -32,12 +32,30 @@ const STATS = [
     { key: "completed", value: 4.5, icon: Star },
 ];
 
+// ⚠️ بيانات تجريبية لحد ما يجهز endpoint المناقصات
 // tenderId: رقمها بـ tendersData عشان الضغط يفتح صفحة تفاصيل المناقصة
+// publishedAt → deadline: فترة التقديم؛ منها بنحسب نسبة الشريط والأيام الباقية
+// newOffers: عروض لسا ما راجعتها المؤسسة
 const TENDERS = [
-    { key: "t1", tenderId: "r1", offers: 12, status: "open", progress: 78, highlighted: true },
-    { key: "t2", tenderId: "r2", offers: 12, status: "submitting", progress: 28 },
-    { key: "t3", tenderId: "r3", offers: 12, status: "submitting", progress: 28 },
+    { key: "t1", tenderId: "r1", offers: 12, newOffers: 3, status: "open", publishedAt: "2026-10-01", deadline: "2026-11-25" },
+    { key: "t2", tenderId: "r2", offers: 4, newOffers: 0, status: "open", publishedAt: "2026-11-10", deadline: "2026-12-20" },
+    { key: "t3", tenderId: "r3", offers: 2, newOffers: 2, status: "open", publishedAt: "2026-11-15", deadline: "2027-01-10" },
 ];
+
+const DAY = 24 * 60 * 60 * 1000;
+// بنحسب على أساس التاريخ بس (من غير الساعة) عشان "باقي X أيام" يكون دقيق
+const dayOf = (d) => {
+    const x = new Date(d);
+    return Date.UTC(x.getFullYear(), x.getMonth(), x.getDate());
+};
+function submissionPeriod({ publishedAt, deadline }) {
+    const today = dayOf(new Date());
+    const start = dayOf(publishedAt);
+    const end = dayOf(deadline);
+    const daysLeft = Math.round((end - today) / DAY);
+    const progress = Math.min(100, Math.max(0, Math.round(((today - start) / Math.max(end - start, DAY)) * 100)));
+    return { daysLeft, progress };
+}
 
 const ACTIONS = [
     { key: "unanswered", to: `${BASE}/messages` },
@@ -47,7 +65,6 @@ const ACTIONS = [
 
 const STATUS_STYLES = {
     open: "bg-[#DDF6E3] text-[#2EAF4E]",
-    submitting: "bg-[#CFE3F3] text-[#4B9AD2]",
 };
 
 const card = "rounded-[20px] border border-[#DDDDDD] bg-white shadow-[0_4px_24px_rgba(35,74,100,0.08)]";
@@ -66,7 +83,8 @@ function readVerification(d = {}) {
 }
 
 export default function InstitutionHome() {
-    const { t } = useTranslation("institutionDashboard");
+    const { t, i18n } = useTranslation("institutionDashboard");
+    const locale = `${i18n.language}-u-nu-latn`;
     // null = لسا عم نحمّل، عشان التنبيه ما يطلع ويختفي فجأة
     const [verification, setVerification] = useState(null);
 
@@ -121,49 +139,89 @@ export default function InstitutionHome() {
             <div className="grid gap-6 lg:grid-cols-[1fr_300px]">
                 {/* المناقصات الجارية */}
                 <section className={`${card} p-5`}>
-                    <h2 className="mb-5 text-[17px] font-bold text-[#4B9AD2]">{t("tenders.title")}</h2>
+                    <h2 className="mb-5 text-[17px] font-bold text-[#22455E]">{t("tenders.title")}</h2>
                     <ul className="flex flex-col gap-4">
-                        {TENDERS.map((tender) => (
+                        {/* نفس شكل بطاقة المشاريع الجارية */}
+                        {TENDERS.map((tender) => {
+                            const { daysLeft, progress } = submissionPeriod(tender);
+                            // آخر 7 أيام بنلوّنها أصفر عشان تلفت النظر
+                            const urgent = daysLeft >= 0 && daysLeft <= 7;
+                            return (
                             <li key={tender.key}>
+                                {/* البطاقة كلها بتفتح تفاصيل المناقصة */}
                                 <Link
                                     to={`${BASE}/tenders/${tender.tenderId}`}
-                                    className={`block rounded-2xl border px-5 pb-5 pt-4 transition-colors hover:border-[#8EC0E4] ${tender.highlighted
-                                        ? "border-[#BFDCF1] bg-[#EAF3FB]"
-                                        : "border-[#DDDDDD] bg-[#F7F8FA] hover:bg-[#F3F8FD]"
-                                        }`}
+                                    className="group block rounded-[20px] border border-[#DDDDDD] bg-white p-5 transition-colors hover:border-[#8EC0E4] hover:bg-[#FAFCFE] sm:p-6"
                                 >
-                                <div className="flex items-start justify-between gap-3">
+                                <div className="flex items-start justify-between gap-4">
                                     <div className="min-w-0">
-                                        <h3 className="text-[16px] font-semibold leading-[1.6] text-[#414141]">
-                                            {t(`sample.${tender.key}.title`)}
-                                        </h3>
-                                        <p className="mt-2 flex flex-wrap items-center gap-x-5 gap-y-1 text-[11px] text-[#89949D]">
-                                            <span>{t("tenders.offers", { count: tender.offers })}</span>
-                                            <span>{t(`sample.${tender.key}.location`)}</span>
+                                        <h3 className="text-[19px] font-bold leading-[1.5] text-[#22455E]">{t(`sample.${tender.key}.title`)}</h3>
+                                        <p className="mt-1.5 flex items-center gap-1.5 text-[12px] text-[#38749E]">
+                                            <MapPin size={14} strokeWidth={1.8} />
+                                            {t(`sample.${tender.key}.location`)}
                                         </p>
                                     </div>
                                     <span
-                                        className={`shrink-0 rounded-full px-2.5 py-0.5 text-[11px] font-medium ${STATUS_STYLES[tender.status]}`}
+                                        className={`mt-1 shrink-0 whitespace-nowrap rounded-full px-4 py-1.5 text-[12px] font-semibold ${STATUS_STYLES[tender.status]}`}
                                     >
                                         {t(`tenders.status.${tender.status}`)}
                                     </span>
                                 </div>
 
-                                <div className="mt-8 flex items-center gap-4">
-                                    <span className="flex shrink-0 items-center gap-1 text-[11px] text-[#4B9AD2]">
-                                        <Hourglass size={12} />
-                                        {t("tenders.remaining", { time: t(`sample.${tender.key}.remaining`) })}
-                                    </span>
-                                    <div className="h-[3px] flex-1 overflow-hidden rounded-full bg-[#CFE3F3]">
+                                {/* مدة التقديم + الأيام الباقية جنب الخط — آخر موعد تحت الخط */}
+                                <div className="mt-5">
+                                    <div className="flex items-center gap-3">
+                                        <span className="flex shrink-0 items-center gap-1.5 text-[13px]">
+                                            <span className="text-[#286292]">{t("tenders.periodLabel")}</span>
+                                            <span className={`font-bold tabular-nums ${urgent ? "text-[#9A7400]" : "text-[#4B9AD2]"}`}>
+                                                {daysLeft < 0 ? t("tenders.ended") : t("tenders.daysLeft", { count: daysLeft })}
+                                            </span>
+                                        </span>
                                         <div
-                                            className="h-full rounded-full bg-[#4B9AD2]"
-                                            style={{ width: `${tender.progress}%` }}
-                                        />
+                                            className="h-2 flex-1 overflow-hidden rounded-full bg-[#E3E9EE]"
+                                            role="progressbar"
+                                            aria-valuenow={progress}
+                                            aria-valuemin={0}
+                                            aria-valuemax={100}
+                                            aria-label={t("tenders.periodLabel")}
+                                        >
+                                            <div
+                                                className={`h-full rounded-full ${urgent ? "bg-[#F2C200]" : "bg-[#4B9AD2]"}`}
+                                                style={{ width: `${progress}%` }}
+                                            />
+                                        </div>
                                     </div>
+                                    <p className="mt-6 flex items-center gap-1.5 text-[12px] text-[#38749E]">
+                                        <CalendarDays size={15} strokeWidth={1.8} />
+                                        {t("tenders.deadlineLabel")}:
+                                        <span className="font-semibold text-[#22455E] tabular-nums">
+                                            {new Date(tender.deadline).toLocaleDateString(locale, { day: "numeric", month: "long", year: "numeric" })}
+                                        </span>
+                                    </p>
+                                </div>
+
+                                {/* العروض المقدمة + الجديدة — وعلى الطرف الثاني إشارة إنو البطاقة بتنفتح (مهمة للموبايل لأنو ما في hover) */}
+                                <div className="mt-5 flex items-end justify-between gap-4 border-t border-[#DDDDDD] pt-4">
+                                    <div>
+                                        <p className="text-[12px] text-[#38749E]">{t("tenders.offersLabel")}</p>
+                                        <p className="mt-2 flex items-center gap-2">
+                                            <span className="text-[22px] font-bold leading-none text-[#22455E] tabular-nums">{tender.offers}</span>
+                                            {tender.newOffers > 0 && (
+                                                <span className="rounded-full bg-[#E3EFFA] px-2.5 py-1 text-[11px] font-semibold text-[#3D8BC9] tabular-nums">
+                                                    {t("tenders.newOffers", { count: tender.newOffers })}
+                                                </span>
+                                            )}
+                                        </p>
+                                    </div>
+                                    <span className="flex shrink-0 items-center gap-1 text-[13px] font-semibold text-[#4B9AD2] transition-transform group-hover:-translate-x-1 ltr:group-hover:translate-x-1">
+                                        {t("tenders.viewDetails")}
+                                        <ChevronLeft size={16} className="ltr:rotate-180" />
+                                    </span>
                                 </div>
                                 </Link>
                             </li>
-                        ))}
+                            );
+                        })}
                     </ul>
                 </section>
 

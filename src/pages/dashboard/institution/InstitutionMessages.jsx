@@ -42,11 +42,12 @@ function messageText(t, m, key) {
 }
 
 /** قائمة منسدلة بأيقونة مربعات بالبداية وسهم بالنهاية */
-function FilterSelect({ value, onChange, label, children }) {
+function FilterSelect({ value, onChange, label, name, children }) {
     return (
         <div className="relative min-w-0 md:w-[200px]">
             <LayoutGrid size={15} className="pointer-events-none absolute start-3 top-1/2 -translate-y-1/2 text-[#4B9AD2]" />
             <select
+                name={name}
                 value={value}
                 onChange={(e) => onChange(e.target.value)}
                 aria-label={label}
@@ -213,7 +214,7 @@ function ReplyModal({ message, onClose, onSend }) {
                     <label htmlFor="reply-subject" className="mb-1.5 block text-[12px] text-[#575757]">
                         {t("messagesPage.replyModal.subject")}
                     </label>
-                    <input
+                    <input name="subject"
                         id="reply-subject"
                         value={subject}
                         onChange={(e) => {
@@ -227,7 +228,7 @@ function ReplyModal({ message, onClose, onSend }) {
                     <label htmlFor="reply-body" className="mb-1.5 mt-4 block text-[12px] text-[#575757]">
                         {t("messagesPage.replyModal.body")}
                     </label>
-                    <textarea
+                    <textarea name="body"
                         id="reply-body"
                         ref={bodyRef}
                         rows={5}
@@ -260,7 +261,7 @@ function ReplyModal({ message, onClose, onSend }) {
                         <Paperclip size={14} />
                         {t("messagesPage.replyModal.dropHint")}
                     </label>
-                    <input
+                    <input name="files"
                         id="reply-files"
                         type="file"
                         multiple
@@ -408,7 +409,7 @@ export default function InstitutionMessages() {
             >
                 <div className="relative min-w-0 flex-1">
                     <Search size={16} className="pointer-events-none absolute start-3 top-1/2 -translate-y-1/2 text-[#4B9AD2]" />
-                    <input
+                    <input name="search"
                         type="search"
                         value={query}
                         onChange={(e) => setQuery(e.target.value)}
@@ -418,7 +419,7 @@ export default function InstitutionMessages() {
                     />
                 </div>
 
-                <FilterSelect value={project} onChange={setProject} label={t("messagesPage.allProjects")}>
+                <FilterSelect name="project" value={project} onChange={setProject} label={t("messagesPage.allProjects")}>
                     <option value="all">{t("messagesPage.allProjects")}</option>
                     {PROJECTS.map((p) => (
                         <option key={p} value={p} className="font-bold">
@@ -427,7 +428,7 @@ export default function InstitutionMessages() {
                     ))}
                 </FilterSelect>
 
-                <FilterSelect value={status} onChange={setStatus} label={t("messagesPage.status")}>
+                <FilterSelect name="status" value={status} onChange={setStatus} label={t("messagesPage.status")}>
                     <option value="all">{t("messagesPage.status")}</option>
                     {STATUSES.map((st) => (
                         <option key={st} value={st} className="font-bold">

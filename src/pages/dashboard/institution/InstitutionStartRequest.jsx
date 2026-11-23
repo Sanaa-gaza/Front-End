@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import {
     ArrowLeft,
@@ -7,6 +7,7 @@ import {
     Building2,
     CalendarDays,
     Check,
+    ChevronDown,
     ChevronLeft,
     Clock,
     FileText,
@@ -14,20 +15,16 @@ import {
     PencilLine,
     Settings,
     UsersRound,
+    X,
 } from "lucide-react";
-import { PROJECTS } from "./projectsData";
+import { PROJECTS, allProjects, defaultStartChecks, projectProvider, projectTitle } from "./projectsData";
+import StartApproveModal from "./StartApproveModal";
 
 const BASE = "/dashboard/institution";
 
 // ===== بيانات تجريبية =====
 // ⚠️ ما في endpoint لطلب بدء التنفيذ لسا. لما يجهز، استبدلي هالقيم بطلب من src/api/endpoints.js
 // النصوص بملف الترجمة: startRequest
-const REVIEW = [
-    { id: "team", done: true },
-    { id: "schedule", done: true },
-    { id: "equipment", done: false },
-    { id: "safety", done: false },
-];
 // بطاقات الملخص: الأيقونة ولون خلفيتها
 const STATS = [
     { key: "team", icon: UsersRound, tone: "bg-[#E3EFFA] text-[#3D8BC9]" },
@@ -129,23 +126,200 @@ function SectionTitle({ number, title, children }) {
     );
 }
 
+// بنود طلب الاستكمال ومهلته
+const REQUEST_ITEMS = ["certificates", "replaceWorker", "startDate", "schedule", "equipment", "safety"];
+const REQUEST_DEADLINES = ["24h", "48h", "3d", "week"];
+
+/** نافذة "طلب استكمال المتطلبات" — النواقص اللي لازم فريق التنفيذ يكملها */
+function RequestModal({ code, title, provider, startDate, onClose, onSend }) {
+    const { t } = useTranslation("institutionDashboard");
+    const m = "startRequest.requestModal";
+    const [items, setItems] = useState([]);
+    const [notes, setNotes] = useState("");
+    const [deadline, setDeadline] = useState("48h");
+    const valid = items.length > 0 && notes.trim();
+
+    useEffect(() => {
+        const onKey = (e) => e.key === "Escape" && onClose();
+        window.addEventListener("keydown", onKey);
+        return () => window.removeEventListener("keydown", onKey);
+    }, [onClose]);
+
+    const toggle = (id) => setItems((list) => (list.includes(id) ? list.filter((x) => x !== id) : [...list, id]));
+    const field =
+        "w-full rounded-xl border border-[#DDDDDD] bg-white px-4 text-[13px] text-[#1E293B] outline-none transition-colors placeholder:text-[#94A3B8] focus:border-[#4B9AD2]";
+
+    return (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+            <div aria-hidden="true" onClick={onClose} className="dim-backdrop absolute inset-0 bg-[#0F172A]/40 backdrop-blur-[2px]" />
+            <form
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="request-title"
+                onSubmit={(e) => {
+                    e.preventDefault();
+                    // ⚠️ محلي لحد ما يصير في endpoint
+                    if (valid) onSend({ items, notes: notes.trim(), deadline });
+                }}
+                className="relative flex max-h-[calc(100dvh-2rem)] w-full max-w-[640px] flex-col overflow-hidden rounded-[20px] bg-white shadow-[0_24px_60px_rgba(15,23,42,0.25)]"
+            >
+                {/* الرأس */}
+                <div className="flex items-center gap-4 border-b border-[#E2E8F0] bg-[#F8FAFC] px-6 py-5">
+                    <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#FEF2F2] text-[#DC2626]">
+                        <PencilLine size={19} strokeWidth={1.8} />
+                    </span>
+                    <div className="min-w-0 flex-1">
+                        <p className="text-[12px] font-bold text-[#3D8BC9]">
+                            {t("startRequest.approveModal.label")} · <bdi dir="ltr">{code}</bdi>
+                        </p>
+                        <h2 id="request-title" className="mt-0.5 text-[18px] font-semibold text-[#1E293B]">
+                            {t(`${m}.title`)}
+                        </h2>
+                        <p className="mt-0.5 text-[12px] text-[#64748B]">{t(`${m}.subtitle`)}</p>
+                    </div>
+                    <button
+                        type="button"
+                        onClick={onClose}
+                        aria-label={t("startRequest.approveModal.close")}
+                        className="flex h-9 w-9 shrink-0 cursor-pointer items-center justify-center rounded-full text-[#64748B] transition-colors hover:bg-[#F1F5F9]"
+                    >
+                        <X size={20} />
+                    </button>
+                </div>
+
+                {/* المحتوى */}
+                <div className="flex flex-col gap-5 overflow-y-auto px-6 py-5 [scrollbar-width:thin] [scrollbar-color:#CBD5E1_transparent]">
+                    {/* المشروع */}
+                    <div className="flex items-center gap-3 rounded-xl border border-[#D6E6F5] bg-[#F3F8FD] p-4">
+                        <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#E3EFFA] text-[#3D8BC9]">
+                            <Building2 size={20} strokeWidth={1.8} />
+                        </span>
+                        <div className="min-w-0 flex-1">
+                            <p className="text-[11px] text-[#94A3B8]">{t("startRequest.approveModal.project")}</p>
+                            <p className="mt-0.5 truncate text-[13px] font-bold text-[#1E293B]">{title}</p>
+                            <p className="mt-0.5 text-[12px] text-[#64748B]">
+                                {t("startRequest.approveModal.projectMeta", { provider, date: startDate })}
+                            </p>
+                        </div>
+                        <span className="shrink-0 rounded-full bg-[#FFF7D6] px-3 py-1 text-[11px] font-semibold text-[#9A7400]">
+                            {t("startRequest.approveModal.pending")}
+                        </span>
+                    </div>
+
+                    {/* المتطلبات */}
+                    <fieldset>
+                        <legend className="mb-2.5 text-[13px] font-bold text-[#1E293B]">{t(`${m}.itemsTitle`)}</legend>
+                        <div className="flex flex-col gap-2">
+                            {REQUEST_ITEMS.map((id) => {
+                                const on = items.includes(id);
+                                return (
+                                    <label
+                                        key={id}
+                                        className={`flex cursor-pointer items-center gap-3 rounded-xl border px-4 py-3 transition-colors ${on ? "border-[#F5B5B5] bg-[#FEF7F7]" : "border-[#E2E8F0] hover:bg-[#F8FAFC]"}`}
+                                    >
+                                        <input
+                                            type="checkbox"
+                                            name="request_items"
+                                            value={id}
+                                            checked={on}
+                                            onChange={() => toggle(id)}
+                                            className="peer sr-only"
+                                        />
+                                        <span
+                                            className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-md border transition-colors peer-focus-visible:ring-2 peer-focus-visible:ring-[#DC2626]/30 ${on ? "border-[#DC2626] bg-[#DC2626] text-white" : "border-[#CBD5E1] bg-white"}`}
+                                        >
+                                            {on && <Check size={13} strokeWidth={3} />}
+                                        </span>
+                                        <span className={`text-[13px] ${on ? "font-semibold text-[#1E293B]" : "text-[#475569]"}`}>
+                                            {t(`${m}.items.${id}`)}
+                                        </span>
+                                    </label>
+                                );
+                            })}
+                        </div>
+                    </fieldset>
+
+                    <label className="block">
+                        <span className="mb-2 block text-[13px] font-medium text-[#1E293B]">
+                            {t(`${m}.notes`)} <span className="text-[#D64545]">*</span>
+                        </span>
+                        <textarea
+                            name="request_notes"
+                            required
+                            rows={3}
+                            maxLength={1000}
+                            value={notes}
+                            onChange={(e) => setNotes(e.target.value)}
+                            placeholder={t(`${m}.notesPlaceholder`)}
+                            className={`${field} resize-none py-3 leading-[1.8]`}
+                        />
+                        <span className="mt-1.5 block text-[11px] text-[#94A3B8]">{t(`${m}.notesHint`)}</span>
+                    </label>
+
+                    <label className="block">
+                        <span className="mb-2 block text-[13px] font-medium text-[#1E293B]">{t(`${m}.deadline`)}</span>
+                        <span className="relative block">
+                            <select
+                                name="request_deadline"
+                                value={deadline}
+                                onChange={(e) => setDeadline(e.target.value)}
+                                className={`${field} h-11 cursor-pointer appearance-none pe-10`}
+                            >
+                                {REQUEST_DEADLINES.map((key) => (
+                                    <option key={key} value={key}>
+                                        {t(`${m}.deadlines.${key}`)}
+                                    </option>
+                                ))}
+                            </select>
+                            <ChevronDown size={18} className="pointer-events-none absolute end-3 top-1/2 -translate-y-1/2 text-[#334155]" />
+                        </span>
+                    </label>
+                </div>
+
+                {/* الأزرار */}
+                <div className="flex justify-end gap-3 border-t border-[#E2E8F0] bg-[#F8FAFC] px-6 py-4">
+                    <button
+                        type="button"
+                        onClick={onClose}
+                        className="h-11 min-w-[100px] cursor-pointer rounded-xl border border-[#DDDDDD] bg-white px-6 text-[14px] font-medium text-[#334155] transition-colors hover:bg-[#F1F5F9]"
+                    >
+                        {t("startRequest.approveModal.cancel")}
+                    </button>
+                    <button
+                        type="submit"
+                        disabled={!valid}
+                        className="inline-flex h-11 cursor-pointer items-center gap-2 rounded-xl bg-[#DC2626] px-5 text-[14px] font-semibold text-white transition-colors hover:bg-[#B91C1C] disabled:cursor-not-allowed disabled:bg-[#DCE6EF] disabled:text-[#94A3B8]"
+                    >
+                        <PencilLine size={16} />
+                        {t(`${m}.send`)}
+                    </button>
+                </div>
+            </form>
+        </div>
+    );
+}
+
 /** مراجعة طلب بدء التنفيذ (من "عرض الطلب" بتفاصيل المشروع) */
 export default function InstitutionStartRequest() {
     const { t } = useTranslation("institutionDashboard");
     const navigate = useNavigate();
+    // حالة قائمة التحقق من صفحة المشروع (أو الافتراضية إذا فتحت الصفحة مباشرة)
+    const { state: navState } = useLocation();
+    const checks = navState?.checks || defaultStartChecks();
+    const remaining = Object.values(checks).filter((x) => !x).length;
+    const allDone = remaining === 0;
     const { projectId } = useParams();
-    const project = PROJECTS.find((p) => p.id === projectId);
+    const project = allProjects().find((p) => p.id === projectId);
     const sr = "startRequest";
 
     // ⚠️ المراجعة والملاحظة والقرار بالصفحة بس لحد ما يصير في endpoint
-    const [checks, setChecks] = useState(() => Object.fromEntries(REVIEW.map((r) => [r.id, r.done])));
     const [reviewer, setReviewer] = useState("r1");
     const [changingReviewer, setChangingReviewer] = useState(false);
     const [note, setNote] = useState("");
     const [showTeam, setShowTeam] = useState(false);
     const [requesting, setRequesting] = useState(false);
-    const [requestText, setRequestText] = useState("");
     const [flash, setFlash] = useState("");
+    const [approving, setApproving] = useState(false);
 
     if (!project) {
         return (
@@ -158,12 +332,10 @@ export default function InstitutionStartRequest() {
         );
     }
 
-    const s = `projectsPage.sample.${project.id}`;
-    const provider = t(`${s}.provider`);
+    const provider = projectProvider(project, t);
+    const title = projectTitle(project, t);
     const projectPath = `${BASE}/projects/${project.id}`;
-    const doneCount = Object.values(checks).filter(Boolean).length;
-    const remaining = REVIEW.length - doneCount;
-    const allDone = remaining === 0;
+    const requestCode = `REQ-START-2025-${String(14 + Math.max(0, PROJECTS.indexOf(project))).padStart(3, "0")}`;
     const team = showTeam ? TEAM : TEAM.slice(0, TEAM_PREVIEW);
     const reviewerName = t(`${sr}.reviewer.people.${reviewer}`);
 
@@ -174,7 +346,7 @@ export default function InstitutionStartRequest() {
 
     return (
         <div className="mx-auto flex max-w-[1100px] flex-col gap-3">
-            <Link to={projectPath} className="inline-flex w-fit items-center gap-1 text-[12px] font-medium text-[#4B9AD2] hover:underline">
+            <Link to={projectPath} state={{ checks }} className="inline-flex w-fit items-center gap-1 text-[12px] font-medium text-[#4B9AD2] hover:underline">
                 <ChevronLeft size={14} className="rtl:rotate-180" />
                 {t(`${sr}.back`)}
             </Link>
@@ -188,10 +360,10 @@ export default function InstitutionStartRequest() {
                     <div className="min-w-0">
                         {/* bdi بدل dir على الفقرة كلها، عشان الرقم ينحاذى مع بداية العنوان مش ينزاح للنص */}
                         <p className="font-mono text-[11px] text-[#94A3B8]">
-                            <bdi dir="ltr">REQ-START-2025-{String(14 + PROJECTS.indexOf(project)).padStart(3, "0")}</bdi>
+                            <bdi dir="ltr">{requestCode}</bdi>
                         </p>
                         <h1 className="mt-1 text-[23px] font-medium leading-[1.4] text-[#1E293B]">{t(`${sr}.title`)}</h1>
-                        <p className="mt-1 text-[12px] text-[#64748B]">{t(`${sr}.subtitle`, { project: t(`${s}.title`) })}</p>
+                        <p className="mt-1 text-[12px] text-[#64748B]">{t(`${sr}.subtitle`, { project: title })}</p>
                     </div>
                 </div>
                 <div className="shrink-0 border-[#E2E8F0] sm:min-w-[130px] sm:border-s sm:ps-5">
@@ -228,7 +400,7 @@ export default function InstitutionStartRequest() {
                 ))}
             </ul>
 
-            <div className="grid items-start gap-5 lg:grid-cols-[minmax(0,1fr)_320px]">
+            <div className="grid items-start gap-5 lg:grid-cols-[minmax(0,2fr)_minmax(300px,1fr)]">
                 {/* العمود الرئيسي */}
                 <div className="flex min-w-0 flex-col gap-5">
                     {/* 01 بيانات الطلب الوارد */}
@@ -247,8 +419,13 @@ export default function InstitutionStartRequest() {
                                     className={`p-4 ${i % 2 === 1 ? "sm:border-s sm:border-[#E2E8F0]" : ""} ${i >= 2 ? "border-t border-[#E2E8F0]" : i === 1 ? "border-t border-[#E2E8F0] sm:border-t-0" : ""}`}
                                 >
                                     <dt className="text-[11px] text-[#94A3B8]">{t(`${sr}.info.items.${key}.label`)}</dt>
-                                    <dd className="mt-1.5 text-[14px] font-bold text-[#1E293B]" dir={key === "contact" ? "ltr" : undefined}>
-                                        {t(`${sr}.info.items.${key}.value`, { provider })}
+                                    {/* الرقم: bdi عشان ترتيب أرقامه يضل صح، والسطر نفسه بمحاذاة باقي الكلام (يمين) */}
+                                    <dd className="mt-1.5 text-[14px] font-bold text-[#1E293B]">
+                                        {key === "contact" ? (
+                                            <bdi dir="ltr">{t(`${sr}.info.items.${key}.value`, { provider })}</bdi>
+                                        ) : (
+                                            t(`${sr}.info.items.${key}.value`, { provider })
+                                        )}
                                     </dd>
                                     <dd className="mt-0.5 text-[11px] text-[#94A3B8]">{t(`${sr}.info.items.${key}.note`)}</dd>
                                 </div>
@@ -377,45 +554,8 @@ export default function InstitutionStartRequest() {
                     </section>
                 </div>
 
-                {/* العمود الجانبي: قائمة المراجعة + المراجع + ملاحظة للفريق */}
+                {/* العمود الجانبي: المراجع ← ملاحظة للفريق */}
                 <aside className="flex flex-col gap-4">
-                    <section className={`${card} p-5`}>
-                        <div className="flex items-center justify-between gap-2">
-                            <h2 className="text-[14px] font-bold text-[#1E293B]">{t(`${sr}.review.title`)}</h2>
-                            <span className="rounded-lg bg-[#EEF5FC] px-2.5 py-1 text-[11px] font-semibold text-[#3D8BC9] tabular-nums" dir="ltr">
-                                {doneCount}/{REVIEW.length}
-                            </span>
-                        </div>
-                        <p className="mt-1 text-[11px] text-[#94A3B8]">{t(`${sr}.review.desc`)}</p>
-                        <ul className="mt-3 divide-y divide-[#E2E8F0]">
-                            {REVIEW.map(({ id }) => {
-                                const on = checks[id];
-                                return (
-                                    <li key={id}>
-                                        <label className="flex cursor-pointer items-center gap-3 py-3">
-                                            <input
-                                                type="checkbox"
-                                                checked={on}
-                                                onChange={() => setChecks((c) => ({ ...c, [id]: !c[id] }))}
-                                                className="peer sr-only"
-                                            />
-                                            <span
-                                                aria-hidden="true"
-                                                className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-md border-2 transition-colors peer-focus-visible:ring-2 peer-focus-visible:ring-[#4B9AD2] ${on ? "border-[#10B981] bg-[#10B981] text-white" : "border-[#CBD5E1] bg-white"
-                                                    }`}
-                                            >
-                                                {on && <Check size={12} strokeWidth={3} />}
-                                            </span>
-                                            <span className={`text-[12px] ${on ? "font-semibold text-[#1E293B]" : "text-[#475569]"}`}>
-                                                {t(`${sr}.review.items.${id}`)}
-                                            </span>
-                                        </label>
-                                    </li>
-                                );
-                            })}
-                        </ul>
-                    </section>
-
                     <section className={`${card} p-5`}>
                         <div className="flex items-center justify-between gap-2">
                             <h2 className="text-[14px] font-bold text-[#1E293B]">{t(`${sr}.reviewer.title`)}</h2>
@@ -465,7 +605,7 @@ export default function InstitutionStartRequest() {
 
                     <section className={`${card} p-5`}>
                         <h2 className="text-[14px] font-bold text-[#1E293B]">{t(`${sr}.note.title`)}</h2>
-                        <textarea
+                        <textarea name="note"
                             rows={4}
                             value={note}
                             onChange={(e) => setNote(e.target.value)}
@@ -488,8 +628,8 @@ export default function InstitutionStartRequest() {
                 </aside>
             </div>
 
-            {/* القرار */}
-            <section className={`${card} p-5`}>
+            {/* القرار — مفصول بمسافة عن باقي الصفحة */}
+            <section className={`${card} mt-6 p-5`}>
                 <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
                     <div className="flex items-center gap-3">
                         <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#EEF5FC] text-[#3D8BC9]">
@@ -499,22 +639,26 @@ export default function InstitutionStartRequest() {
                             <p className="text-[14px] font-bold text-[#1E293B]">{t(`${sr}.decision.title`)}</p>
                             <p className="mt-0.5 text-[12px] text-[#64748B]">
                                 {allDone ? t(`${sr}.decision.ready`) : t(`${sr}.decision.remaining`, { count: remaining })}
+                                {!allDone && (
+                                    <>
+                                        {" "}
+                                        <Link
+                                            to={`${projectPath}#project-checklist`}
+                                            state={{ checks }}
+                                            className="font-semibold text-[#4B9AD2] hover:underline"
+                                        >
+                                            {t(`${sr}.decision.completeChecklist`)}
+                                        </Link>
+                                    </>
+                                )}
                             </p>
                         </div>
                     </div>
                     <div className="flex flex-wrap gap-2.5">
                         <button
                             type="button"
-                            onClick={() => navigate(`${BASE}/chats`, { state: { craftsman: { id: project.id, full_name: provider } } })}
-                            className="inline-flex h-11 cursor-pointer items-center gap-2 rounded-xl bg-[#EEF5FC] px-4 text-[13px] font-medium text-[#3D8BC9] transition-colors hover:bg-[#E3EFFA]"
-                        >
-                            <MessageSquareText size={16} />
-                            {t(`${sr}.decision.message`)}
-                        </button>
-                        <button
-                            type="button"
-                            onClick={() => setRequesting((x) => !x)}
-                            aria-expanded={requesting}
+                            onClick={() => setRequesting(true)}
+                            aria-haspopup="dialog"
                             className="inline-flex h-11 cursor-pointer items-center gap-2 rounded-xl bg-[#FEF2F2] px-4 text-[13px] font-medium text-[#DC2626] transition-colors hover:bg-[#FEE2E2]"
                         >
                             <PencilLine size={16} />
@@ -524,7 +668,7 @@ export default function InstitutionStartRequest() {
                             type="button"
                             disabled={!allDone}
                             title={allDone ? undefined : t(`${sr}.decision.disabledHint`)}
-                            onClick={() => navigate(projectPath, { state: { startApproved: true } })}
+                            onClick={() => setApproving(true)}
                             className="inline-flex h-11 cursor-pointer items-center gap-2 rounded-xl bg-[#4B9AD2] px-5 text-[13px] font-bold text-white btn-wipe disabled:cursor-not-allowed disabled:bg-[#E2E8F0] disabled:text-[#94A3B8]"
                         >
                             <Check size={16} strokeWidth={2.5} />
@@ -532,33 +676,33 @@ export default function InstitutionStartRequest() {
                         </button>
                     </div>
                 </div>
-
-                {/* طلب استكمال: ملاحظة لمقدم الخدمة */}
-                {requesting && (
-                    <div className="mt-4 flex flex-col gap-2.5 border-t border-[#E2E8F0] pt-4 sm:flex-row sm:items-start">
-                        <textarea
-                            rows={2}
-                            value={requestText}
-                            onChange={(e) => setRequestText(e.target.value)}
-                            aria-label={t(`${sr}.decision.requestLabel`)}
-                            placeholder={t(`${sr}.decision.requestPlaceholder`)}
-                            className="flex-1 resize-none rounded-xl border border-[#DDDDDD] px-3 py-2.5 text-[12px] leading-[1.8] text-[#334155] outline-none placeholder:text-[#94A3B8] focus:border-[#4B9AD2] focus:ring-1 focus:ring-[#4B9AD2]"
-                        />
-                        <button
-                            type="button"
-                            disabled={!requestText.trim()}
-                            onClick={() => {
-                                setRequesting(false);
-                                setRequestText("");
-                                say(t(`${sr}.decision.requested`, { provider }));
-                            }}
-                            className="h-11 shrink-0 cursor-pointer rounded-xl bg-[#DC2626] px-5 text-[13px] font-semibold text-white transition-colors hover:bg-[#B91C1C] disabled:cursor-not-allowed disabled:bg-[#E2E8F0] disabled:text-[#94A3B8]"
-                        >
-                            {t(`${sr}.decision.sendRequest`)}
-                        </button>
-                    </div>
-                )}
             </section>
+
+            {requesting && (
+                <RequestModal
+                    code={requestCode}
+                    title={title}
+                    provider={provider}
+                    startDate={t(`${sr}.stats.start.value`)}
+                    onClose={() => setRequesting(false)}
+                    onSend={() => {
+                        setRequesting(false);
+                        say(t(`${sr}.decision.requested`, { provider }));
+                    }}
+                />
+            )}
+
+            {approving && (
+                <StartApproveModal
+                    code={requestCode}
+                    title={title}
+                    provider={provider}
+                    startDate={t(`${sr}.stats.start.value`)}
+                    remaining={remaining}
+                    onClose={() => setApproving(false)}
+                    onApprove={() => navigate(projectPath, { state: { startApproved: true, checks } })}
+                />
+            )}
         </div>
     );
 }

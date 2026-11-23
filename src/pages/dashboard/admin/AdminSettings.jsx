@@ -121,13 +121,13 @@ function ProfileSettings() {
             <fieldset disabled={saving} className="mt-5 grid gap-x-8 gap-y-4 sm:grid-cols-2">
                 <div>
                     <label htmlFor="admin-name" className={label}>{t(`${pr}.name`)}</label>
-                    <input id="admin-name" value={form.name} onChange={update("name")} aria-invalid={!!errors.name} className={fieldInput("name")} />
+                    <input name="name" id="admin-name" value={form.name} onChange={update("name")} aria-invalid={!!errors.name} className={fieldInput("name")} />
                     {err("name")}
                 </div>
                 <div>
                     <label htmlFor="admin-role" className={label}>{t(`${pr}.role`)}</label>
                     <div className="relative">
-                        <input
+                        <input name="role"
                             id="admin-role"
                             value={role}
                             readOnly
@@ -138,12 +138,12 @@ function ProfileSettings() {
                 </div>
                 <div>
                     <label htmlFor="admin-email" className={label}>{t(`${pr}.email`)}</label>
-                    <input id="admin-email" type="email" dir="ltr" value={form.email} onChange={update("email")} aria-invalid={!!errors.email} className={`${fieldInput("email")} text-end`} />
+                    <input name="email" id="admin-email" type="email" dir="ltr" value={form.email} onChange={update("email")} aria-invalid={!!errors.email} className={`${fieldInput("email")} text-end`} />
                     {err("email")}
                 </div>
                 <div>
                     <label htmlFor="admin-phone" className={label}>{t(`${pr}.phone`)}</label>
-                    <input id="admin-phone" type="tel" dir="ltr" value={form.phone} onChange={update("phone")} aria-invalid={!!errors.phone} className={`${fieldInput("phone")} text-end`} />
+                    <input name="phone" id="admin-phone" type="tel" dir="ltr" value={form.phone} onChange={update("phone")} aria-invalid={!!errors.phone} className={`${fieldInput("phone")} text-end`} />
                     {err("phone")}
                 </div>
             </fieldset>
@@ -178,7 +178,7 @@ function PasswordField({ id, label: text, value, onChange, autoComplete, error }
         <div>
             <label htmlFor={id} className="mb-2.5 block text-[12px] text-[#575757]">{text}</label>
             <div className="relative">
-                <input
+                <input name={id}
                     id={id}
                     type={visible ? "text" : "password"}
                     dir="ltr"

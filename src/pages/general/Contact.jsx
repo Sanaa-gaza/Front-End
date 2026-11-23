@@ -286,7 +286,7 @@ export default function Contact() {
                                     </label>
                                     <div className="relative">
                                         <i className="fa-regular fa-user pointer-events-none absolute end-3 top-1/2 -translate-y-1/2 text-[13px] text-[#4B9AD2]"></i>
-                                        <input
+                                        <input name="name"
                                             id="c-name"
                                             value={form.name}
                                             onChange={update("name")}
@@ -300,7 +300,7 @@ export default function Contact() {
                                         {t("form.city")}
                                     </label>
                                     <div className="relative">
-                                        <select
+                                        <select name="city"
                                             id="c-city"
                                             value={form.city}
                                             onChange={update("city")}
@@ -330,7 +330,7 @@ export default function Contact() {
                                     </label>
                                     <div className="relative">
                                         <i className="fa-regular fa-envelope pointer-events-none absolute end-3 top-1/2 -translate-y-1/2 text-[13px] text-[#4B9AD2]"></i>
-                                        <input
+                                        <input name="email"
                                             id="c-email"
                                             type="email"
                                             dir="ltr"
@@ -349,7 +349,7 @@ export default function Contact() {
                                     {t("form.topic")}
                                 </label>
                                 <div className="relative">
-                                    <select
+                                    <select name="topic"
                                         id="c-topic"
                                         value={form.topic}
                                         onChange={update("topic")}
@@ -375,7 +375,7 @@ export default function Contact() {
                                 <label htmlFor="c-message" className="mb-1.5 block text-[11px] font-bold text-[#2B2B2B]">
                                     {t("form.message")}
                                 </label>
-                                <textarea
+                                <textarea name="message"
                                     id="c-message"
                                     rows={5}
                                     value={form.message}

@@ -270,6 +270,7 @@ export default function DashboardLayout({
                                 <label className="relative hidden md:block">
                                     <Search size={16} className="pointer-events-none absolute top-1/2 start-3 -translate-y-1/2 text-[#4B9AD2]" />
                                     <input
+                                        name="search"
                                         type="search"
                                         placeholder={searchPlaceholder || t("search")}
                                         className="h-9 w-[300px] rounded-full border border-[#4B9AD2] bg-white ps-9 pe-4 text-[12px] text-[#414141] placeholder-[#89949D] outline-none focus:ring-1 focus:ring-[#4B9AD2] xl:w-[380px]"

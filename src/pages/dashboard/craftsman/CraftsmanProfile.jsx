@@ -83,7 +83,7 @@ function IconSelect({ id, icon: Icon, value, onChange, placeholder, options, err
     return (
         <div className="relative">
             {Icon && <Icon size={15} strokeWidth={1.7} className="pointer-events-none absolute start-4 top-1/2 -translate-y-1/2 text-[#4B9AD2]" />}
-            <select
+            <select name={id}
                 id={id}
                 value={value}
                 onChange={onChange}
@@ -219,7 +219,7 @@ function EditProfile({ profile, onProfileChange }) {
                     <p className="mt-0.5 text-[9px] text-[#575757]">{t(`${p}.photoHint`)}</p>
                     <label className="mt-1 inline-block cursor-pointer text-[11px] font-semibold text-[#4B9AD2] hover:underline">
                         {t(`${p}.changePhoto`)}
-                        <input
+                        <input name="photos"
                             type="file"
                             accept="image/jpeg,image/png"
                             className="hidden"
@@ -246,12 +246,12 @@ function EditProfile({ profile, onProfileChange }) {
             <fieldset disabled={saving} className="mt-5 grid gap-x-4 gap-y-5 sm:grid-cols-2">
                 <div>
                     <label htmlFor="cp-name" className={label}>{t(`${p}.name`)}</label>
-                    <input id="cp-name" value={form.name} onChange={update("name")} aria-invalid={!!errors.name} className={`${input} ${errors.name ? "border-red-400" : ""}`} />
+                    <input name="name" id="cp-name" value={form.name} onChange={update("name")} aria-invalid={!!errors.name} className={`${input} ${errors.name ? "border-red-400" : ""}`} />
                     {err("name")}
                 </div>
                 <div>
                     <label htmlFor="cp-phone" className={label}>{t(`${p}.phone`)}</label>
-                    <input
+                    <input name="phone"
                         id="cp-phone"
                         type="tel"
                         dir="ltr"
@@ -321,7 +321,7 @@ function EditProfile({ profile, onProfileChange }) {
                     <label htmlFor="cp-bio" className={label}>
                         {t(`${p}.bio`)} <span className="font-normal text-[#89949D]">{t(`${p}.optional`)}</span>
                     </label>
-                    <textarea
+                    <textarea name="bio"
                         id="cp-bio"
                         rows={3}
                         maxLength={500}
@@ -496,7 +496,7 @@ function WorkModal({ work, initialFiles = [], governorateId, onSave, onClose }) 
                                         <Plus size={13} />
                                     </span>
                                     {photos.length ? t(`${w}.morePhoto`) : t(`${w}.addPhoto`)}
-                                    <input
+                                    <input name="photos"
                                         type="file"
                                         accept="image/jpeg,image/png"
                                         multiple
@@ -516,7 +516,7 @@ function WorkModal({ work, initialFiles = [], governorateId, onSave, onClose }) 
                     <label htmlFor="work-title" className={`${fieldLabel} mt-4`}>
                         {t(`${w}.title`)} <span className="text-[#D64545]">*</span>
                     </label>
-                    <input
+                    <input name="title"
                         id="work-title"
                         value={title}
                         onChange={(e) => {
@@ -533,7 +533,7 @@ function WorkModal({ work, initialFiles = [], governorateId, onSave, onClose }) 
                     <label htmlFor="work-area" className={`${fieldLabel} mt-4`}>{t(`${w}.area`)}</label>
                     <div className="relative">
                         <MapPin size={15} strokeWidth={1.7} className="pointer-events-none absolute start-4 top-1/2 -translate-y-1/2 text-[#4B9AD2]" />
-                        <select
+                        <select name="area_id"
                             id="work-area"
                             value={areaId}
                             onChange={(e) => setAreaId(e.target.value)}
@@ -552,7 +552,7 @@ function WorkModal({ work, initialFiles = [], governorateId, onSave, onClose }) 
                     <label htmlFor="work-date" className={`${fieldLabel} mt-4`}>{t(`${w}.date`)}</label>
                     <div className="relative">
                         <CalendarDays size={15} strokeWidth={1.7} className="pointer-events-none absolute start-4 top-1/2 -translate-y-1/2 text-[#4B9AD2]" />
-                        <select
+                        <select name="date"
                             id="work-date"
                             value={date}
                             onChange={(e) => setDate(e.target.value)}
@@ -572,7 +572,7 @@ function WorkModal({ work, initialFiles = [], governorateId, onSave, onClose }) 
                     <label htmlFor="work-desc" className={`${fieldLabel} mt-6`}>
                         {t(`${w}.desc`)} <span className="font-normal text-[#89949D]">{t("profilePage.edit.optional")}</span>
                     </label>
-                    <textarea
+                    <textarea name="desc"
                         id="work-desc"
                         rows={3}
                         maxLength={500}
@@ -774,7 +774,7 @@ function WorksSection({ governorateId }) {
                     >
                         <ImagePlus size={26} strokeWidth={1.5} />
                         {t(`${ws}.drop`)}
-                        <input
+                        <input name="photos"
                             type="file"
                             accept="image/jpeg,image/png"
                             multiple
@@ -1188,6 +1188,7 @@ function PersonalInfo({ profile, onProfileChange }) {
         const key = editing;
         return (
             <input
+                name={key}
                 autoFocus
                 type={key === "email" ? "email" : "tel"}
                 dir="ltr"
@@ -1322,7 +1323,7 @@ function PasswordSection() {
         <div>
             <label htmlFor={`pw-${key}`} className="mb-2.5 block text-[13px] font-bold text-[#22303C]">{t(`${pw}.${key}`)}</label>
             <div className="relative">
-                <input
+                <input name={key}
                     id={`pw-${key}`}
                     type={visible[key] ? "text" : "password"}
                     dir="ltr"

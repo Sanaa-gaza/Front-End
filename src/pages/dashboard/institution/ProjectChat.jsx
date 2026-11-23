@@ -187,7 +187,7 @@ export default function ProjectChat() {
                         <span className="tabular-nums" dir="ltr">{formatSeconds(seconds)}</span>
                     </p>
                 ) : (
-                    <input
+                    <input name="message"
                         value={text}
                         onChange={(e) => setText(e.target.value)}
                         placeholder={t(`${c}.placeholder`)}
@@ -238,7 +238,7 @@ export default function ProjectChat() {
                         </ul>
                     )}
                 </div>
-                <input ref={fileRef} type="file" multiple className="hidden" onChange={onFiles} />
+                <input name="attachments" ref={fileRef} type="file" multiple className="hidden" onChange={onFiles} />
             </form>
         </section>
     );

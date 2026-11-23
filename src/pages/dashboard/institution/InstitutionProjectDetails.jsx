@@ -1,8 +1,10 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Link, useLocation, useParams } from "react-router-dom";
+import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import {
     Building2,
+    CalendarDays,
+    Camera,
     Check,
     ChevronDown,
     ChevronLeft,
@@ -10,24 +12,23 @@ import {
     CircleHelp,
     Clock,
     Eye,
+    Lock,
+    FileText,
     MessageSquareText,
+    Package,
     Plus,
+    Star,
     X,
 } from "lucide-react";
-import { PROJECTS } from "./projectsData";
+import { PROJECTS, START_CHECKLIST as CHECKLIST, allProjects, defaultStartChecks, projectProvider, projectTitle } from "./projectsData";
+import StartApproveModal from "./StartApproveModal";
+import DateField from "../../../components/dashboard/DateField";
 
 const BASE = "/dashboard/institution";
 
 // ===== بيانات تجريبية =====
 // ⚠️ ما في endpoints لتفاصيل المشروع (طلب بدء التنفيذ، قائمة التحقق، الموعد) لسا.
 // لما تجهز، استبدلي هالقيم بطلبات من src/api/endpoints.js — النصوص بملف الترجمة: projectView
-const CHECKLIST = [
-    { id: "team", done: true },
-    { id: "site", done: true },
-    { id: "plan", done: true },
-    { id: "materials", done: false },
-    { id: "kickoff", done: false },
-];
 // موعد التنفيذ المقترح
 const PROPOSED_START = "2026-05-20T08:00";
 const DURATION_DAYS = 102;
@@ -45,9 +46,13 @@ const STATUS_BADGES = {
 };
 
 /** مراحل المشروع: المنتهية خضرا، الحالية زرقا، والجاية رمادية فاتحة */
-function Stepper({ current }) {
+function Stepper({ current, phase, acceptedOn = "" }) {
     const { t } = useTranslation("institutionDashboard");
     const v = "projectView.stages";
+    // بمرحلة الاستلام: "قيد التنفيذ" بتصير "اكتمال التنفيذ" و"تسليم المشروع" بتصير "مراجعة الاستلام"
+    const delivery = phase === "delivery";
+    const titleOf = (key) =>
+        delivery && (key === "executing" || key === "delivery") ? t(`${v}.${key}.deliveryTitle`) : t(`${v}.${key}.title`);
     return (
         // --half: نص عرض المرحلة (الخط بيبدأ وبينتهي بنص الدوائر)
         <ol className="relative flex items-start justify-between [--half:36px] sm:[--half:65px]">
@@ -56,7 +61,7 @@ function Stepper({ current }) {
             <span
                 aria-hidden="true"
                 className="absolute start-[var(--half)] top-[17px] h-[3px] rounded-full bg-[#10B981]"
-                style={{ width: `calc((100% - var(--half) * 2) * ${current / (STAGES.length - 1)})` }}
+                style={{ width: `calc((100% - var(--half) * 2) * ${Math.min(current, STAGES.length - 1) / (STAGES.length - 1)})` }}
             />
             {STAGES.map((key, i) => {
                 const state = i < current ? "done" : i === current ? "current" : "upcoming";
@@ -75,7 +80,7 @@ function Stepper({ current }) {
                         <span
                             className={`mt-3 text-[13px] font-bold ${state === "current" ? "text-[#5DA5D5]" : state === "done" ? "text-[#334155]" : "text-[#94A3B8]"}`}
                         >
-                            {t(`${v}.${key}.title`)}
+                            {titleOf(key)}
                         </span>
                         <span
                             className={`mt-1 text-[10px] ${state === "done"
@@ -85,7 +90,7 @@ function Stepper({ current }) {
                                     : "text-[#CBD5E1]"
                                 }`}
                         >
-                            {state === "current" ? t(`${v}.waiting`) : t(`${v}.${key}.note`)}
+                            {state === "current" ? (delivery ? t(`${v}.delivery.reviewWaiting`) : t(`${v}.waiting`)) : state === "done" ? (key === "accepted" && acceptedOn) || t(`${v}.${key}.done`, { defaultValue: t(`${v}.${key}.note`) }) : t(`${v}.${key}.note`)}
                         </span>
                     </li>
                 );
@@ -205,7 +210,7 @@ function UpdateModal({ project, onClose, onSend }) {
                                         className={`flex cursor-pointer items-center gap-2.5 rounded-xl border px-3.5 py-3 text-[12px] transition-colors ${on ? "border-[#C7E0F1] bg-[#EEF5FC] font-semibold text-[#22455E]" : "border-[#DDDDDD] bg-white text-[#334155] hover:border-[#8EC0E4]"
                                             }`}
                                     >
-                                        <input type="checkbox" checked={on} onChange={() => toggle(key)} className="peer sr-only" />
+                                        <input name="update_items" value={key} type="checkbox" checked={on} onChange={() => toggle(key)} className="peer sr-only" />
                                         <span
                                             aria-hidden="true"
                                             className={`flex h-[18px] w-[18px] shrink-0 items-center justify-center rounded-[5px] border-2 peer-focus-visible:ring-2 peer-focus-visible:ring-[#4B9AD2] ${on ? "border-[#4B9AD2] bg-[#4B9AD2] text-white" : "border-[#CBD5E1] bg-white"
@@ -224,7 +229,7 @@ function UpdateModal({ project, onClose, onSend }) {
                     {/* التفاصيل */}
                     <div>
                         <label htmlFor="pv-update-details" className={label}>{t(`${u}.details`)}</label>
-                        <textarea
+                        <textarea name="details"
                             id="pv-update-details"
                             rows={3}
                             value={details}
@@ -243,7 +248,7 @@ function UpdateModal({ project, onClose, onSend }) {
                         <div>
                             <label htmlFor="pv-update-deadline" className={label}>{t(`${u}.deadline`)}</label>
                             <div className="relative">
-                                <select id="pv-update-deadline" value={deadline} onChange={(e) => setDeadline(e.target.value)} className={select}>
+                                <select name="deadline" id="pv-update-deadline" value={deadline} onChange={(e) => setDeadline(e.target.value)} className={select}>
                                     {DEADLINES.map((k) => (
                                         <option key={k} value={k}>{t(`${u}.deadlines.${k}`)}</option>
                                     ))}
@@ -254,7 +259,7 @@ function UpdateModal({ project, onClose, onSend }) {
                         <div>
                             <label htmlFor="pv-update-priority" className={label}>{t(`${u}.priority`)}</label>
                             <div className="relative">
-                                <select id="pv-update-priority" value={priority} onChange={(e) => setPriority(e.target.value)} className={select}>
+                                <select name="priority" id="pv-update-priority" value={priority} onChange={(e) => setPriority(e.target.value)} className={select}>
                                     {PRIORITIES.map((k) => (
                                         <option key={k} value={k}>{t(`${u}.priorities.${k}`)}</option>
                                     ))}
@@ -289,26 +294,598 @@ function UpdateModal({ project, onClose, onSend }) {
 }
 
 /** تفاصيل مشروع جاري (من "فتح" بالمشاريع الجارية): طلب اعتماد بدء التنفيذ + قائمة التحقق + موعد التنفيذ */
+// ===== مرحلة "قيد التنفيذ" =====
+// ⚠️ بيانات تجريبية لحد ما تجهز endpoints المهام والتحديثات والمستندات — النصوص بملف الترجمة: projectView.exec
+// tone: لون شارة الموعد (soon = قريب)
+const EXEC_TASKS = [
+    { id: "t1", due: "tomorrow", tone: "soon", done: false },
+    { id: "t2", due: "24may", tone: "normal", done: false },
+    { id: "t3", due: "26may", tone: "later", done: false },
+    { id: "t4", due: "30may", tone: "later", done: false },
+    { id: "t5", due: "18may", tone: "normal", done: true },
+    { id: "t6", due: "15may", tone: "normal", done: true },
+];
+const TASK_TONES = {
+    soon: "bg-[#FFF7D6] text-[#9A7400]",
+    normal: "bg-[#F1F5F9] text-[#64748B]",
+    later: "bg-[#E3EFFA] text-[#3D8BC9]",
+};
+const EXEC_UPDATES = [
+    { id: "u1", icon: FileText },
+    { id: "u2", icon: Check },
+    { id: "u3", icon: CalendarDays },
+    { id: "u4", icon: Camera },
+    { id: "u5", icon: Check },
+];
+const EXEC_DOCS = [
+    { id: "d1", size: "2.4 MB" },
+    { id: "d2", size: "1.8 MB" },
+    { id: "d3", size: "1.8 MB" },
+    { id: "d4", size: "1.8 MB" },
+];
+const EXEC_TABS = ["overview", "tasks", "updates", "documents"];
+const OVERVIEW_TASKS = 3;
+const OVERVIEW_UPDATES = 3;
+
+/** خط زمني للتحديثات: أيقونة بدائرة وخط بيوصل بينهم */
+function UpdatesTimeline({ items }) {
+    const { t } = useTranslation("institutionDashboard");
+    const e = "projectView.exec";
+    return (
+        <ol className="flex flex-col">
+            {items.map(({ id, icon: Icon }, i) => (
+                <li key={id} className={`relative flex items-start gap-4 ${i < items.length - 1 ? "pb-7" : ""}`}>
+                    {i < items.length - 1 && (
+                        <span aria-hidden="true" className="absolute start-[17px] top-10 bottom-1 w-0.5 rounded-full bg-[#E3EFFA]" />
+                    )}
+                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#EEF5FC] text-[#3D8BC9]">
+                        <Icon size={16} strokeWidth={1.8} />
+                    </span>
+                    <div className="min-w-0 pt-0.5">
+                        <p className="text-[13px] font-bold text-[#1E293B]">{t(`${e}.updates.${id}.title`)}</p>
+                        <p className="mt-1 text-[11px] text-[#94A3B8]">{t(`${e}.updates.${id}.meta`)}</p>
+                    </div>
+                </li>
+            ))}
+        </ol>
+    );
+}
+
+/** عرض المشروع بمرحلة التنفيذ: تبويبات (نظرة عامة/المهام/التحديثات/المستندات) + المقاول وملخص الميزانية */
+function ExecutionView({ project, provider }) {
+    const { t } = useTranslation("institutionDashboard");
+    const navigate = useNavigate();
+    const e = "projectView.exec";
+    const [tab, setTab] = useState("overview");
+    // ⚠️ إنجاز المهام محلي لحد ما يصير في endpoint
+    const [doneTasks, setDoneTasks] = useState(() => EXEC_TASKS.filter((x) => x.done).map((x) => x.id));
+    const openTasks = EXEC_TASKS.filter((x) => !doneTasks.includes(x.id));
+    const toggleTask = (id) => setDoneTasks((list) => (list.includes(id) ? list.filter((x) => x !== id) : [...list, id]));
+
+    const value = project.value;
+    const paid = Math.round((value * project.progress) / 100 / 100) * 100;
+    const spent = Math.round((paid / value) * 100);
+    const money = (n) => t(`${e}.budget.amount`, { value: n.toLocaleString("en-US") });
+    const initials = provider.replace(/^(شركة|مؤسسة)\s+/, "").split(" ").map((w) => w.charAt(0)).slice(0, 2).join("");
+
+    // دالة رسم مش مكوّن، عشان ما ينعاد تركيب الصف (والتركيز) مع كل تغيير
+    const renderTask = ({ id, due, tone }) => {
+        const done = doneTasks.includes(id);
+        return (
+            <li key={id}>
+                <label className="flex cursor-pointer items-center gap-3.5 rounded-2xl border border-[#E2E8F0] bg-white px-4 py-3.5 transition-colors hover:border-[#8EC0E4]">
+                    <input name={`task_${id}`} type="checkbox" checked={done} onChange={() => toggleTask(id)} className="peer sr-only" />
+                    <span
+                        aria-hidden="true"
+                        className={`flex h-[22px] w-[22px] shrink-0 items-center justify-center rounded-md border-2 transition-colors peer-focus-visible:ring-2 peer-focus-visible:ring-[#4B9AD2] ${done ? "border-[#10B981] bg-[#10B981] text-white" : "border-[#CBD5E1] bg-white"}`}
+                    >
+                        {done && <Check size={13} strokeWidth={3} />}
+                    </span>
+                    <span className="min-w-0 flex-1">
+                        <span className={`block text-[13px] font-bold ${done ? "text-[#94A3B8] line-through" : "text-[#1E293B]"}`}>
+                            {t(`${e}.tasks.${id}.title`)}
+                        </span>
+                        <span className="mt-1 block text-[11px] text-[#94A3B8]">{t(`${e}.tasks.${id}.team`)}</span>
+                    </span>
+                    <span className={`shrink-0 rounded-full px-3 py-1 text-[11px] font-semibold ${done ? "bg-[#DCFCE7] text-[#16A34A]" : TASK_TONES[tone]}`}>
+                        {done ? t(`${e}.taskDone`) : t(`${e}.due.${due}`)}
+                    </span>
+                </label>
+            </li>
+        );
+    };
+
+    return (
+        <div className="grid items-start gap-5 lg:grid-cols-[270px_minmax(0,1fr)]">
+            {/* العمود الجانبي: المقاول + الميزانية */}
+            <aside className="flex flex-col gap-4">
+                <section className={`${card} p-5`}>
+                    <div className="flex items-center justify-between gap-2">
+                        <h2 className="text-[14px] font-bold text-[#1E293B]">{t(`${e}.contractor.title`)}</h2>
+                        <Link to={`${BASE}/providers`} className="text-[12px] font-semibold text-[#4B9AD2] hover:underline">
+                            {t(`${e}.contractor.profile`)}
+                        </Link>
+                    </div>
+                    <div className="mt-4 flex items-center gap-3">
+                        <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#EEF5FC] text-[13px] font-bold text-[#3D8BC9]">
+                            {initials}
+                        </span>
+                        <div className="min-w-0">
+                            <p className="truncate text-[13px] font-bold text-[#1E293B]">{provider}</p>
+                            <p className="mt-0.5 flex items-center gap-1 text-[11px] text-[#D97706]">
+                                <Star size={12} className="fill-[#F2C200] text-[#F2C200]" />
+                                {t(`${e}.contractor.rating`)}
+                            </p>
+                        </div>
+                    </div>
+                    <dl className="mt-4 divide-y divide-[#F1F5F9] border-t border-[#F1F5F9] text-[12px]">
+                        {["manager", "phone", "email"].map((key) => (
+                            <div key={key} className="flex items-center justify-between gap-3 py-2.5">
+                                <dt className="shrink-0 text-[#94A3B8]">{t(`${e}.contractor.${key}Label`)}</dt>
+                                <dd className="min-w-0 truncate font-medium text-[#334155]">
+                                    {key === "manager" ? t(`${e}.contractor.manager`) : <bdi dir="ltr">{t(`${e}.contractor.${key}`)}</bdi>}
+                                </dd>
+                            </div>
+                        ))}
+                    </dl>
+                    <button
+                        type="button"
+                        onClick={() => navigate(`${BASE}/chats`, { state: { craftsman: { id: project.id, full_name: provider } } })}
+                        className="mt-3 inline-flex h-11 w-full cursor-pointer items-center justify-center gap-2 rounded-xl border border-[#C7E0F1] text-[13px] font-semibold text-[#3D8BC9] btn-wipe btn-wipe-outline"
+                    >
+                        <MessageSquareText size={16} />
+                        {t(`${e}.contractor.message`)}
+                    </button>
+                </section>
+
+                <section className={`${card} p-5`}>
+                    <h2 className="text-[14px] font-bold text-[#1E293B]">{t(`${e}.budget.title`)}</h2>
+                    <div className="mt-4 flex items-center justify-between gap-3 rounded-xl bg-[#EEF5FC] px-4 py-3.5">
+                        <span className="text-[12px] text-[#475569]">{t(`${e}.budget.value`)}</span>
+                        <span className="text-[20px] font-bold text-[#3D8BC9] tabular-nums">{money(value)}</span>
+                    </div>
+                    <dl className="mt-2 divide-y divide-[#F1F5F9] text-[12px]">
+                        {[
+                            ["paid", paid],
+                            ["remaining", value - paid],
+                        ].map(([key, n]) => (
+                            <div key={key} className="flex items-center justify-between gap-3 py-2.5">
+                                <dt className="text-[#94A3B8]">{t(`${e}.budget.${key}`)}</dt>
+                                <dd className="font-bold text-[#1E293B] tabular-nums">{money(n)}</dd>
+                            </div>
+                        ))}
+                    </dl>
+                    <div
+                        className="mt-2 h-2 overflow-hidden rounded-full bg-[#E3E9EE]"
+                        role="progressbar"
+                        aria-valuenow={spent}
+                        aria-valuemin={0}
+                        aria-valuemax={100}
+                        aria-label={t(`${e}.budget.title`)}
+                    >
+                        <div className="h-full rounded-full bg-[#4B9AD2]" style={{ width: `${spent}%` }} />
+                    </div>
+                    <p className="mt-2 text-[11px] text-[#94A3B8]">{t(`${e}.budget.spent`, { percent: spent })}</p>
+                </section>
+            </aside>
+
+            {/* التبويبات */}
+            <section className={`${card} min-w-0`}>
+                <div
+                    role="tablist"
+                    className="flex gap-6 overflow-x-auto overflow-y-hidden px-5 shadow-[inset_0_-1px_0_#DDDDDD] [scrollbar-width:none] sm:px-6 [&::-webkit-scrollbar]:hidden"
+                >
+                    {EXEC_TABS.map((key) => (
+                        <button
+                            key={key}
+                            type="button"
+                            role="tab"
+                            aria-selected={tab === key}
+                            onClick={() => setTab(key)}
+                            className={`flex shrink-0 cursor-pointer items-center gap-1.5 border-b-2 py-4 text-[13px] font-semibold transition-colors ${tab === key ? "border-[#4B9AD2] text-[#3D8BC9]" : "border-transparent text-[#64748B] hover:text-[#334155]"}`}
+                        >
+                            {t(`${e}.tabs.${key}`)}
+                            {key === "tasks" && openTasks.length > 0 && (
+                                <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-[#E3EFFA] px-1.5 text-[10px] font-bold text-[#3D8BC9] tabular-nums">
+                                    {openTasks.length}
+                                </span>
+                            )}
+                        </button>
+                    ))}
+                </div>
+
+                <div className="p-5 sm:p-6">
+                    {tab === "overview" && (
+                        <div className="flex flex-col gap-8">
+                            <div>
+                                <div className="flex items-start justify-between gap-3">
+                                    <div>
+                                        <h2 className="text-[15px] font-bold text-[#1E293B]">{t(`${e}.current.title`)}</h2>
+                                        <p className="mt-1 text-[12px] text-[#94A3B8]">{t(`${e}.current.desc`)}</p>
+                                    </div>
+                                    <button
+                                        type="button"
+                                        onClick={() => setTab("tasks")}
+                                        className="shrink-0 cursor-pointer text-[12px] font-semibold text-[#4B9AD2] hover:underline"
+                                    >
+                                        {t(`${e}.current.all`)}
+                                    </button>
+                                </div>
+                                {openTasks.length ? (
+                                    <ul className="mt-4 flex flex-col gap-2.5">
+                                        {openTasks.slice(0, OVERVIEW_TASKS).map(renderTask)}
+                                    </ul>
+                                ) : (
+                                    <p className="mt-4 rounded-2xl bg-[#ECFDF5] px-4 py-3 text-[12px] font-medium text-[#059669]">
+                                        {t(`${e}.current.empty`)}
+                                    </p>
+                                )}
+                            </div>
+
+                            <div>
+                                <h2 className="text-[15px] font-bold text-[#1E293B]">{t(`${e}.latest.title`)}</h2>
+                                <p className="mt-1 text-[12px] text-[#94A3B8]">{t(`${e}.latest.desc`)}</p>
+                                <div className="mt-5">
+                                    <UpdatesTimeline items={EXEC_UPDATES.slice(0, OVERVIEW_UPDATES)} />
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
+                    {tab === "tasks" && (
+                        <ul className="flex flex-col gap-2.5">
+                            {/* المفتوحة أول، وبعدها المنجزة */}
+                            {[...openTasks, ...EXEC_TASKS.filter((x) => doneTasks.includes(x.id))].map((task) => (
+                                renderTask(task)
+                            ))}
+                        </ul>
+                    )}
+
+                    {tab === "updates" && <UpdatesTimeline items={EXEC_UPDATES} />}
+
+                    {tab === "documents" && (
+                        <div>
+                            <h2 className="text-[15px] font-semibold text-[#1E293B]">{t(`${e}.docsTitle`)}</h2>
+                            <p className="mt-1 text-[11px] text-[#94A3B8]">{t(`${e}.docsDesc`)}</p>
+                            <ul className="mt-5 flex flex-col gap-2.5">
+                                {EXEC_DOCS.map(({ id, size }) => (
+                                    <li key={id} className="flex items-center gap-3.5 rounded-2xl border border-[#E2E8F0] bg-[#FBFCFE] px-4 py-3.5">
+                                        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#EEF5FC] text-[#3D8BC9]">
+                                            <FileText size={18} strokeWidth={1.7} />
+                                        </span>
+                                        <span className="min-w-0 flex-1">
+                                            <span className="block truncate text-[13px] font-bold text-[#1E293B]">{t(`${e}.docs.${id}`)}</span>
+                                            <span className="mt-1 block text-[11px] text-[#94A3B8]">
+                                                {t(`${e}.docUpdated`)} · <bdi dir="ltr">{size}</bdi>
+                                            </span>
+                                        </span>
+                                        {/* ⚠️ ما في رابط ملف لسا — المعاينة بتشتغل لما تنربط الملفات بالسيرفر */}
+                                        <button
+                                            type="button"
+                                            disabled
+                                            title={t(`${e}.docSoon`)}
+                                            aria-label={t(`${e}.view`)}
+                                            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-[#64748B] disabled:cursor-not-allowed"
+                                        >
+                                            <Eye size={18} />
+                                        </button>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                    )}
+                </div>
+            </section>
+        </div>
+    );
+}
+
+// ===== مرحلة "مراجعة الاستلام" =====
+// ⚠️ بيانات تجريبية لحد ما تجهز endpoints التسليم — النصوص بملف الترجمة: projectView.delivery
+const DELIVERY_CHECKS = [
+    { id: "contract", done: true },
+    { id: "notes", done: true },
+    { id: "asBuilt", done: false },
+    { id: "manuals", done: false },
+    { id: "committee", done: false },
+    { id: "payment", done: false },
+];
+// received: الحرفيين سلّموه
+const DELIVERY_DOCS = [
+    { id: "initial", received: true },
+    { id: "asBuilt", received: true },
+    { id: "warranty", received: false },
+    { id: "manuals", received: false },
+    { id: "clearance", received: false },
+];
+// الدفعة الختامية: نسبة من قيمة المشروع
+const FINAL_PAYMENT_RATIO = 0.26;
+
+/** عرض المشروع بمرحلة مراجعة الاستلام: مستندات الحرفيين + الدفعة + قائمة مراجعة المؤسسة + المعاينة */
+function DeliveryView({ project, provider, accepted, onAccept, say }) {
+    const { t, i18n } = useTranslation("institutionDashboard");
+    const d = "projectView.delivery";
+    const locale = `${i18n.language}-u-nu-latn`;
+    // ⚠️ كل الإجراءات محلية لحد ما تجهز الـ endpoints
+    const [checks, setChecks] = useState(() => Object.fromEntries(DELIVERY_CHECKS.map((c) => [c.id, c.done])));
+    const [requestedDocs, setRequestedDocs] = useState([]);
+    const [inspection, setInspection] = useState("");
+    const [pickingDate, setPickingDate] = useState(false);
+    const [requesting, setRequesting] = useState(false);
+    const [requestText, setRequestText] = useState("");
+
+    const doneCount = Object.values(checks).filter(Boolean).length;
+    const total = DELIVERY_CHECKS.length;
+    const remaining = total - doneCount;
+    const percent = Math.round((doneCount / total) * 100);
+    const received = DELIVERY_DOCS.filter((x) => x.received).length;
+    const finalPayment = Math.round((project.value * FINAL_PAYMENT_RATIO) / 100) * 100;
+    const today = new Date();
+    const minDate = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
+
+    return (
+        <div className="grid items-start gap-5 lg:grid-cols-[270px_minmax(0,1fr)]">
+            {/* العمود الجانبي: المستندات + الدفعة + القرار */}
+            <aside className="flex flex-col gap-4">
+                <section className={`${card} p-5`}>
+                    <div className="flex items-center justify-between gap-2">
+                        <h2 className="text-[14px] font-bold text-[#1E293B]">{t(`${d}.docs.title`)}</h2>
+                        <span className="text-[11px] text-[#94A3B8] tabular-nums">{t(`${d}.docs.count`, { done: received, total: DELIVERY_DOCS.length })}</span>
+                    </div>
+                    <ul className="mt-3 divide-y divide-[#F1F5F9]">
+                        {DELIVERY_DOCS.map(({ id, received: got }) => {
+                            const asked = requestedDocs.includes(id);
+                            return (
+                                <li key={id} className="flex items-center gap-3 py-3">
+                                    <span
+                                        className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg ${got ? "bg-[#DCFCE7] text-[#16A34A]" : "bg-[#F1F5F9] text-[#64748B]"}`}
+                                    >
+                                        {got ? <Check size={15} strokeWidth={2.5} /> : <FileText size={15} />}
+                                    </span>
+                                    <span className="min-w-0 flex-1">
+                                        <span className="block text-[12px] font-bold text-[#1E293B]">{t(`${d}.docs.items.${id}`)}</span>
+                                        <span className="mt-0.5 block text-[10px] text-[#94A3B8]">
+                                            {got ? t(`${d}.docs.received`) : asked ? t(`${d}.docs.requested`) : t(`${d}.docs.waiting`)}
+                                        </span>
+                                    </span>
+                                    {got ? (
+                                        // ⚠️ ما في رابط ملف لسا
+                                        <button
+                                            type="button"
+                                            disabled
+                                            title={t("projectView.exec.docSoon")}
+                                            className="h-8 shrink-0 rounded-lg bg-[#F1F5F9] px-3 text-[11px] font-medium text-[#475569] disabled:cursor-not-allowed"
+                                        >
+                                            {t(`${d}.docs.view`)}
+                                        </button>
+                                    ) : (
+                                        <button
+                                            type="button"
+                                            disabled={asked}
+                                            onClick={() => {
+                                                setRequestedDocs((list) => [...list, id]);
+                                                say(t(`${d}.docs.requestedFlash`, { doc: t(`${d}.docs.items.${id}`) }));
+                                            }}
+                                            className="h-8 shrink-0 cursor-pointer rounded-lg bg-[#EEF5FC] px-3 text-[11px] font-medium text-[#3D8BC9] transition-colors hover:bg-[#E3EFFA] disabled:cursor-default disabled:bg-[#F1F5F9] disabled:text-[#94A3B8]"
+                                        >
+                                            {asked ? t(`${d}.docs.requestedBtn`) : t(`${d}.docs.request`)}
+                                        </button>
+                                    )}
+                                </li>
+                            );
+                        })}
+                    </ul>
+                </section>
+
+                <section className={`${card} p-5`}>
+                    <h2 className="text-[14px] font-bold text-[#1E293B]">{t(`${d}.payment.title`)}</h2>
+                    <div className="mt-3 flex items-center justify-between gap-3 rounded-xl bg-[#EEF5FC] px-4 py-3.5">
+                        <span className="text-[12px] text-[#475569]">{t(`${d}.payment.final`)}</span>
+                        <span className="text-[16px] font-bold text-[#3D8BC9] tabular-nums">
+                            {t("projectView.exec.budget.amount", { value: finalPayment.toLocaleString("en-US") })}
+                        </span>
+                    </div>
+                    <p className="mt-3 flex items-center gap-1.5 text-[11px] text-[#94A3B8]">
+                        {accepted ? <CircleCheck size={13} className="text-[#10B981]" /> : <Lock size={13} />}
+                        {t(`${d}.payment.${accepted ? "released" : "locked"}`)}
+                    </p>
+                </section>
+
+                {!accepted && (
+                    <div className="flex flex-col gap-2.5">
+                        <button
+                            type="button"
+                            onClick={() => setRequesting((x) => !x)}
+                            aria-expanded={requesting}
+                            className="inline-flex h-11 w-full cursor-pointer items-center justify-center rounded-xl border border-[#4B9AD2] bg-white text-[13px] font-semibold text-[#3D8BC9] btn-wipe btn-wipe-outline"
+                        >
+                            {t(`${d}.requestMore`)}
+                        </button>
+                        {requesting && (
+                            <div className={`${card} p-3`}>
+                                <textarea
+                                    name="delivery_request"
+                                    rows={3}
+                                    value={requestText}
+                                    onChange={(e) => setRequestText(e.target.value)}
+                                    aria-label={t(`${d}.requestMore`)}
+                                    placeholder={t(`${d}.requestPlaceholder`)}
+                                    className="w-full resize-none rounded-xl border border-[#DDDDDD] px-3 py-2.5 text-[12px] leading-[1.8] text-[#334155] outline-none placeholder:text-[#94A3B8] focus:border-[#4B9AD2]"
+                                />
+                                <button
+                                    type="button"
+                                    disabled={!requestText.trim()}
+                                    onClick={() => {
+                                        setRequesting(false);
+                                        setRequestText("");
+                                        say(t(`${d}.requestSent`, { provider }));
+                                    }}
+                                    className="mt-2 h-10 w-full cursor-pointer rounded-xl bg-[#4B9AD2] text-[12px] font-semibold text-white btn-wipe disabled:cursor-not-allowed disabled:bg-[#E2E8F0] disabled:text-[#94A3B8]"
+                                >
+                                    {t(`${d}.requestSend`)}
+                                </button>
+                            </div>
+                        )}
+                        <button
+                            type="button"
+                            disabled={remaining > 0}
+                            onClick={onAccept}
+                            className="inline-flex h-11 w-full cursor-pointer items-center justify-center gap-2 rounded-xl bg-[#4B9AD2] text-[13px] font-bold text-white btn-wipe disabled:cursor-not-allowed disabled:bg-[#E2E8F0] disabled:text-[#94A3B8]"
+                        >
+                            <Check size={16} strokeWidth={2.5} />
+                            {t(`${d}.approve`)}
+                        </button>
+                        {remaining > 0 && (
+                            <p className="text-center text-[11px] text-[#94A3B8]">{t(`${d}.remaining`, { count: remaining })}</p>
+                        )}
+                    </div>
+                )}
+            </aside>
+
+            <div className="flex min-w-0 flex-col gap-4">
+                {/* ملخص التسليم */}
+                <section className={`${card} flex items-center gap-4 p-5`}>
+                    <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#EEF5FC] text-[#3D8BC9]">
+                        <Package size={20} strokeWidth={1.8} />
+                    </span>
+                    <div className="min-w-0 flex-1">
+                        <p className="text-[14px] font-bold text-[#1E293B]">{t(`${d}.summary.${accepted ? "acceptedTitle" : "title"}`)}</p>
+                        <p className="mt-0.5 text-[12px] text-[#64748B]">{t(`${d}.summary.${accepted ? "acceptedDesc" : "desc"}`)}</p>
+                    </div>
+                    <span className="shrink-0 text-[15px] font-bold text-[#3D8BC9] tabular-nums" dir="ltr">
+                        {doneCount}/{total}
+                    </span>
+                </section>
+
+                {/* مراجعة المؤسسة للتسليم */}
+                <section className={`${card} p-5 sm:p-6`}>
+                    <div className="flex flex-wrap items-start justify-between gap-3">
+                        <div>
+                            <h2 className="text-[16px] font-semibold text-[#1E293B]">{t(`${d}.review.title`)}</h2>
+                            <p className="mt-1 text-[11px] text-[#94A3B8]">{t(`${d}.review.desc`)}</p>
+                        </div>
+                        <span className="rounded-lg bg-[#EEF5FC] px-3 py-1.5 text-[11px] font-semibold text-[#3D8BC9] tabular-nums">
+                            {t(`${d}.review.percent`, { percent })}
+                        </span>
+                    </div>
+                    <ul className="mt-4 flex flex-col gap-2.5">
+                        {DELIVERY_CHECKS.map(({ id }) => {
+                            const on = checks[id];
+                            return (
+                                <li key={id}>
+                                    <label
+                                        className={`flex items-center gap-3.5 rounded-2xl border px-4 py-3.5 transition-colors ${accepted ? "cursor-default" : "cursor-pointer hover:border-[#8EC0E4]"} ${on ? "border-[#BFEBCD]" : "border-[#E2E8F0]"}`}
+                                    >
+                                        <input
+                                            name={`delivery_${id}`}
+                                            type="checkbox"
+                                            checked={on}
+                                            disabled={accepted}
+                                            onChange={() => setChecks((c) => ({ ...c, [id]: !c[id] }))}
+                                            className="peer sr-only"
+                                        />
+                                        <span
+                                            aria-hidden="true"
+                                            className={`flex h-[22px] w-[22px] shrink-0 items-center justify-center rounded-md border-2 transition-colors peer-focus-visible:ring-2 peer-focus-visible:ring-[#4B9AD2] ${on ? "border-[#10B981] bg-[#10B981] text-white" : "border-[#CBD5E1] bg-white"}`}
+                                        >
+                                            {on && <Check size={13} strokeWidth={3} />}
+                                        </span>
+                                        <span className="min-w-0 flex-1 text-[13px] font-bold text-[#1E293B]">{t(`${d}.review.items.${id}`)}</span>
+                                        <span className={`shrink-0 text-[12px] font-medium ${on ? "text-[#10B981]" : "text-[#D97706]"}`}>
+                                            {t(`${d}.review.${on ? "verified" : "waiting"}`)}
+                                        </span>
+                                    </label>
+                                </li>
+                            );
+                        })}
+                    </ul>
+                </section>
+
+                {/* معاينة المؤسسة للأعمال */}
+                <section className={`${card} p-5 sm:p-6`}>
+                    <div className="flex flex-wrap items-start justify-between gap-3">
+                        <div>
+                            <h2 className="text-[16px] font-semibold text-[#1E293B]">{t(`${d}.inspection.title`)}</h2>
+                            <p className="mt-1 text-[11px] text-[#94A3B8]">{t(`${d}.inspection.desc`)}</p>
+                        </div>
+                        {!accepted && (
+                            <button
+                                type="button"
+                                onClick={() => setPickingDate((x) => !x)}
+                                aria-expanded={pickingDate}
+                                className="h-9 shrink-0 cursor-pointer rounded-lg bg-[#EEF5FC] px-4 text-[12px] font-semibold text-[#3D8BC9] transition-colors hover:bg-[#E3EFFA]"
+                            >
+                                {t(`${d}.inspection.${inspection ? "change" : "schedule"}`)}
+                            </button>
+                        )}
+                    </div>
+                    {pickingDate && (
+                        <div className="mt-4 max-w-[320px]">
+                            <DateField
+                                id="inspection-date"
+                                value={inspection}
+                                min={minDate}
+                                onChange={(value) => {
+                                    setInspection(value);
+                                    if (value) {
+                                        setPickingDate(false);
+                                        say(t(`${d}.inspection.saved`));
+                                    }
+                                }}
+                                placeholder={t(`${d}.inspection.schedule`)}
+                            />
+                        </div>
+                    )}
+                    <div className="mt-4 flex items-center gap-3 rounded-2xl border border-dashed border-[#CBD5E1] bg-[#F8FAFC] px-4 py-4">
+                        <CalendarDays size={20} className="shrink-0 text-[#64748B]" />
+                        <div>
+                            <p className="text-[13px] font-bold text-[#1E293B]">
+                                {inspection
+                                    ? t(`${d}.inspection.scheduled`, {
+                                          date: new Date(`${inspection}T00:00`).toLocaleDateString(locale, { weekday: "long", day: "numeric", month: "long" }),
+                                      })
+                                    : t(`${d}.inspection.empty`)}
+                            </p>
+                            <p className="mt-0.5 text-[11px] text-[#94A3B8]">
+                                {t(`${d}.inspection.${inspection ? "scheduledHint" : "emptyHint"}`)}
+                            </p>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    );
+}
+
 export default function InstitutionProjectDetails() {
     const { t, i18n } = useTranslation("institutionDashboard");
     const { projectId } = useParams();
-    const project = PROJECTS.find((p) => p.id === projectId);
+    const project = allProjects().find((p) => p.id === projectId);
     const locale = `${i18n.language}-u-nu-latn`;
     const v = "projectView";
 
     // ⚠️ كل الإجراءات بالصفحة بس لحد ما تجهز الـ endpoints
-    const [checks, setChecks] = useState(() => Object.fromEntries(CHECKLIST.map((c) => [c.id, c.done])));
+    // حالة القائمة ممكن ترجع من صفحة مراجعة الطلب
+    const { state: navState, hash } = useLocation();
+    const [checks, setChecks] = useState(() => navState?.checks || defaultStartChecks());
     // الاعتماد ممكن ييجي من صفحة "مراجعة طلب بدء التنفيذ"
-    const { state: navState } = useLocation();
-    const [approved, setApproved] = useState(() => Boolean(navState?.startApproved));
+    const [approved, setApproved] = useState(() => project?.status === "executing" || Boolean(navState?.startApproved));
     const [reportReviewed, setReportReviewed] = useState(false);
-    const [requesting, setRequesting] = useState(false);
-    const [requestText, setRequestText] = useState("");
     const [updating, setUpdating] = useState(false);
+    // ⚠️ اعتماد الاستلام النهائي محلي
+    const [accepted, setAccepted] = useState(false);
+    const [approving, setApproving] = useState(false);
     const [flash, setFlash] = useState("");
     const [editingDate, setEditingDate] = useState(false);
     const [start, setStart] = useState(PROPOSED_START);
     const [draftStart, setDraftStart] = useState(PROPOSED_START);
+
+    // جاي من "إكمال قائمة التحقق" بصفحة مراجعة الطلب: انزل للقائمة
+    useEffect(() => {
+        if (hash === "#project-checklist") {
+            document.getElementById("project-checklist")?.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+    }, [hash]);
 
     if (!project) {
         return (
@@ -321,14 +898,16 @@ export default function InstitutionProjectDetails() {
         );
     }
 
-    const s = `projectsPage.sample.${project.id}`;
-    const provider = t(`${s}.provider`);
-    const code = `PRJ-2025-${String(14 + PROJECTS.indexOf(project)).padStart(3, "0")}`;
+    const provider = projectProvider(project, t);
+    const title = projectTitle(project, t);
+    const code = `PRJ-2025-${String(14 + Math.max(0, PROJECTS.indexOf(project))).padStart(3, "0")}`;
     const doneCount = Object.values(checks).filter(Boolean).length;
     const percent = Math.round((doneCount / CHECKLIST.length) * 100);
     const allDone = doneCount === CHECKLIST.length;
     // بعد الاعتماد: المرحلة الحالية "قيد التنفيذ"
-    const stage = approved ? 2 : 1;
+    // phase: start (طلب البدء — ومنها المشاريع من عروض مقبولة) | executing | delivery (مراجعة الاستلام)
+    const phase = project.phase === "delivery" ? "delivery" : approved ? "executing" : "start";
+    const stage = phase === "delivery" ? (accepted ? 4 : 3) : approved ? 2 : 1;
 
     const startDate = new Date(start);
     const endDate = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate() + DURATION_DAYS);
@@ -361,10 +940,11 @@ export default function InstitutionProjectDetails() {
                                 {code}
                             </span>
                         </div>
-                        <h1 className="mt-2 text-[24px] font-semibold leading-[1.4] text-[#1E293B]">{t(`${s}.title`)}</h1>
+                        <h1 className="mt-2 text-[24px] font-semibold leading-[1.4] text-[#1E293B]">{title}</h1>
                         <p className="mt-1 text-[12px] text-[#64748B]">{t(`${v}.subtitle`)}</p>
                     </div>
                 </div>
+                {phase !== "delivery" && (
                 <button
                     type="button"
                     onClick={() => setUpdating(true)}
@@ -373,6 +953,7 @@ export default function InstitutionProjectDetails() {
                     <Plus size={17} />
                     {t(`${v}.requestUpdate`)}
                 </button>
+                )}
             </section>
 
             {flash && (
@@ -381,8 +962,8 @@ export default function InstitutionProjectDetails() {
                 </p>
             )}
 
-            {/* التقرير الأسبوعي */}
-            {reportReviewed ? (
+            {/* التقرير الأسبوعي (مش بمرحلة الاستلام) */}
+            {phase === "delivery" ? null : reportReviewed ? (
                 <section className="flex items-center gap-3 rounded-[20px] border border-[#A7E8CF] bg-[#ECFDF5] px-5 py-4 text-[#059669]">
                     <CircleCheck size={18} className="shrink-0" />
                     <p className="text-[13px] font-semibold">{t(`${v}.report.reviewed`)}</p>
@@ -412,87 +993,31 @@ export default function InstitutionProjectDetails() {
             <section className={`${card} px-3 py-5 sm:py-6`}>
                 <div className="mb-6 flex flex-wrap items-center justify-between gap-2 px-2 sm:px-3">
                     <h2 className="text-[12px] font-semibold text-[#94A3B8]">{t(`${v}.stagesTitle`)}</h2>
-                    <p className="text-[12px] text-[#334155]">{t(`${v}.currentStage.${approved ? "executing" : "start"}`)}</p>
+                    <p className="text-[12px] text-[#334155]">{t(`${v}.currentStage.${phase === "delivery" ? (accepted ? "accepted" : "delivery") : approved ? "executing" : "start"}`)}</p>
                 </div>
-                <Stepper current={stage} />
+                <Stepper
+                    current={stage}
+                    phase={phase}
+                    acceptedOn={project.acceptedAt ? new Date(project.acceptedAt).toLocaleDateString(locale, { day: "numeric", month: "long" }) : ""}
+                />
             </section>
 
-            <div className="grid items-start gap-5 lg:grid-cols-[280px_minmax(0,1fr)]">
-                {/* العمود الجانبي: موعد التنفيذ */}
-                <aside className="flex flex-col gap-4">
-                    <section className={`${card} p-4`}>
-                        <div className="flex items-center justify-between gap-2">
-                            <h2 className="text-[13px] font-bold text-[#22455E]">{t(`${v}.schedule.title`)}</h2>
-                            {!editingDate && !approved && (
-                                <button
-                                    type="button"
-                                    onClick={() => {
-                                        setDraftStart(start);
-                                        setEditingDate(true);
-                                    }}
-                                    className="cursor-pointer text-[12px] font-semibold text-[#4B9AD2] hover:underline"
-                                >
-                                    {t(`${v}.schedule.edit`)}
-                                </button>
-                            )}
-                        </div>
-
-                        {editingDate ? (
-                            <div className="mt-3 flex flex-col gap-2">
-                                <input
-                                    type="datetime-local"
-                                    value={draftStart}
-                                    onChange={(e) => setDraftStart(e.target.value)}
-                                    aria-label={t(`${v}.schedule.title`)}
-                                    className="h-10 rounded-xl border border-[#DDDDDD] px-3 text-[12px] text-[#334155] outline-none focus:border-[#4B9AD2] focus:ring-1 focus:ring-[#4B9AD2]"
-                                />
-                                <div className="flex gap-2">
-                                    <button
-                                        type="button"
-                                        onClick={() => {
-                                            if (draftStart) setStart(draftStart);
-                                            setEditingDate(false);
-                                        }}
-                                        className="h-9 flex-1 cursor-pointer rounded-lg bg-[#4B9AD2] text-[12px] font-semibold text-white btn-wipe"
-                                    >
-                                        {t(`${v}.schedule.save`)}
-                                    </button>
-                                    <button
-                                        type="button"
-                                        onClick={() => setEditingDate(false)}
-                                        className="h-9 flex-1 cursor-pointer rounded-lg border border-[#DDDDDD] text-[12px] text-[#334155] hover:bg-[#F8FAFC]"
-                                    >
-                                        {t(`${v}.schedule.cancel`)}
-                                    </button>
-                                </div>
-                            </div>
-                        ) : (
-                            <div className="mt-3 flex items-center gap-3 rounded-xl bg-[#EEF5FC] px-4 py-3">
-                                <span className="text-[30px] font-bold leading-none text-[#3D8BC9] tabular-nums">{startDate.getDate()}</span>
-                                <span className="text-[11px] leading-[1.7] text-[#334155]">
-                                    <span className="block font-semibold">{startDate.toLocaleDateString(locale, { month: "long", year: "numeric" })}</span>
-                                    {startDate.toLocaleDateString(locale, { weekday: "long" })} ·{" "}
-                                    {startDate.toLocaleTimeString(locale, { hour: "numeric", minute: "2-digit" })}
-                                </span>
-                            </div>
-                        )}
-
-                        <dl className="mt-3 flex flex-col gap-2.5 text-[12px]">
-                            {[
-                                { key: "requester", value: provider },
-                                { key: "duration", value: t(`${v}.schedule.days`, { count: DURATION_DAYS }) },
-                                { key: "delivery", value: fmtDay(endDate) },
-                            ].map((row) => (
-                                <div key={row.key} className="flex items-center justify-between gap-3">
-                                    <dt className="text-[#94A3B8]">{t(`${v}.schedule.${row.key}`)}</dt>
-                                    <dd className="text-end font-semibold text-[#334155] tabular-nums">{row.value}</dd>
-                                </div>
-                            ))}
-                        </dl>
-                    </section>
-
-                </aside>
-
+            {/* بعد الاعتماد: عرض مرحلة التنفيذ؛ قبله: طلب البدء + قائمة التحقق */}
+            {phase === "delivery" ? (
+                <DeliveryView
+                    project={project}
+                    provider={provider}
+                    accepted={accepted}
+                    say={say}
+                    onAccept={() => {
+                        setAccepted(true);
+                        say(t(`${v}.delivery.acceptedFlash`));
+                    }}
+                />
+            ) : approved ? (
+                <ExecutionView project={project} provider={provider} />
+            ) : (
+            <div className="grid items-start gap-5 lg:grid-cols-[minmax(0,1fr)_260px]">
                 {/* طلب اعتماد بدء التنفيذ + قائمة التحقق */}
                 <section className={`${card} p-5 sm:p-6`}>
                     <div className="flex flex-col gap-3 rounded-2xl border border-[#C7E0F1] bg-[#F3F8FD] p-4 sm:flex-row sm:items-center sm:justify-between sm:p-5">
@@ -511,7 +1036,8 @@ export default function InstitutionProjectDetails() {
                         </div>
                         <Link
                             to={`${BASE}/projects/${project.id}/start-request`}
-                            className="inline-flex h-10 w-fit shrink-0 items-center gap-2 rounded-xl bg-white px-4 text-[12px] text-[#475569] transition-colors hover:text-[#4B9AD2]"
+                            state={{ checks }}
+                            className="inline-flex h-10 w-fit shrink-0 items-center gap-2 rounded-xl border border-[#C7E0F1] bg-white px-4 text-[12px] font-medium text-[#475569] transition-colors hover:border-[#4B9AD2] hover:text-[#4B9AD2]"
                         >
                             <Eye size={16} className="text-[#4B9AD2]" />
                             {t(`${v}.request.view`)}
@@ -555,6 +1081,7 @@ export default function InstitutionProjectDetails() {
                                         className={`flex cursor-pointer items-center gap-3.5 rounded-2xl border border-[#DDDDDD] bg-white px-5 py-4 transition-colors ${approved ? "cursor-default" : "hover:border-[#8EC0E4]"}`}
                                     >
                                         <input
+                                            name={`checklist_${id}`}
                                             type="checkbox"
                                             checked={on}
                                             disabled={approved}
@@ -593,54 +1120,19 @@ export default function InstitutionProjectDetails() {
                         </div>
                     </div>
 
-                    {/* طلب استكمال: ملاحظة لفريق التنفيذ */}
-                    {requesting && (
-                        <div className="mt-4">
-                            <textarea
-                                rows={3}
-                                value={requestText}
-                                onChange={(e) => setRequestText(e.target.value)}
-                                aria-label={t(`${v}.decision.requestLabel`)}
-                                placeholder={t(`${v}.decision.requestPlaceholder`)}
-                                className="w-full resize-none rounded-xl border border-[#DDDDDD] px-4 py-3 text-[12px] leading-[1.8] text-[#334155] outline-none placeholder:text-[#94A3B8] focus:border-[#4B9AD2] focus:ring-1 focus:ring-[#4B9AD2]"
-                            />
-                        </div>
-                    )}
-
                     {approved ? (
                         <p className="mt-5 flex items-center justify-center gap-2 rounded-xl bg-[#ECFDF5] py-3 text-[13px] font-semibold text-[#059669]">
                             <CircleCheck size={17} />
                             {t(`${v}.decision.approvedNote`)}
                         </p>
                     ) : (
-                        <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:justify-end">
-                            <button
-                                type="button"
-                                onClick={() => {
-                                    if (!requesting) {
-                                        setRequesting(true);
-                                        return;
-                                    }
-                                    if (!requestText.trim()) return;
-                                    setRequesting(false);
-                                    setRequestText("");
-                                    say(t(`${v}.decision.requested`, { provider }));
-                                }}
-                                className="inline-flex h-[52px] cursor-pointer items-center justify-center gap-2 rounded-xl border border-[#C7E0F1] bg-white text-[14px] text-[#4B9AD2] btn-wipe btn-wipe-outline sm:min-w-0 sm:flex-[0_1_275px]"
-                            >
-                                <MessageSquareText size={18} />
-                                {t(`${v}.decision.${requesting ? "sendRequest" : "request"}`)}
-                            </button>
+                        <div className="mt-5 flex justify-end">
                             <button
                                 type="button"
                                 disabled={!allDone}
                                 title={allDone ? undefined : t(`${v}.decision.disabledHint`)}
-                                onClick={() => {
-                                    setApproved(true);
-                                    setRequesting(false);
-                                    say(t(`${v}.decision.approved`));
-                                }}
-                                className="inline-flex h-[52px] cursor-pointer items-center justify-center gap-2.5 rounded-xl bg-[#4B9AD2] text-[14px] font-bold text-white btn-wipe disabled:cursor-not-allowed disabled:bg-[#E2E8F0] disabled:text-[#94A3B8] sm:min-w-0 sm:flex-[0_1_510px]"
+                                onClick={() => setApproving(true)}
+                                className="inline-flex h-12 w-full cursor-pointer items-center justify-center gap-2.5 rounded-xl bg-[#4B9AD2] text-[14px] font-bold text-white btn-wipe disabled:cursor-not-allowed disabled:bg-[#E2E8F0] disabled:text-[#94A3B8] sm:w-[330px]"
                             >
                                 <Check size={18} strokeWidth={2.5} />
                                 {t(`${v}.decision.approve`)}
@@ -648,11 +1140,107 @@ export default function InstitutionProjectDetails() {
                         </div>
                     )}
                 </section>
+
+                {/* العمود الجانبي: موعد الانطلاق المقترح */}
+                <aside className="flex flex-col gap-4">
+                    <section className={`${card} p-5`}>
+                        <div className="flex items-center justify-between gap-2">
+                            <h2 className="text-[13px] font-bold text-[#22455E]">{t(`${v}.schedule.title`)}</h2>
+                            {!editingDate && !approved && (
+                                <button
+                                    type="button"
+                                    onClick={() => {
+                                        setDraftStart(start);
+                                        setEditingDate(true);
+                                    }}
+                                    className="cursor-pointer text-[12px] font-semibold text-[#4B9AD2] hover:underline"
+                                >
+                                    {t(`${v}.schedule.edit`)}
+                                </button>
+                            )}
+                        </div>
+
+                        {editingDate ? (
+                            <div className="mt-3 flex flex-col gap-2">
+                                <input name="start_date"
+                                    type="datetime-local"
+                                    value={draftStart}
+                                    onChange={(e) => setDraftStart(e.target.value)}
+                                    aria-label={t(`${v}.schedule.title`)}
+                                    className="h-10 rounded-xl border border-[#DDDDDD] px-3 text-[12px] text-[#334155] outline-none focus:border-[#4B9AD2] focus:ring-1 focus:ring-[#4B9AD2]"
+                                />
+                                <div className="flex gap-2">
+                                    <button
+                                        type="button"
+                                        onClick={() => {
+                                            if (draftStart) setStart(draftStart);
+                                            setEditingDate(false);
+                                        }}
+                                        className="h-9 flex-1 cursor-pointer rounded-lg bg-[#4B9AD2] text-[12px] font-semibold text-white btn-wipe"
+                                    >
+                                        {t(`${v}.schedule.save`)}
+                                    </button>
+                                    <button
+                                        type="button"
+                                        onClick={() => setEditingDate(false)}
+                                        className="h-9 flex-1 cursor-pointer rounded-lg border border-[#DDDDDD] text-[12px] text-[#334155] hover:bg-[#F8FAFC]"
+                                    >
+                                        {t(`${v}.schedule.cancel`)}
+                                    </button>
+                                </div>
+                            </div>
+                        ) : (
+                            <div className="mt-3 flex items-center gap-3.5 rounded-xl bg-[#EEF5FC] px-4 py-4">
+                                <span className="text-[32px] font-bold leading-none text-[#3D8BC9] tabular-nums">{startDate.getDate()}</span>
+                                <span className="min-w-0 text-[11px] leading-[1.7] text-[#475569]">
+                                    <span className="block text-[13px] font-bold text-[#1E293B]">
+                                        {startDate.toLocaleDateString(locale, { month: "long", year: "numeric" })}
+                                    </span>
+                                    {t(`${v}.schedule.when`, {
+                                        day: startDate.toLocaleDateString(locale, { weekday: "long" }),
+                                        time: startDate.toLocaleTimeString(locale, { hour: "2-digit", minute: "2-digit" }),
+                                    })}
+                                </span>
+                            </div>
+                        )}
+
+                        <dl className="mt-2 divide-y divide-[#F1F5F9] text-[12px]">
+                            {[
+                                { key: "requester", value: provider },
+                                { key: "duration", value: t(`${v}.schedule.days`, { count: DURATION_DAYS }) },
+                                { key: "delivery", value: fmtDay(endDate) },
+                            ].map((row) => (
+                                <div key={row.key} className="flex items-center justify-between gap-3 py-3">
+                                    <dt className="text-[#94A3B8]">{t(`${v}.schedule.${row.key}`)}</dt>
+                                    <dd className="text-end font-semibold text-[#334155] tabular-nums">{row.value}</dd>
+                                </div>
+                            ))}
+                        </dl>
+                    </section>
+
+                </aside>
             </div>
+            )}
+
+            {approving && (
+                <StartApproveModal
+                    code={`REQ-START-2025-${String(14 + Math.max(0, PROJECTS.indexOf(project))).padStart(3, "0")}`}
+                    title={title}
+                    provider={provider}
+                    startDate={fmtDay(startDate)}
+                    remaining={CHECKLIST.length - doneCount}
+                    onClose={() => setApproving(false)}
+                    onApprove={() => {
+                        setApproving(false);
+                        setApproved(true);
+                        say(t(`${v}.decision.approved`));
+                    }}
+                />
+            )}
 
             {updating && (
                 <UpdateModal
-                    project={{ code, title: t(`${s}.title`), provider }}
+                    project={{ code, title, provider }}
                     onClose={() => setUpdating(false)}
                     // ⚠️ الطلب بالصفحة بس لحد ما يصير في endpoint لطلبات التحديث
                     onSend={() => {

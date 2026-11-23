@@ -6,7 +6,7 @@
         "projects": "Active projects",
         "messages": "Correspondence",
         "providers": "Service providers",
-        "reports": "Financial reports",
+        "subscription": "Subscription",
         "settings": "Settings & verification"
     },
     "stats": {
@@ -40,7 +40,16 @@
         "status": {
             "open": "Open",
             "submitting": "Submitting"
-        }
+        },
+        "periodLabel": "Submission period",
+        "offersLabel": "Offers received",
+        "deadlineLabel": "Submission deadline",
+        "ended": "Submission closed",
+        "viewDetails": "View details",
+        "daysLeft_zero": "Ends today",
+        "daysLeft_one": "1 day left",
+        "daysLeft_other": "{{count}} days left",
+        "newOffers": "+{{count}} new"
     },
     "actions": {
         "title": "Needs your action",
@@ -201,6 +210,10 @@
                 "title": "Electrical network maintenance",
                 "provider": "Al-Noor Electric",
                 "time": "3 days"
+            },
+            "p5": {
+                "title": "Rehabilitating a main administrative building",
+                "provider": "Al-Bunyan Contracting Co."
             }
         },
         "progressLabel": "Completion",
@@ -606,27 +619,10 @@
     "offerDetails": {
         "back": "Back to offers",
         "notFound": "This offer was not found",
-        "days": "Days",
-        "years": "Years of experience",
-        "reviews": "({{count}} reviews)",
-        "desc": "I provide high-quality restoration and wooden furniture maintenance with attention to detail, with over {{years}} years of experience in carpentry and interior decoration.",
-        "features": {
-            "experience": "Long experience",
-            "quality": "Quality work",
-            "punctual": "On-time delivery",
-            "prices": "Fair prices",
-            "support": "After-service support"
-        },
         "applicants": "Applicants ({{count}})",
         "offerValue": "Offer value",
         "price": "{{amount}} ILS",
         "yearsExp": "{{count}} years of experience",
-        "verified": "Verified account",
-        "accept": "Accept",
-        "accepted": "Accepted",
-        "acceptedMsg": "{{name}}'s offer has been accepted for this tender.",
-        "undo": "Undo",
-        "profile": "Professional profile",
         "sample": {
             "o1": {
                 "craft": "Carpentry & furniture restoration craftsmen",
@@ -672,12 +668,39 @@
                 "address": "Deir al-Balah, Al-Baraka"
             }
         },
-        "descTitle": "Description",
-        "prevPhoto": "Previous photo",
-        "nextPhoto": "Next photo",
-        "photo": "Photo {{n}}",
-        "morePhotos": "{{count}} more photos",
-        "applicantsCount": "Applicants"
+        "subtitle": "Review providers’ offers and compare them to build your shortlist.",
+        "stats": {
+            "applicants": "Applicants",
+            "budget": "Budget",
+            "duration": "Duration"
+        },
+        "budgetValue": "₪{{value}}",
+        "durationValue": "{{count}} days",
+        "guide": {
+            "title": "Start reviewing offers",
+            "desc": "Open each offer to see the technical and financial details, then pick {{min}} to {{max}} offers to compare."
+        },
+        "viewDetails": "View details",
+        "compare": {
+            "button": "Compare offers",
+            "buttonCount": "Compare offers ({{count}})",
+            "checkbox": "Compare",
+            "hint": "Pick {{min}} to {{max}} offers to compare",
+            "max": "You can compare up to {{max}} offers",
+            "title": "Compare offers",
+            "subtitle": "{{count}} offers side by side",
+            "close": "Close",
+            "rows": {
+                "specialty": "Specialty",
+                "experience": "Experience",
+                "location": "Location",
+                "rating": "Rating",
+                "verified": "Verified account",
+                "price": "Offer value"
+            },
+            "yes": "Yes",
+            "no": "No"
+        }
     },
     "messagesPage": {
         "search": "Search by subject or reference number",
@@ -779,70 +802,6 @@
             "replyType": "Official reply"
         }
     },
-    "tenderDetails": {
-        "back": "Back to tenders",
-        "category": "Category: {{category}}",
-        "published": "Published: {{date}}",
-        "close": "Close tender",
-        "closeConfirm": "Do you want to close this tender? It will not receive new offers after closing.",
-        "confirmClose": "Confirm closing",
-        "cancel": "Cancel",
-        "closed": "The tender was closed and will not receive new offers.",
-        "closedBadge": "Closed",
-        "awardedBadge": "Winner selected",
-        "stagesTitle": "Tender stages and workflow status",
-        "stages": {
-            "publish": {
-                "title": "Tender published",
-                "note": ""
-            },
-            "compare": {
-                "title": "Comparing offers",
-                "note": ""
-            },
-            "select": {
-                "title": "Choosing the craftsman",
-                "note": "Award and contract signing"
-            },
-            "deliver": {
-                "title": "Execution & delivery",
-                "note": "Supervision and final handover"
-            }
-        },
-        "doneOn": "Completed ({{date}})",
-        "startsOn": "Starts {{date}}",
-        "remaining": "{{time}} left",
-        "descTitle": "Project description and scope of work",
-        "infoTitle": "Tender information",
-        "info": {
-            "number": "Tender number",
-            "category": "Category",
-            "location": "Area and location",
-            "published": "Published on",
-            "deadline": "Submission deadline",
-            "remaining": "Time left",
-            "duration": "Expected duration"
-        },
-        "remainingHours": "{{count}} hours left",
-        "durationDays": "{{count}} working days",
-        "genericDesc": "{{title}} in {{area}}. The full scope of work will appear once the tender data is available from the server.",
-        "notFound": "Tender not found",
-        "sample": {
-            "r1": {
-                "location": "Nuseirat - Al-Qassam St., Gaza",
-                "published": "12 May 2024",
-                "publishedShort": "12 May",
-                "deadline": "28 May 2024",
-                "deadlineShort": "28 May",
-                "remainingTime": "1 day 6 hours",
-                "desc": [
-                    "The project covers a full rehabilitation and restoration of the exterior facades of a 4-storey commercial and residential building on Al-Qassam Street in Nuseirat. It aims to treat structural and surface cracks, clean the exterior stone with pressure washing and suitable materials, and renew the weather-resistant plaster and paint layers.",
-                    "The work also includes modern water and thermal insulation for balconies and cornices, rewiring the exterior electrical cables, and installing an architectural LED lighting system to highlight the building's appearance according to the attached technical drawings."
-                ]
-            }
-        },
-        "showOffers": "Show offers"
-    },
     "notifications": {
         "sample": {
             "n1": {
@@ -879,17 +838,14 @@
     },
     "createTender": {
         "title": "Create a new tender",
-        "subtitle": "Fill in the following details to create a new tender",
+        "subtitle": "Enter the tender details step by step. You can save it as a draft and come back later.",
         "optional": "(optional)",
-        "basic": "1. Basic tender information",
-        "desc": "Tender description",
-        "descPlaceholder": "Write a short, clear description of the tender ...",
-        "name": "Tender name",
-        "namePlaceholder": "Enter the tender name",
-        "number": "Tender number",
-        "numberPlaceholder": "Enter the tender number",
-        "category": "Category",
-        "categoryPlaceholder": "Tender category",
+        "desc": "Short description",
+        "descPlaceholder": "Summarize the project goal and the main works required...",
+        "name": "Tender title",
+        "namePlaceholder": "e.g. Rehabilitating a primary school",
+        "category": "Tender category",
+        "categoryPlaceholder": "Choose a category",
         "categories": {
             "construction": "Contracting & construction",
             "maintenance": "Maintenance",
@@ -899,44 +855,113 @@
             "furnishing": "Furnishing",
             "other": "Other"
         },
-        "closeDate": "Closing date",
-        "extra": "2. Additional details",
-        "location": "Location / Area",
-        "locationPlaceholder": "Choose the location",
+        "location": "Execution location",
+        "locationPlaceholder": "Choose a city",
         "loading": "Loading...",
-        "value": "Tender value",
-        "valuePlaceholder": "Enter the tender value",
-        "submitDate": "Submission deadline",
-        "files": "Terms & attachments",
-        "filesCta": "Click to upload files",
-        "filesHint": "You can upload several files (PDF, Word, Excel)",
+        "value": "Estimated budget",
+        "submitDate": "Offer submission deadline",
+        "files": "Attachments and drawings",
+        "filesCta": "Choose files",
+        "filesHint": "Drag files here or click to choose · PDF, DOCX, XLSX, DWG",
         "removeFile": "Remove {{name}}",
-        "map": "3. Add a location on the map",
-        "locate": "Locate on the map",
-        "mapSearch": "Search for the place or area number...",
-        "mapPreview": "Map location preview",
-        "submit": "Create tender",
+        "map": "Pin the location on the map",
+        "submit": "Publish tender",
         "cancel": "Cancel",
         "required": "This field is required",
         "invalidValue": "Enter a valid value greater than zero",
-        "submitAfterClose": "The submission deadline must be before the closing date",
         "successTitle": "Tender created",
         "successDesc": "The tender \"{{name}}\" was created successfully.",
         "goTenders": "Manage tenders",
         "another": "Create another tender",
-        "closeDatePlaceholder": "Choose the closing date",
-        "submitDatePlaceholder": "Choose the submission deadline",
-        "locating": "Finding your location...",
-        "mapHint": "Type a place and press \"Locate on the map\", or press it directly to use your current location.",
-        "mapSelected": "The location was set on the map.",
-        "openMap": "Open in Google Maps",
-        "mapErrors": {
-            "denied": "Location access was not allowed. Allow it in your browser or type the place name.",
-            "failed": "Couldn't find your location. Try again or type the place name.",
-            "empty": "Type the place name first."
-        },
         "services": "Required services",
-        "servicesPlaceholder": "Services I need"
+        "servicesPlaceholder": "Choose the required services",
+        "saveDraft": "Save as draft",
+        "draftSaved": "Draft saved.",
+        "counter": "{{count}}/{{max}} characters",
+        "mapRequired": "Pin the execution location on the map",
+        "scope": "Scope of work",
+        "scopePlaceholder": "List the scope items, for example:\n• Remove and treat damaged parts\n• Insulation and finishing works\n• Inspect works and hand over the site",
+        "requirements": "Qualification requirements",
+        "requirementsPlaceholder": "e.g. Valid commercial registration, at least 5 years of experience, similar projects...",
+        "currency": "₪",
+        "duration": "Expected duration",
+        "day": "days",
+        "confirm": "I confirm all information and documents are correct and agree to publish the tender under Sanaa's terms.",
+        "confirmRequired": "Confirm the details before publishing",
+        "edit": "Edit",
+        "next": "Next",
+        "back": "Back",
+        "money": "₪{{value}}",
+        "daysCount_one": "1 day",
+        "daysCount_other": "{{count}} days",
+        "filesCount_one": "1 file",
+        "filesCount_other": "{{count}} files",
+        "reviewRows": {
+            "name": "Tender title",
+            "category": "Category",
+            "location": "Location",
+            "desc": "Description",
+            "services": "Services",
+            "scope": "Scope of work",
+            "requirements": "Qualification criteria",
+            "files": "Attachments",
+            "value": "Budget",
+            "submitDate": "Deadline",
+            "duration": "Duration",
+            "mapPoint": "Map location",
+            "startDate": "Expected start"
+        },
+        "progress": "Tender completion",
+        "stepOf": "Step {{step}} of {{total}}",
+        "info": {
+            "title": "Tender info",
+            "number": "Tender no.",
+            "saved": "Last saved",
+            "notSaved": "Not saved yet",
+            "status": "Status",
+            "draft": "Draft"
+        },
+        "steps": {
+            "basic": {
+                "title": "Basic info",
+                "desc": "Title and category",
+                "intro": "Describe the tender so providers can understand and find it easily.",
+                "note": "This information appears on the tender card and in providers' search results.",
+                "tipTitle": "Write a clear title",
+                "tip": "A clear title helps the right providers find your tender."
+            },
+            "scope": {
+                "title": "Scope and requirements",
+                "desc": "Works and attachments",
+                "intro": "Describe the required works, qualification requirements and supporting documents.",
+                "note": "The clearer the scope, the more accurate and comparable the offers.",
+                "tipTitle": "Define the scope precisely",
+                "tip": "The more detailed the specs, the more accurate and comparable the offers."
+            },
+            "budget": {
+                "title": "Budget and dates",
+                "desc": "Value and timeline",
+                "intro": "Set the tender budget and the time available for offers and execution.",
+                "note": "An estimated budget helps providers submit realistic offers.",
+                "tipTitle": "Allow enough time to apply",
+                "tip": "Give companies enough time to study the requirements and prepare their offers."
+            },
+            "review": {
+                "title": "Review and publish",
+                "desc": "Confirm the details",
+                "intro": "Check the details, then publish the tender to start receiving providers’ offers.",
+                "note": "After publishing, offers will arrive on the Offers page and you can follow the tender from Tender management.",
+                "tipTitle": "Review before publishing",
+                "tip": "Make sure all details, dates and attachments are correct before publishing.",
+                "heading": "Review the tender before publishing"
+            }
+        },
+        "filesTitle": "Attach the terms and drawings",
+        "uploaded": "Uploaded",
+        "valueHint": "It won't be shown to providers if you choose a sealed offer.",
+        "startDate": "Expected start date",
+        "datePlaceholder": "Choose a date",
+        "startBeforeSubmit": "The start date must be after the submission deadline"
     },
     "searchSections": {
         "pages": "Pages",
@@ -963,7 +988,9 @@
         "stagesTitle": "Project stages and progress",
         "currentStage": {
             "start": "Current stage: execution start",
-            "executing": "Current stage: in progress"
+            "executing": "Current stage: in progress",
+            "delivery": "Current stage: handover review",
+            "accepted": "Project handed over"
         },
         "stages": {
             "waiting": "Waiting",
@@ -973,15 +1000,21 @@
             },
             "start": {
                 "title": "Execution start",
-                "note": "Team & site approval"
+                "note": "Team & site approval",
+                "done": "Oct 12"
             },
             "executing": {
                 "title": "In progress",
-                "note": "Daily updates"
+                "note": "Daily updates",
+                "deliveryTitle": "Execution complete",
+                "done": "Oct 24"
             },
             "delivery": {
                 "title": "Delivery",
-                "note": "Supervision & final handover"
+                "note": "Supervision and final handover",
+                "deliveryTitle": "Handover review",
+                "reviewWaiting": "Awaiting institution approval",
+                "done": "Handed over"
             }
         },
         "schedule": {
@@ -992,7 +1025,8 @@
             "requester": "Requested by",
             "duration": "Project duration",
             "delivery": "Expected delivery",
-            "days": "{{count}} days"
+            "days": "{{count}} days",
+            "when": "{{day}}, {{time}}"
         },
         "request": {
             "label": "New request from the provider",
@@ -1070,7 +1104,179 @@
             "cancel": "Cancel",
             "sent": "The update request was sent to {{provider}}."
         },
-        "requestUpdate": "Request execution update"
+        "requestUpdate": "Add update",
+        "exec": {
+            "tabs": {
+                "overview": "Overview",
+                "tasks": "Tasks",
+                "updates": "Updates",
+                "documents": "Documents"
+            },
+            "current": {
+                "title": "Current tasks",
+                "desc": "Tasks the team is working on this week",
+                "all": "View all tasks",
+                "empty": "No open tasks right now."
+            },
+            "tasks": {
+                "t1": {
+                    "title": "Complete roof waterproofing",
+                    "team": "Assigned to the waterproofing team"
+                },
+                "t2": {
+                    "title": "Run electrical wiring for the second floor",
+                    "team": "Assigned to the electrical team"
+                },
+                "t3": {
+                    "title": "Test concrete quality and document results",
+                    "team": "Assigned to the supervising engineer"
+                },
+                "t4": {
+                    "title": "Install exterior windows and doors",
+                    "team": "Assigned to the carpentry and aluminum team"
+                },
+                "t5": {
+                    "title": "Pour the second-floor slab",
+                    "team": "Assigned to the structural team"
+                },
+                "t6": {
+                    "title": "Prepare the site and receive equipment",
+                    "team": "Assigned to site management"
+                }
+            },
+            "due": {
+                "tomorrow": "Tomorrow",
+                "24may": "May 24",
+                "26may": "May 26",
+                "30may": "May 30",
+                "18may": "May 18",
+                "15may": "May 15"
+            },
+            "taskDone": "Done",
+            "latest": {
+                "title": "Latest updates",
+                "desc": "Project activity over the past days"
+            },
+            "updates": {
+                "u1": {
+                    "title": "Weekly report #8 uploaded",
+                    "meta": "Eng. Ahmad Al-Najjar · 3 hours ago"
+                },
+                "u2": {
+                    "title": "Second-floor slab pouring completed",
+                    "meta": "Supervising engineer · Yesterday, 3:00 PM"
+                },
+                "u3": {
+                    "title": "Project schedule updated",
+                    "meta": "Project management · May 20, 11:40 AM"
+                },
+                "u4": {
+                    "title": "12 site photos added",
+                    "meta": "Eng. Ahmad Al-Najjar · May 18, 4:15 PM"
+                },
+                "u5": {
+                    "title": "Site preparation and equipment handover completed",
+                    "meta": "Site management · May 15, 9:00 AM"
+                }
+            },
+            "docs": {
+                "d1": "Final project contract.pdf",
+                "d2": "Approved structural drawings.pdf",
+                "d3": "Weekly report 8.pdf",
+                "d4": "Bill of quantities and costs.xlsx"
+            },
+            "docSoon": "Preview will be available once files are connected to the server",
+            "contractor": {
+                "title": "Executing contractor",
+                "profile": "View profile",
+                "rating": "4.8 · Verified contractor",
+                "managerLabel": "Project manager",
+                "manager": "Eng. Ahmad Al-Najjar",
+                "phoneLabel": "Phone",
+                "phone": "+970 59 123 4567",
+                "emailLabel": "Email",
+                "email": "projects@albunyan.ps",
+                "message": "Message contractor"
+            },
+            "budget": {
+                "title": "Budget summary",
+                "value": "Project value",
+                "amount": "₪{{value}}",
+                "paid": "Paid",
+                "remaining": "Remaining",
+                "spent": "{{percent}}% of the budget spent"
+            },
+            "docsTitle": "Project documents",
+            "docsDesc": "Contracts, reports and approved drawings",
+            "docUpdated": "Recently updated",
+            "view": "View"
+        },
+        "delivery": {
+            "docs": {
+                "title": "Workers' documents",
+                "count": "{{done}}/{{total}} received",
+                "items": {
+                    "initial": "Initial handover report",
+                    "asBuilt": "As-built drawings",
+                    "warranty": "Warranty certificates",
+                    "manuals": "Operation and maintenance manuals",
+                    "clearance": "Final clearance"
+                },
+                "received": "Received · to review",
+                "waiting": "Waiting for workers",
+                "requested": "Requested from workers",
+                "view": "View",
+                "request": "Request file",
+                "requestedBtn": "Requested",
+                "requestedFlash": "“{{doc}}” was requested from the workers."
+            },
+            "payment": {
+                "title": "Payment due to workers",
+                "final": "Final payment",
+                "locked": "Release is allowed after your institution approves the handover.",
+                "released": "The final payment has been released."
+            },
+            "requestMore": "Request completion from workers",
+            "requestPlaceholder": "Write what the workers need to complete before handover...",
+            "requestSend": "Send request",
+            "requestSent": "Completion request sent to {{provider}}.",
+            "approve": "Approve final handover",
+            "remaining_one": "1 item left to review before approval is enabled.",
+            "remaining_other": "{{count}} items left to review before approval is enabled.",
+            "summary": {
+                "title": "Workers' handover is under your review",
+                "desc": "The execution team delivered the works. Check them against the contract and review the documents before approving.",
+                "acceptedTitle": "Final handover approved",
+                "acceptedDesc": "The project is complete and the final payment has been released."
+            },
+            "review": {
+                "title": "Institution handover review",
+                "desc": "Some items are verified — review the rest and complete the institution's decision.",
+                "percent": "{{percent}}% verified",
+                "verified": "Verified",
+                "waiting": "Awaiting you",
+                "items": {
+                    "contract": "Verify contracted works were executed",
+                    "notes": "Verify previous notes were addressed",
+                    "asBuilt": "Review as-built drawings",
+                    "manuals": "Review operation manuals and warranty certificates",
+                    "committee": "Approve the final acceptance committee report",
+                    "payment": "Allow releasing the final payment"
+                }
+            },
+            "inspection": {
+                "title": "Institution site inspection",
+                "desc": "Coordinate the acceptance committee visit with the workers and supervising engineer",
+                "schedule": "Schedule inspection",
+                "change": "Change inspection date",
+                "empty": "The institution hasn't recorded the inspection result yet",
+                "emptyHint": "Set an inspection date, then record notes and the acceptance decision.",
+                "scheduled": "Inspection date: {{date}}",
+                "scheduledHint": "Record notes and the acceptance decision after the inspection.",
+                "saved": "Inspection scheduled and workers notified."
+            },
+            "acceptedFlash": "The project's final handover was approved."
+        }
     },
     "startRequest": {
         "back": "Back to project details",
@@ -1115,16 +1321,6 @@
                 "note": "Requirements complete"
             }
         },
-        "review": {
-            "title": "Your review checklist",
-            "desc": "Review your project requirements before approving the start.",
-            "items": {
-                "team": "Team fits your project scope",
-                "schedule": "Schedule matches the project contract",
-                "equipment": "Equipment meets project requirements",
-                "safety": "Safety plan meets requirements"
-            }
-        },
         "reviewer": {
             "title": "Reviewer at your institution",
             "change": "Change",
@@ -1138,18 +1334,15 @@
         },
         "decision": {
             "title": "Your decision on starting the project",
-            "remaining": "{{count}} items left to review before approval.",
-            "remaining_one": "1 item left to review before approval.",
-            "remaining_two": "2 items left to review before approval.",
             "ready": "Review complete; you can approve the start.",
             "message": "Message the provider",
             "request": "Request completion from the provider",
             "approve": "Approve execution start",
-            "disabledHint": "Complete all review items first",
-            "sendRequest": "Send completion request",
-            "requestLabel": "Completion request notes",
-            "requestPlaceholder": "Write what the provider needs to complete...",
-            "requested": "A completion request was sent to {{provider}}."
+            "requested": "A completion request was sent to {{provider}}.",
+            "remaining_one": "1 checklist item left before approval.",
+            "remaining_other": "{{count}} checklist items left before approval.",
+            "completeChecklist": "Complete the checklist",
+            "disabledHint": "Complete all checklist items first"
         },
         "info": {
             "title": "Incoming request details",
@@ -1283,6 +1476,534 @@
             "placeholder": "Add an internal note for the team ..",
             "save": "Save note",
             "saved": "The internal note was saved."
+        },
+        "approveModal": {
+            "label": "Institution decision",
+            "title": "Approve execution start",
+            "subtitle": "Review the impact of this decision before final approval.",
+            "close": "Close",
+            "project": "Project",
+            "projectMeta": "{{provider}} · Proposed start {{date}}",
+            "pending": "Awaiting decision",
+            "incompleteTitle": "Review incomplete",
+            "incompleteDesc_one": "Complete 1 remaining checklist item to enable final approval.",
+            "incompleteDesc_other": "Complete {{count}} remaining checklist items to enable final approval.",
+            "effectsTitle": "What happens after approval?",
+            "effects": {
+                "start": {
+                    "title": "Project officially starts",
+                    "desc": "{{date}} is set as the execution start date."
+                },
+                "notify": {
+                    "title": "Execution team notified",
+                    "desc": "The decision reaches the company and all responsible parties instantly."
+                },
+                "tracking": {
+                    "title": "Progress tracking enabled",
+                    "desc": "Daily updates, reports and progress percentages open up."
+                }
+            },
+            "note": "Note attached to the decision",
+            "optional": "(optional)",
+            "notePlaceholder": "Add guidance for the execution team when work starts...",
+            "confirm": "I confirm approving the execution start",
+            "confirmDesc": "I reviewed the team, plan and attachments and am authorized to issue this decision on behalf of the institution.",
+            "cancel": "Cancel",
+            "submit": "Confirm and approve start"
+        },
+        "requestModal": {
+            "title": "Request missing requirements",
+            "subtitle": "Select what the execution team needs to complete.",
+            "itemsTitle": "Select the requirements to complete",
+            "items": {
+                "certificates": "Attach team members' certificates and experience",
+                "replaceWorker": "Replace an unverified worker or complete verification details",
+                "startDate": "Adjust the start date to match the contract schedule",
+                "schedule": "Update the schedule and clarify phase durations",
+                "equipment": "Complete equipment and material quantities and specs",
+                "safety": "Attach the safety plan and site handover report"
+            },
+            "notes": "Required notes",
+            "notesPlaceholder": "Explain what must be changed or added before resubmitting...",
+            "notesHint": "The selected items and these notes will be sent to the execution team supervisor.",
+            "deadline": "Deadline to complete",
+            "deadlines": {
+                "24h": "Within 24 hours",
+                "48h": "Within 48 hours",
+                "3d": "Within 3 days",
+                "week": "Within a week"
+            },
+            "send": "Send request"
+        }
+    },
+    "tenderManage": {
+        "notFound": "Tender not found",
+        "back": "Back to tenders",
+        "cancel": "Cancel",
+        "status": {
+            "open": "Open",
+            "paused": "Paused",
+            "draft": "Draft",
+            "executing": "In progress",
+            "completed": "Completed",
+            "cancelled": "Cancelled"
+        },
+        "viewOffers": "View offers ({{count}})",
+        "more": "Tender actions",
+        "menu": {
+            "title": "Tender actions",
+            "edit": {
+                "title": "Edit tender",
+                "desc": "Edit the allowed details"
+            },
+            "pause": {
+                "title": "Pause",
+                "desc": "Stop receiving new offers"
+            },
+            "resume": {
+                "title": "Resume receiving offers",
+                "desc": "Reopen submissions for providers"
+            }
+        },
+        "toastPaused": "Receiving offers has been paused",
+        "toastResumed": "Receiving offers has resumed",
+        "banner": {
+            "title": "Offers close in {{time}}",
+            "desc": "{{offers}} received so far. You can extend the deadline before submissions close.",
+            "endedTitle": "Offer submissions have closed",
+            "endedDesc": "{{offers}} received. You can now review and compare them.",
+            "pausedTitle": "Receiving offers is paused",
+            "pausedDesc": "Providers cannot submit new offers until you resume.",
+            "resume": "Resume",
+            "extend": "Extend deadline"
+        },
+        "days_zero": "less than a day",
+        "days_one": "1 day",
+        "days_other": "{{count}} days",
+        "hours_zero": "less than an hour",
+        "hours_one": "1 hour",
+        "hours_other": "{{count}} hours",
+        "times_zero": "None",
+        "times_one": "Once",
+        "times_other": "{{count}} times",
+        "inquiries_zero": "None",
+        "inquiries_one": "1 inquiry",
+        "inquiries_other": "{{count}} inquiries",
+        "offersCount_zero": "No offers",
+        "offersCount_one": "1 offer",
+        "offersCount_other": "{{count}} offers",
+        "and": "{{a}} and {{b}}",
+        "stats": {
+            "offers": {
+                "label": "Offers received",
+                "sub": "All under review"
+            },
+            "deadline": {
+                "label": "Deadline",
+                "ended": "Submissions closed"
+            },
+            "duration": {
+                "label": "Execution period",
+                "sub": "Starts within {{count}} days of award"
+            },
+            "budget": {
+                "label": "Estimated budget",
+                "value": "₪{{value}}",
+                "sub": "Sealed financial offer"
+            }
+        },
+        "tabs": {
+            "overview": "Overview",
+            "requirements": "Requirements",
+            "activity": "Activity log"
+        },
+        "overview": {
+            "descTitle": "Tender description",
+            "descSub": "Project scope and main objectives",
+            "execTitle": "Execution details",
+            "exec": {
+                "category": "Category",
+                "location": "Location",
+                "duration": "Execution period",
+                "bidBond": "Initial amount"
+            },
+            "bidBondValue": "{{value}}% of the offer value",
+            "scopeTitle": "Main scope of work",
+            "scope": [
+                "Remove and treat damaged parts of the building",
+                "Waterproofing and thermal insulation works",
+                "Renew electricity and water networks",
+                "Interior and exterior painting and finishing",
+                "Inspect works and hand over the site ready for use"
+            ]
+        },
+        "genericDesc": "The tender aims to carry out comprehensive restoration and rehabilitation of the building, including treating structural damage, insulation, electrical and finishing works, according to the approved technical specifications and drawings.",
+        "requirements": {
+            "qualTitle": "Qualification requirements",
+            "qual": [
+                "Valid commercial registration and practice license",
+                "Contractor classification grade A or B",
+                "At least 5 years of experience in similar projects",
+                "3 similar projects completed in the last 5 years"
+            ]
+        },
+        "activity": [
+            {
+                "type": "offer",
+                "text": "New offer received from Al-Bunyan Co.",
+                "time": "Today, 10:42 AM"
+            },
+            {
+                "type": "clarify",
+                "text": "Clarification added about warranty requirements",
+                "time": "Yesterday, 02:15 PM"
+            },
+            {
+                "type": "deadline",
+                "text": "Deadline extended by 3 days",
+                "time": "May 18, 11:30 AM"
+            },
+            {
+                "type": "publish",
+                "text": "Tender published successfully",
+                "time": "May 12, 09:00 AM"
+            }
+        ],
+        "publish": {
+            "title": "Publishing status",
+            "published": "Public",
+            "since": "Since {{date}}",
+            "paused": "Paused",
+            "pausedSub": "Not accepting new offers",
+            "draft": "Not published",
+            "draftSub": "Draft is visible only to you",
+            "closed": "Closed",
+            "closedSub": "Not accepting offers",
+            "views": "Views",
+            "saves": "Saved",
+            "inquiries": "Inquiries"
+        },
+        "officer": {
+            "title": "Tender officer",
+            "change": "Change",
+            "modalTitle": "Change tender officer",
+            "save": "Save",
+            "changed": "Tender officer updated",
+            "people": [
+                {
+                    "initials": "MS",
+                    "name": "Eng. Mohammed Suleiman",
+                    "role": "Procurement manager",
+                    "email": "m.suleiman@example.org"
+                },
+                {
+                    "initials": "RK",
+                    "name": "Eng. Rana Al-Khatib",
+                    "role": "Project engineer",
+                    "email": "r.alkhatib@example.org"
+                },
+                {
+                    "initials": "AA",
+                    "name": "Ahmed Awad",
+                    "role": "Contracts officer",
+                    "email": "a.awad@example.org"
+                }
+            ]
+        },
+        "quick": {
+            "title": "Quick actions",
+            "notify": "Notify applicants",
+            "clarify": "Add clarification",
+            "download": "Download summary",
+            "downloaded": "Tender summary downloaded",
+            "notifyDone": "Notification sent to applicants",
+            "clarifyDone": "Clarification published to applicants"
+        },
+        "sample": {},
+        "activityBy": "By {{name}} · {{time}}",
+        "notify": {
+            "title": "Message applicants",
+            "subtitle": "Send one message to all providers who applied.",
+            "close": "Close",
+            "recipients": "Recipients",
+            "allApplicants_zero": "All applicants · none yet",
+            "allApplicants_one": "All applicants · 1 applicant",
+            "allApplicants_other": "All applicants · {{count}} applicants",
+            "hidden": "Recipients won't see each other's addresses.",
+            "bulk": "Bulk message",
+            "subject": "Subject",
+            "defaultSubject": "Notice about tender: {{title}}",
+            "body": "Message",
+            "bodyPlaceholder": "Write the message all applicants will receive...",
+            "counter": "{{count}}/{{max}} characters",
+            "method": "Delivery method",
+            "channels": {
+                "platform": {
+                    "title": "In-app notification",
+                    "desc": "Appears instantly in the applicant's account."
+                },
+                "email": {
+                    "title": "Email",
+                    "desc": "A copy is sent to the registered email."
+                }
+            },
+            "send": "Send message"
+        },
+        "clarify": {
+            "title": "Add a tender clarification",
+            "subtitle": "Publish an official clarification visible to all applicants on the tender page.",
+            "publishedIn": "Will be published in",
+            "notice": "All applicants will be notified about the new clarification.",
+            "public": "Public clarification",
+            "category": "Clarification category",
+            "categories": {
+                "technical": "Technical requirements",
+                "schedule": "Dates and schedule",
+                "financial": "Financial terms",
+                "documents": "Required documents",
+                "other": "Other"
+            },
+            "heading": "Clarification title",
+            "headingPlaceholder": "e.g. Clarifying the final guarantee requirements",
+            "body": "Clarification text",
+            "bodyPlaceholder": "Write the corrected information or answer you want to add to the tender...",
+            "preview": "Preview",
+            "now": "Published now",
+            "previewHeading": "The clarification title will appear here",
+            "previewBody": "The clarification text will appear here for applicants in the tender details.",
+            "confirm": "I confirm publishing this clarification to all applicants",
+            "confirmDesc": "It will be added to the tender log and can't be edited after publishing without a new update.",
+            "publish": "Publish clarification",
+            "activity": "Clarification added: {{heading}}"
+        },
+        "edit": {
+            "title": "Edit tender",
+            "subtitle": "Edit the available details while keeping a change log.",
+            "name": "Tender title",
+            "budget": "Estimated budget",
+            "currency": "₪",
+            "deadline": "Deadline",
+            "reason": "Reason for change",
+            "reasonPlaceholder": "Write a short reason to show in the activity log...",
+            "locked": "The scope of work and offer type can't be changed after the first offer is received. Use “Add clarification” instead.",
+            "save": "Save changes",
+            "done": "Tender changes saved",
+            "activity": "Tender details updated",
+            "activityExtended": "Deadline extended by {{days}}"
+        }
+    },
+    "applicantOffer": {
+        "offerNo": "Offer no.",
+        "appliedTo": "Submitted for tender:",
+        "submittedAt": "Submitted on",
+        "statusLabel": "Offer status",
+        "status": {
+            "new": "New",
+            "accepted": "Accepted",
+            "excluded": "Excluded"
+        },
+        "undo": "Undo",
+        "amount": "₪{{value}}",
+        "days_one": "1 day",
+        "days_other": "{{count}} days",
+        "months_one": "1 month",
+        "months_other": "{{count}} months",
+        "members_one": "1 member",
+        "members_other": "{{count}} members",
+        "years_one": "1 year",
+        "years_other": "{{count}} years",
+        "startWithin": "Within {{count}} days of award",
+        "tabs": {
+            "summary": "Summary",
+            "technical": "Technical offer",
+            "financial": "Financial offer",
+            "documents": "Documents"
+        },
+        "message": {
+            "title": "Provider's message",
+            "text": "We're pleased to submit our offer to execute the project to the highest quality and safety standards. Our team reviewed all drawings and requirements, and we confirm our ability to meet the timeline and deliver to spec."
+        },
+        "info": {
+            "title": "Key offer information",
+            "desc": "Details submitted by the company",
+            "items": {
+                "value": "Offer value",
+                "duration": "Proposed duration",
+                "validity": "Offer validity",
+                "warranty": "Warranty period",
+                "team": "Team size",
+                "start": "Expected start"
+            }
+        },
+        "strengths": {
+            "title": "Offer strengths",
+            "items": {
+                "fast": "Shorter execution time than required",
+                "experienced": "Team with documented experience",
+                "safety": "Comprehensive safety plan",
+                "warranty": "Extended 24-month warranty"
+            }
+        },
+        "compare": "Compare this offer with the others",
+        "technical": {
+            "title": "Technical approach",
+            "desc": "The provider's plan to deliver the scope of work",
+            "items": {
+                "plan": {
+                    "title": "Execution plan and site management",
+                    "text": "Work split into four parallel packages, each with a site engineer, plus daily follow-up meetings and documented weekly reports."
+                },
+                "quality": {
+                    "title": "Quality and safety management",
+                    "text": "A quality control plan covering material inspection before supply, mandatory approval points for each phase, and a standards-compliant safety plan."
+                },
+                "team": {
+                    "title": "Team and equipment",
+                    "text": "An 18-member team led by a project manager with 12 years of experience, with all required equipment provided on site."
+                }
+            }
+        },
+        "financial": {
+            "title": "Financial offer details",
+            "desc": "Prices include materials and labor",
+            "items": {
+                "prep": "Preparatory works and site setup",
+                "civil": "Structural and civil works",
+                "mep": "Electrical and mechanical works",
+                "finishing": "Finishing works"
+            },
+            "total": "Total including tax"
+        },
+        "docs": {
+            "technical": "Technical offer.pdf",
+            "financial": "Sealed financial offer.pdf",
+            "schedule": "Execution schedule.pdf",
+            "license": "Commercial registration and classification.pdf",
+            "portfolio": "Previous work samples.pdf",
+            "bond": "Bid bond letter.pdf"
+        },
+        "provider": {
+            "title": "Provider details",
+            "profile": "View profile",
+            "verified": "Verified provider",
+            "ratingLabel": "Rated {{rating}} out of 5",
+            "reviews": "from {{count}} reviews",
+            "projects": "projects",
+            "projectsDesc": "completed successfully",
+            "category": "Category",
+            "experience": "Experience",
+            "location": "Location",
+            "message": "Message provider"
+        },
+        "note": {
+            "title": "Internal note",
+            "placeholder": "Add a note for the evaluation team...",
+            "save": "Save note",
+            "saved": "Internal note saved."
+        },
+        "decision": {
+            "title": "Done reviewing this offer?",
+            "desc": "You can request a clarification, exclude the offer, or nominate it for award.",
+            "exclude": "Exclude offer",
+            "accept": "Accept",
+            "acceptedFlash": "{{name}}'s offer was accepted and added to ongoing projects.",
+            "excludedFlash": "{{name}}'s offer was excluded.",
+            "openProject": "View in ongoing projects"
+        },
+        "dateTime": "{{date}}, {{time}}",
+        "compareModal": {
+            "title": "Compare offers",
+            "subtitle": "Compare {{name}}'s offer with the top submitted offers.",
+            "close": "Close",
+            "hint": "This comparison is indicative and covers the key technical and financial criteria. Review each offer before deciding.",
+            "criteria": "Criteria",
+            "current": "Current offer",
+            "competitor": "Competing offer",
+            "rows": {
+                "value": "Offer value",
+                "duration": "Duration",
+                "score": "Technical score",
+                "experience": "Experience",
+                "warranty": "Warranty"
+            },
+            "lowest": "Lowest price",
+            "fastest": "Fastest",
+            "footer": "You can add another offer to compare from the tender's offers page.",
+            "open": "Compare offers"
+        }
+    },
+    "subscription": {
+        "title": "My subscription",
+        "close": "Close",
+        "cancel": "Cancel",
+        "save": "Save",
+        "money": "₪{{value}}",
+        "plan": {
+            "name": "Institution plan",
+            "price": "₪{{price}} / month · tax included",
+            "active": "Active",
+            "ending": "Won't renew"
+        },
+        "info": {
+            "renews": "Renews on",
+            "ends": "Ends on",
+            "method": "Payment method",
+            "since": "Member since"
+        },
+        "changeMethod": "Change payment method",
+        "cancelRenewal": "Cancel renewal",
+        "resumeRenewal": "Resume renewal",
+        "methods": {
+            "bank": {
+                "label": "Bank transfer - Bank of Palestine",
+                "desc": "Monthly transfer from the institution's bank account."
+            },
+            "card": {
+                "label": "Credit card",
+                "desc": "Automatic charge to a Visa or Mastercard."
+            },
+            "wallet": {
+                "label": "E-wallet",
+                "desc": "Pay with Jawwal Pay or PalPay."
+            }
+        },
+        "methodModal": {
+            "title": "Change payment method",
+            "subtitle": "Choose how you'd like to pay the monthly subscription."
+        },
+        "methodFlash": "Payment method changed to {{method}}.",
+        "cancelModal": {
+            "title": "Cancel automatic renewal",
+            "subtitle": "Your subscription stays active until the end of the current period.",
+            "body": "After cancelling, the institution plan won't renew automatically and you can keep using all features until {{date}}.",
+            "note": "Published tenders and received offers stay saved in your account, and you can resume renewal anytime.",
+            "keep": "Keep renewal",
+            "confirm": "Cancel renewal"
+        },
+        "cancelledFlash": "Automatic renewal cancelled. Your subscription stays active until {{date}}.",
+        "resumedFlash": "Automatic renewal resumed.",
+        "invoices": {
+            "title": "Latest invoices",
+            "all": "All invoices",
+            "less": "Show less",
+            "cols": {
+                "number": "Invoice no.",
+                "date": "Date",
+                "period": "Period",
+                "total": "Total",
+                "file": "Download invoice"
+            },
+            "period": "{{from}} – {{to}}",
+            "soon": "Invoice download will be available once connected to the server"
+        },
+        "features": {
+            "title": "What your plan includes",
+            "items": {
+                "tenders_one": "Unlimited tenders · 1 published this month",
+                "tenders_other": "Unlimited tenders · {{count}} published this month",
+                "invites": "Private invitations to providers",
+                "badge": "“Active subscriber” badge on your profile"
+            }
         }
     }
 }

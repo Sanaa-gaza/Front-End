@@ -220,7 +220,7 @@ export default function ClientSignup() {
                             />
 
                             <div className="flex items-center  gap-2 mb-2">
-                                <input
+                                <input name="agree_terms"
                                     id="agreeTerms"
                                     type="checkbox"
                                     checked={agreeTerms}

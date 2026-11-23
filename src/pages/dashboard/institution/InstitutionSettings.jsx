@@ -27,7 +27,7 @@ function PinSelect({ id, value, onChange, disabled, placeholder, options, error 
         <div>
             <div className="relative">
                 <MapPin size={16} className="pointer-events-none absolute start-3 top-1/2 -translate-y-1/2 text-[#4B9AD2]" />
-                <select
+                <select name={id}
                     id={id}
                     value={value}
                     onChange={(e) => onChange(e.target.value)}
@@ -246,7 +246,7 @@ function GeneralSettings() {
                             >
                                 <Camera size={13} />
                             </label>
-                            <input
+                            <input name="photo"
                                 id="inst-photo"
                                 type="file"
                                 accept="image/jpeg,image/png"
@@ -265,7 +265,7 @@ function GeneralSettings() {
 
                     <div>
                         <label htmlFor="inst-name" className={label}>{t("settingsPage.info.name")}</label>
-                        <input
+                        <input name="name"
                             id="inst-name"
                             value={form.name}
                             onChange={(e) => update("name")(e.target.value)}
@@ -277,7 +277,7 @@ function GeneralSettings() {
 
                     <div>
                         <label htmlFor="inst-activity" className={label}>{t("settingsPage.info.activity")}</label>
-                        <input
+                        <input name="activity"
                             id="inst-activity"
                             value={form.activity}
                             onChange={(e) => update("activity")(e.target.value)}
@@ -289,7 +289,7 @@ function GeneralSettings() {
                     <div>
                         <label htmlFor="inst-phone" className={label}>{t("settingsPage.info.phone")}</label>
                         <div className="flex" dir="ltr">
-                            <select
+                            <select name="phone_code"
                                 value={form.phoneCode}
                                 onChange={(e) => update("phoneCode")(e.target.value)}
                                 aria-label={t("signupCommon:countryCode")}
@@ -298,7 +298,7 @@ function GeneralSettings() {
                                 <option value="+970">+970</option>
                                 <option value="+972">+972</option>
                             </select>
-                            <input
+                            <input name="phone"
                                 id="inst-phone"
                                 type="tel"
                                 value={form.phone}

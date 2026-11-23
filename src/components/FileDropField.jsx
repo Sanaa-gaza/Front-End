@@ -13,7 +13,7 @@ export default function FileDropField({ id, label, hint, hintNote, icon = "fa-so
                 <i className={`${icon} text-[18px]`}></i>
                 <span className="text-sm">{file ? file.name : hintNote}</span>
             </label>
-            <input type="file" id={id} className="hidden" onChange={onChange} />
+            <input name={id} type="file" id={id} className="hidden" onChange={onChange} />
             <p className={`text-red-500 text-xs mt-1 text-start ${error ? "" : "hidden"}`}>{error}</p>
         </div>
     );

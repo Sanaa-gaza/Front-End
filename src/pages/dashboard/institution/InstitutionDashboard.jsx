@@ -6,6 +6,7 @@ import { ClipboardLines, SquareTrendingUp } from "../../../components/dashboard/
 import RequireRole from "../../../components/dashboard/RequireRole";
 import DashboardLayout from "../../../components/dashboard/DashboardLayout";
 import ComingSoon from "../../../components/dashboard/ComingSoon";
+import InstitutionSubscription from "./InstitutionSubscription";
 import InstitutionHome from "./InstitutionHome";
 import InstitutionTenders from "./InstitutionTenders";
 import InstitutionTenderDetails from "./InstitutionTenderDetails";
@@ -18,6 +19,7 @@ import InstitutionProviders from "./InstitutionProviders";
 import InstitutionProviderProfile from "./InstitutionProviderProfile";
 import InstitutionOffers from "./InstitutionOffers";
 import InstitutionOfferDetails from "./InstitutionOfferDetails";
+import InstitutionApplicantOffer from "./InstitutionApplicantOffer";
 import InstitutionMessages from "./InstitutionMessages";
 import { ChatBox } from "../../general/Chats";
 
@@ -82,8 +84,7 @@ export default function InstitutionDashboard() {
         { key: "projects", icon: ClipboardLines, to: `${BASE}/projects` },
         { key: "messages", icon: ClipboardLines, to: `${BASE}/messages` },
         { key: "providers", icon: Wallet, to: `${BASE}/providers` },
-        // صفحة التقارير المالية لسا مش جاهزة — رابطها بيعرض "قيد الإنشاء"
-        { key: "reports", icon: CircleDollarSign, to: `${BASE}/reports` },
+        { key: "subscription", icon: CircleDollarSign, to: `${BASE}/subscription` },
         { key: "settings", icon: UserRound, to: `${BASE}/settings` },
     ].map((item) => ({ ...item, label: t(`nav.${item.key}`) }));
 
@@ -154,6 +155,7 @@ export default function InstitutionDashboard() {
                     <Route path="tenders/:tenderId" element={<InstitutionTenderDetails />} />
                     <Route path="offers" element={<InstitutionOffers />} />
                     <Route path="offers/:offerId" element={<InstitutionOfferDetails />} />
+                    <Route path="offers/:offerId/applicants/:applicantId" element={<InstitutionApplicantOffer />} />
                     <Route path="projects" element={<InstitutionProjects />} />
                     <Route path="projects/:projectId" element={<InstitutionProjectDetails />} />
                     <Route path="projects/:projectId/start-request" element={<InstitutionStartRequest />} />
@@ -162,6 +164,7 @@ export default function InstitutionDashboard() {
                     <Route path="chats" element={<InstitutionChats />} />
                     <Route path="providers" element={<InstitutionProviders />} />
                     <Route path="providers/:providerId" element={<InstitutionProviderProfile />} />
+                    <Route path="subscription" element={<InstitutionSubscription />} />
                     <Route path="settings" element={<InstitutionSettings />} />
                     <Route path="*" element={<ComingSoon homePath={BASE} />} />
                 </Routes>

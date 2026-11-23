@@ -72,7 +72,7 @@ export default function AdminChats() {
                 <div className="flex gap-2 px-1 pt-3">
                     <label className="relative block min-w-0 flex-1">
                         <Search size={14} className="pointer-events-none absolute start-3 top-1/2 -translate-y-1/2 text-[#4B9AD2]" />
-                        <input
+                        <input name="search"
                             type="search"
                             value={query}
                             onChange={(e) => setQuery(e.target.value)}
@@ -93,7 +93,7 @@ export default function AdminChats() {
                     </label>
                     {/* فلتر نوع الحساب — بالتصميم بيظهر كسهم بس، والاختيار بيظهر لما تفتحه */}
                     <div className="relative w-12 shrink-0">
-                        <select
+                        <select name="type"
                             value={type}
                             onChange={(e) => setType(e.target.value)}
                             aria-label={t(`${c}.filter`)}
@@ -169,7 +169,7 @@ export default function AdminChats() {
                         </div>
 
                         <form onSubmit={send} className="flex items-center gap-3 p-4">
-                            <input
+                            <input name="message"
                                 value={text}
                                 onChange={(e) => setText(e.target.value)}
                                 placeholder={t(`${c}.placeholder`)}

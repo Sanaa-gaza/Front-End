@@ -44,5 +44,28 @@
         "showAll": "Show all ({{count}})",
         "clear": "Clear search"
     },
-    "backToSite": "Back to site"
+    "backToSite": "Back to site",
+    "mapPicker": {
+        "title": "Set the execution location",
+        "subtitle": "Search for a place or click the map to drop the pin.",
+        "close": "Close",
+        "search": "Search for a city, area or street...",
+        "searchBtn": "Search",
+        "myLocation": "Use my current location",
+        "hint": "Click anywhere on the map to set it; zoom in for more precision.",
+        "resolving": "Finding the address...",
+        "none": "No location selected yet.",
+        "cancel": "Cancel",
+        "confirm": "Confirm location",
+        "pick": "Pick on map",
+        "change": "Change location",
+        "open": "Open map",
+        "remove": "Remove",
+        "errors": {
+            "noResults": "No results found. Try another name or click the map directly.",
+            "searchFailed": "Search isn't available right now. Check your connection or click the map directly.",
+            "denied": "Location access was denied. Allow it in your browser or click the map.",
+            "failed": "Couldn't get your location. Try again or click the map."
+        }
+    }
 }

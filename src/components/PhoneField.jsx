@@ -14,7 +14,7 @@ export default function PhoneField({ id = "phone", value, onChange, error, count
                 className={`flex ${isRtl ? "flex-row-reverse" : "flex-row"} rounded-lg border bg-[#F5F6F8] focus-within:ring-1 focus-within:ring-[#4ba0d8] focus-within:border-[#4ba0d8] ${error ? "border-red-400" : "border-[#4B9AD2]"
                     }`}
             >
-                <select
+                <select name="country_code"
                     value={countryCode}
                     onChange={(e) => onCountryCodeChange && onCountryCodeChange(e.target.value)}
                     dir="ltr"
@@ -25,7 +25,7 @@ export default function PhoneField({ id = "phone", value, onChange, error, count
                     <option value="+970">+970</option>
                     <option value="+972">+972</option>
                 </select>
-                <input
+                <input name={id}
                     type="tel"
                     id={id}
                     dir="ltr"

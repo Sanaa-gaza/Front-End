@@ -66,7 +66,7 @@ export default function TopbarSearch({ sections, items }) {
         <div ref={wrapRef} className="relative hidden md:block">
             <label className="relative block">
                 <Search size={16} className="pointer-events-none absolute start-3 top-1/2 -translate-y-1/2 text-[#4B9AD2]" />
-                <input
+                <input name="search"
                     ref={inputRef}
                     type="search"
                     value={query}

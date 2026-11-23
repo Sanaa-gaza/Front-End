@@ -288,7 +288,7 @@ export function SuspendModal({ name, onConfirm, onClose }) {
                     {t(`${m}.reason`)} <span className="text-[#D64545]">*</span>
                 </label>
                 <div className="relative">
-                    <select
+                    <select name="reason"
                         id="suspend-reason"
                         ref={selectRef}
                         value={reason}
@@ -314,7 +314,7 @@ export function SuspendModal({ name, onConfirm, onClose }) {
                     {t(`${m}.details`)} <span className="text-[#D64545]">*</span>
                 </label>
                 <div className={`${box} px-4 pb-1.5 pt-3 focus-within:border-[#4B9AD2] focus-within:ring-1 focus-within:ring-[#4B9AD2] ${errors.details ? "border-red-400" : "border-[#8EC0E4]"}`}>
-                    <textarea
+                    <textarea name="details"
                         id="suspend-details"
                         rows={2}
                         maxLength={SUSPEND_DETAILS_MAX}
@@ -335,6 +335,7 @@ export function SuspendModal({ name, onConfirm, onClose }) {
 
                 <label className="mt-5 flex cursor-pointer items-center gap-2 text-[12px] text-[#414141]">
                     <input
+                        name="notify_user"
                         type="checkbox"
                         checked={notify}
                         onChange={(e) => setNotify(e.target.checked)}
@@ -464,7 +465,7 @@ export default function AdminUsers() {
             <div className="flex flex-col gap-3 md:flex-row">
                 <label className="relative block min-w-0 flex-1">
                     <Search size={16} className="pointer-events-none absolute start-4 top-1/2 -translate-y-1/2 text-[#4B9AD2]" />
-                    <input
+                    <input name="search"
                         type="search"
                         value={query}
                         onChange={(e) => setQuery(e.target.value)}
@@ -485,7 +486,7 @@ export default function AdminUsers() {
                 </label>
                 <div className="relative md:w-[270px]">
                     <LayoutGrid size={15} className="pointer-events-none absolute start-4 top-1/2 -translate-y-1/2 text-[#4B9AD2]" />
-                    <select
+                    <select name="status"
                         value={status}
                         onChange={(e) => setStatus(e.target.value)}
                         aria-label={t("usersPage.status")}

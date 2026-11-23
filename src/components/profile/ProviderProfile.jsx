@@ -292,7 +292,7 @@ function RequestModal({ provider, onClose }) {
                                     {t(`${r}.problem`)}
                                     <Req />
                                 </label>
-                                <input
+                                <input name="title"
                                     id="req-title"
                                     value={form.title}
                                     onChange={(e) => set("title")(e.target.value)}
@@ -311,7 +311,7 @@ function RequestModal({ provider, onClose }) {
                                     </label>
                                     <span className="text-[11px] text-[#89949D]">{t(`${r}.detailsHint`)}</span>
                                 </div>
-                                <textarea
+                                <textarea name="details"
                                     id="req-details"
                                     rows={3}
                                     value={form.details}
@@ -369,7 +369,7 @@ function RequestModal({ provider, onClose }) {
                                         </li>
                                     )}
                                 </ul>
-                                <input
+                                <input name="photos"
                                     ref={fileRef}
                                     type="file"
                                     accept="image/*"
@@ -404,7 +404,7 @@ function RequestModal({ provider, onClose }) {
                                         <Req />
                                     </label>
                                     <div className="relative">
-                                        <select
+                                        <select name="time"
                                             id="req-time"
                                             value={form.time}
                                             onChange={(e) => set("time")(e.target.value)}

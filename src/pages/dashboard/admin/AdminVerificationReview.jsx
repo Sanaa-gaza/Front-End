@@ -93,7 +93,7 @@ function ApproveModal({ name, summary, onConfirm, onClose }) {
 
                 {/* ملاحظة داخلية (ما بتوصل للمستخدم) */}
                 <div className="mt-4 rounded-xl border border-[#8EC0E4] px-4 pb-1.5 pt-3 focus-within:border-[#4B9AD2] focus-within:ring-1 focus-within:ring-[#4B9AD2]">
-                    <textarea
+                    <textarea name="note"
                         rows={2}
                         maxLength={APPROVE_NOTE_MAX}
                         value={note}
@@ -208,6 +208,8 @@ function InfoRequestModal({ documents, recipient, onConfirm, onClose }) {
                             <li key={doc.key}>
                                 <label className="flex cursor-pointer items-center gap-2.5 text-[12px] text-[#414141]">
                                     <input
+                                        name="documents"
+                                        value={doc.key}
                                         type="checkbox"
                                         checked={selected.includes(doc.key)}
                                         onChange={() => toggle(doc.key)}
@@ -224,7 +226,7 @@ function InfoRequestModal({ documents, recipient, onConfirm, onClose }) {
                     {t(`${m}.label`)} *
                 </label>
                 <div className={`rounded-xl border px-4 pb-1.5 pt-3 focus-within:border-[#4B9AD2] focus-within:ring-1 focus-within:ring-[#4B9AD2] ${error ? "border-red-400" : "border-[#8EC0E4]"}`}>
-                    <textarea
+                    <textarea name="message"
                         id="info-message"
                         ref={textRef}
                         rows={3}
@@ -339,7 +341,7 @@ function RejectModal({ onConfirm, onClose }) {
                     {t(`${m}.reason`)} *
                 </label>
                 <div className="relative">
-                    <select
+                    <select name="reason"
                         id="reject-reason"
                         ref={selectRef}
                         value={reason}
@@ -369,7 +371,7 @@ function RejectModal({ onConfirm, onClose }) {
                         : "border-[#8EC0E4] focus-within:border-[#4B9AD2] focus-within:ring-1 focus-within:ring-[#4B9AD2]"
                         }`}
                 >
-                    <textarea
+                    <textarea name="details"
                         id="reject-details"
                         rows={2}
                         maxLength={REJECT_MAX}
@@ -656,6 +658,7 @@ export default function AdminVerificationReview() {
                                 <li key={k}>
                                     <label className="flex cursor-pointer items-center gap-2.5 text-[12px] text-[#414141]">
                                         <input
+                                            name={`checklist_${k}`}
                                             type="checkbox"
                                             checked={!!checked[k]}
                                             disabled={decided}

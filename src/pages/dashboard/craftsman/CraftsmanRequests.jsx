@@ -180,7 +180,7 @@ function RejectModal({ request, onClose, onConfirm }) {
             <label htmlFor="reject-notes" className="mb-1.5 mt-5 block text-[12px] text-[#575757]">
                 {t("requestsPage.rejectModal.notes")}
             </label>
-            <textarea
+            <textarea name="notes"
                 id="reject-notes"
                 rows={4}
                 value={notes}

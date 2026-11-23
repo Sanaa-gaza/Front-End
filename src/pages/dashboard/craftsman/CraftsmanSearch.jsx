@@ -116,7 +116,7 @@ export default function CraftsmanSearch() {
                 >
                     <div className="relative min-w-0 flex-1">
                         <Search size={15} className="pointer-events-none absolute start-3.5 top-1/2 -translate-y-1/2 text-[#4B9AD2]" />
-                        <input
+                        <input name="search"
                             type="search"
                             value={query}
                             onChange={(e) => setQuery(e.target.value)}
@@ -126,7 +126,7 @@ export default function CraftsmanSearch() {
                         />
                     </div>
                     <div className="relative min-w-0 md:w-[180px]">
-                        <select
+                        <select name="location"
                             value={location}
                             onChange={(e) => setLocation(e.target.value)}
                             aria-label={t("searchPage.place")}
@@ -142,7 +142,7 @@ export default function CraftsmanSearch() {
                         <ChevronDown size={16} className="pointer-events-none absolute end-3 top-1/2 -translate-y-1/2 text-[#4B9AD2]" />
                     </div>
                     <div className="relative min-w-0 md:w-[180px]">
-                        <select
+                        <select name="min_rating"
                             value={minRating}
                             onChange={(e) => setMinRating(e.target.value)}
                             aria-label={t("searchPage.rating")}
@@ -174,7 +174,7 @@ export default function CraftsmanSearch() {
                     className="flex items-center gap-3"
                 >
                     <div className="relative min-w-0 flex-1">
-                        <input
+                        <input name="search"
                             type="search"
                             value={query}
                             onChange={(e) => setQuery(e.target.value)}

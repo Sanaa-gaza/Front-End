@@ -2,11 +2,12 @@ import React from "react";
 import { Search } from "lucide-react";
 
 /** خانة بحث بعرض كامل للصفحات داخل لوحة التحكم */
-export default function SearchField({ value, onChange, placeholder }) {
+export default function SearchField({ value, onChange, placeholder, name = "search" }) {
     return (
         <label className="relative block">
             <Search size={16} className="pointer-events-none absolute start-4 top-1/2 -translate-y-1/2 text-[#4B9AD2]" />
             <input
+                name={name}
                 type="search"
                 value={value}
                 onChange={(e) => onChange(e.target.value)}

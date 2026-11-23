@@ -137,7 +137,7 @@ export default function CraftsmanCurrent() {
 
             <div className="relative">
                 <Search size={15} className="pointer-events-none absolute start-4 top-1/2 -translate-y-1/2 text-[#A9B3BB]" />
-                <input
+                <input name="search"
                     type="search"
                     value={query}
                     onChange={(e) => setQuery(e.target.value)}

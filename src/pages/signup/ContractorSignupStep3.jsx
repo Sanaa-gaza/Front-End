@@ -145,7 +145,7 @@ export default function ContractorSignupStep3() {
                                 />
 
                                 <div className="flex items-center gap-2 mb-6">
-                                    <input
+                                    <input name="agree_terms"
                                         id="agreeTerms"
                                         type="checkbox"
                                         checked={agreeTerms}

@@ -151,7 +151,7 @@ export function AssignModal({ summary, texts, options, onConfirm, onClose }) {
 
                 <label htmlFor="assign-value" className="mb-2 mt-5 block text-[12px] text-[#575757]">{texts.label}</label>
                 <div className="relative">
-                    <select
+                    <select name="assign_value"
                         id="assign-value"
                         ref={selectRef}
                         value={value}
@@ -249,7 +249,7 @@ export default function AdminRequests() {
             <div className="flex flex-col gap-3 md:flex-row">
                 <label className="relative block min-w-0 flex-1">
                     <Search size={16} className="pointer-events-none absolute start-4 top-1/2 -translate-y-1/2 text-[#4B9AD2]" />
-                    <input
+                    <input name="search"
                         type="search"
                         value={query}
                         onChange={(e) => setQuery(e.target.value)}
@@ -270,7 +270,7 @@ export default function AdminRequests() {
                 </label>
                 <div className="relative md:w-[270px]">
                     <LayoutGrid size={15} className="pointer-events-none absolute start-4 top-1/2 -translate-y-1/2 text-[#4B9AD2]" />
-                    <select
+                    <select name="category"
                         value={category}
                         onChange={(e) => setCategory(e.target.value)}
                         aria-label={t("requestsPage.category")}

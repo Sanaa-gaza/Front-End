@@ -278,11 +278,12 @@ const fieldClass =
     "h-11 w-full rounded-lg border border-[#8EC0E4] bg-white text-[12px] text-[#414141] outline-none transition-colors focus:border-[#4B9AD2] focus:ring-1 focus:ring-[#4B9AD2]";
 
 /** قائمة منسدلة بأيقونة شبكة بالبداية وسهم بالنهاية زي التصميم */
-function FilterSelect({ value, onChange, label, children }) {
+function FilterSelect({ value, onChange, label, name, children }) {
     return (
         <div className="relative md:w-[180px]">
             <LayoutGrid size={15} className="pointer-events-none absolute start-3 top-1/2 -translate-y-1/2 text-[#4B9AD2]" />
             <select
+                name={name}
                 value={value}
                 onChange={onChange}
                 aria-label={label}
@@ -377,7 +378,7 @@ export default function Craftsmen() {
                 >
                     <div className="relative min-w-0 flex-1">
                         <Search size={16} className="pointer-events-none absolute start-3 top-1/2 -translate-y-1/2 text-[#4B9AD2]" />
-                        <input
+                        <input name="search"
                             type="search"
                             value={query}
                             onChange={(e) => setQuery(e.target.value)}
@@ -387,7 +388,7 @@ export default function Craftsmen() {
                         />
                     </div>
 
-                    <FilterSelect
+                    <FilterSelect name="governorate_id"
                         value={governorateId}
                         onChange={(e) => filter(setGovernorateId)(e.target.value)}
                         label={t("filters.location")}
@@ -400,7 +401,7 @@ export default function Craftsmen() {
                         ))}
                     </FilterSelect>
 
-                    <FilterSelect value={rating} onChange={(e) => filter(setRating)(e.target.value)} label={t("filters.rating")}>
+                    <FilterSelect name="rating" value={rating} onChange={(e) => filter(setRating)(e.target.value)} label={t("filters.rating")}>
                         <option value="all">{t("filters.rating")}</option>
                         {RATING_OPTIONS.map((r) => (
                             <option key={r} value={r} className="font-bold">
