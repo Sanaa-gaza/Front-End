@@ -1956,15 +1956,11 @@
         "methods": {
             "bank": {
                 "label": "Bank transfer - Bank of Palestine",
-                "desc": "Monthly transfer from the institution's bank account."
+                "desc": "Monthly transfer from the institution’s bank account."
             },
-            "card": {
-                "label": "Credit card",
-                "desc": "Automatic charge to a Visa or Mastercard."
-            },
-            "wallet": {
-                "label": "E-wallet",
-                "desc": "Pay with Jawwal Pay or PalPay."
+            "jawwalPay": {
+                "label": "Jawwal Pay",
+                "desc": "Monthly payment via the Jawwal Pay wallet."
             }
         },
         "methodModal": {

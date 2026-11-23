@@ -59,6 +59,7 @@ function parseProfile(d = {}) {
     const pick = (...keys) => {
         for (const k of keys) {
             const v = inst[k] ?? d[k];
+            
             if (v) return v;
         }
         return "";

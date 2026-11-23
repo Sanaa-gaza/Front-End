@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Building2, CalendarDays, Check, Clock, CreditCard, FileText, Landmark, RotateCcw, Smartphone, TriangleAlert, Wallet, X } from "lucide-react";
+import { Building2, CalendarDays, Check, Clock, FileText, Landmark, RotateCcw, Smartphone, TriangleAlert, Wallet, X } from "lucide-react";
 
 const card = "rounded-[20px] border border-[#DDDDDD] bg-white";
 
@@ -14,10 +14,10 @@ const INVOICES = [
 ];
 const INVOICES_PREVIEW = 1;
 const FEATURES = ["tenders", "invites", "badge"];
+// وسائل الدفع المتاحة: تحويل بنكي أو جوال باي
 const METHODS = [
     { id: "bank", icon: Landmark },
-    { id: "card", icon: CreditCard },
-    { id: "wallet", icon: Smartphone },
+    { id: "jawwalPay", icon: Smartphone },
 ];
 
 /** نافذة بسيطة بنفس شكل نوافذ اللوحة — بتسكر بزر X أو Esc أو الضغط برا */
@@ -127,7 +127,7 @@ export default function InstitutionSubscription() {
                             ))}
                         </dl>
 
-                        <div className="mt-5 flex flex-wrap gap-3 border-t border-[#F1F5F9] pt-5">
+                        <div className="mt-5 flex flex-wrap justify-end gap-3 border-t border-[#F1F5F9] pt-5">
                             <button
                                 type="button"
                                 onClick={() => {
